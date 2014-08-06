@@ -8,6 +8,7 @@ class EbtBalanceSmsApp < Sinatra::Base
     @texter_phone_number = params["From"].match(/[\d+]/)[0]
     @debit_number = DebitCardNumber.new(params["Body"])
     @twiml_url = "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}/get_balance?phone_number=#{@texter_phone_number}"
+    puts @debit_number.to_s
     if @debit_number.is_valid?
       call = TWILIO_CLIENT.account.calls.create( \
         url: @twiml_url, \
