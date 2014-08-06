@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'twilio-ruby'
+require File.expand_path('../lib/transcription', __FILE__)
 
 class EbtBalanceSmsApp < Sinatra::Base
   TWILIO_CLIENT = Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH'])
@@ -29,10 +30,11 @@ class EbtBalanceSmsApp < Sinatra::Base
   end
 
   post '/:phone_number/send_balance' do
+    transcription = Transcription.new(params["TranscriptionText"])
     TWILIO_CLIENT.account.messages.create( \
       to: params[:phone_number].strip, \
       from: ENV['TWILIO_NUMBER'], \
-      body: params["TranscriptionText"][1..140] \
+      body: "Hi! Your food stamp balance is #{transcription.ebt_amount} and your cash balance is #{transcription.cash_amount}." \
     )
   end
 end
