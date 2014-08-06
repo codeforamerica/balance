@@ -24,7 +24,7 @@ class EbtBalanceSmsApp < Sinatra::Base
   get '/get_balance' do
     @phone_number = params[:phone_number].strip
     @my_response = Twilio::TwiML::Response.new do |r|
-      r.Record :transcribeCallback => "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}/#{@phone_number}/send_balance" #:transcribe => true
+      r.Record :transcribeCallback => "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}/#{@phone_number}/send_balance", :maxLength => 18 #:transcribe => true
     end
     @my_response.text
   end
