@@ -21,9 +21,11 @@ class EbtBalanceSmsApp < Sinatra::Base
   end
 
   get '/get_balance' do
+    puts params
     @my_response = Twilio::TwiML::Response.new do |r|
-      r.Record :transscribeCallback => "/send_balance?outbound_number=#{params[:phone_number]}"
+      r.Record :transcribe => true
     end
+    puts @my_response.text
     @my_response.text
   end
 
