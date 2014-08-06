@@ -2,6 +2,7 @@ require 'sinatra'
 require 'twilio-ruby'
 require File.expand_path('../lib/transcription', __FILE__)
 require File.expand_path('../lib/debit_card_number', __FILE__)
+require File.expand_path('lib/twilio_service')
 
 class EbtBalanceSmsApp < Sinatra::Base
   TWILIO_SERVICE = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
@@ -48,21 +49,5 @@ class EbtBalanceSmsApp < Sinatra::Base
       from: ENV['TWILIO_NUMBER'], \
       body: "Hi! Your food stamp balance is #{transcription.ebt_amount} and your cash balance is #{transcription.cash_amount}." \
     )
-  end
-end
-
-class TwilioService
-  attr_reader :client
-
-  def initialize(twilio_client)
-    @client = twilio_client
-  end
-
-  def make_call(params)
-    @client.account.calls.create(params)
-  end
-
-  def send_text(params)
-    @client.account.messages.create(params)
   end
 end
