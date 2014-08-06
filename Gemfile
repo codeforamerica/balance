@@ -7,4 +7,5 @@ gem 'twilio-ruby'
 group :test, :development do
   gem 'rspec'
   gem 'rack-test'
+  gem 'pry'
 end

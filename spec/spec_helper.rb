@@ -16,6 +16,7 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
 require 'rack/test'
+require 'pry'
 require File.expand_path('../../app', __FILE__)
 require File.expand_path('../rack_spec_helpers', __FILE__)
 
