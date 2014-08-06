@@ -1,6 +1,5 @@
 require 'sinatra'
 require 'twilio-ruby'
-require 'pry'
 
 class EbtBalanceSmsApp < Sinatra::Base
   TWILIO_CLIENT = Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH'])
