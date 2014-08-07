@@ -61,18 +61,23 @@ describe EbtBalanceSmsApp do
   end
 
   describe 'GET /get_balance' do
-    it 'responds with correct TwiML' do
+    before do
       get '/get_balance?phone_number=+12223334444'
       parsed_response = Nokogiri::XML(last_response.body)
       record_attributes = parsed_response.children.children[0].attributes
-      callback = record_attributes["transcribeCallback"].value
-      maxlength = record_attributes["maxLength"].value
-      expect(callback).to eq("http://example.org/12223334444/send_balance")
-      expect(maxlength).to eq("18")
+      @callback_url = record_attributes["transcribeCallback"].value
+      @maxlength = record_attributes["maxLength"].value
+    end
+
+    it 'responds with callback to correct URL (ie, correct phone number)' do
+      expect(@callback_url).to eq("http://example.org/12223334444/send_balance")
+    end
+
+    it 'has max recording length set correctly' do
+      expect(@maxlength).to eq("18")
     end
 
     it 'responds with 200 status' do
-      get '/get_balance?phone_number=+12223334444'
       expect(last_response.status).to eq(200)
     end
   end
