@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'twilio-ruby'
 require File.expand_path('../lib/transcription', __FILE__)
+require File.expand_path('../lib/debit_card_number', __FILE__)
 
 class EbtBalanceSmsApp < Sinatra::Base
   TWILIO_CLIENT = Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH'])
@@ -23,6 +24,12 @@ class EbtBalanceSmsApp < Sinatra::Base
         from: ENV['TWILIO_NUMBER'], \
         body: "Thanks! Please wait 1-2 minutes while we check your EBT balance." \
       )
+    else
+      text_message = TWILIO_CLIENT.account.messages.create( \
+        to: @texter_phone_number, \
+        from: ENV['TWILIO_NUMBER'], \
+        body: "Sorry, that EBT number doesn't look right. Please try again." \
+      )
     end
   end
 
@@ -44,18 +51,3 @@ class EbtBalanceSmsApp < Sinatra::Base
   end
 end
 
-class DebitCardNumber
-  attr_accessor :number
-
-  def initialize(number)
-    @number = number
-  end
-
-  def to_s
-    @number
-  end
-
-  def is_valid?
-    return true
-  end
-end
