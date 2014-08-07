@@ -16,7 +16,6 @@ class EbtBalanceSmsApp < Sinatra::Base
         to: "+18773289677",
         send_digits: "ww1ww#{@debit_number.to_s}",
         from: ENV['TWILIO_NUMBER'],
-        record: "true",
         method: "GET"
       )
       text_message = @twilio_service.send_text(

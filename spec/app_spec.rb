@@ -18,7 +18,6 @@ describe EbtBalanceSmsApp do
           to: '+18773289677',
           send_digits: "ww1ww#{ebt_number}",
           from: 'loltwilionumber',
-          record: 'true',
           method: 'GET'
         )
       end
