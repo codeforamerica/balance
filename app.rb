@@ -2,23 +2,22 @@ require 'sinatra'
 require 'twilio-ruby'
 require File.expand_path('../lib/transcription', __FILE__)
 require File.expand_path('../lib/debit_card_number', __FILE__)
-require File.expand_path('lib/twilio_service')
+require File.expand_path('../lib/twilio_service', __FILE__)
 
 class EbtBalanceSmsApp < Sinatra::Base
-  TWILIO_SERVICE = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
-
   post '/' do
+    @twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
     @texter_phone_number = params["From"]
     @debit_number = DebitCardNumber.new(params["Body"])
     @twiml_url = "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}/get_balance?phone_number=#{@texter_phone_number}"
     if @debit_number.is_valid?
-      call = TWILIO_SERVICE.make_call( \
-        url: @twiml_url, \
-        to: "+18773289677", \
-        send_digits: "ww1ww#{@debit_number.to_s}", \
-        from: ENV['TWILIO_NUMBER'], \
-        record: "true", \
-        method: "GET" \
+      call = @twilio_service.make_call(
+        url: @twiml_url,
+        to: "+18773289677",
+        send_digits: "ww1ww#{@debit_number.to_s}",
+        from: ENV['TWILIO_NUMBER'],
+        record: "true",
+        method: "GET"
       )
       text_message = TWILIO_CLIENT.account.messages.create( \
         to: @texter_phone_number, \
