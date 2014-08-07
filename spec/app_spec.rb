@@ -12,7 +12,7 @@ describe EbtBalanceSmsApp do
         url: "http://example.org/get_balance?phone_number=#{@texter_number}",
         to: '+18773289677',
         send_digits: "ww1ww#{@ebt_number}",
-        from: '14157982736',
+        from: 'loltwilionumber',
         record: 'true',
         method: 'GET'
       )
