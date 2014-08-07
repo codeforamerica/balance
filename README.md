@@ -1,5 +1,7 @@
 A text message interface for EBT balance
 
+[![Build Status](https://travis-ci.org/daguar/balance.svg?branch=master)](https://travis-ci.org/daguar/balance)
+
 ## Deployment
 
 Set the following environment variables:
