@@ -51,4 +51,16 @@ describe EbtBalanceSmsApp do
       end
     end
   end
+
+  describe 'GET /get_balance' do
+    it 'responds with correct TwiML' do
+      get '/get_balance?phone_number=+12223334444'
+      parsed_response = Nokogiri::XML(last_response.body)
+      record_attributes = parsed_response.children.children[0].attributes
+      callback = record_attributes["transcribeCallback"].value
+      maxlength = record_attributes["maxLength"].value
+      expect(callback).to eq("http://example.org/12223334444/send_balance")
+      expect(maxlength).to eq("18")
+    end
+  end
 end
