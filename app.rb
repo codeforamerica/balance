@@ -19,16 +19,16 @@ class EbtBalanceSmsApp < Sinatra::Base
         record: "true",
         method: "GET"
       )
-      text_message = @twilio_service.send_text( \
-        to: @texter_phone_number, \
-        from: ENV['TWILIO_NUMBER'], \
-        body: "Thanks! Please wait 1-2 minutes while we check your EBT balance." \
+      text_message = @twilio_service.send_text(
+        to: @texter_phone_number,
+        from: ENV['TWILIO_NUMBER'],
+        body: "Thanks! Please wait 1-2 minutes while we check your EBT balance."
       )
     else
-      text_message = @twilio_service.send_text( \
-        to: @texter_phone_number, \
-        from: ENV['TWILIO_NUMBER'], \
-        body: "Sorry, that EBT number doesn't look right. Please try again." \
+      text_message = @twilio_service.send_text(
+        to: @texter_phone_number,
+        from: ENV['TWILIO_NUMBER'],
+        body: "Sorry, that EBT number doesn't look right. Please try again."
       )
     end
   end
@@ -44,10 +44,10 @@ class EbtBalanceSmsApp < Sinatra::Base
   post '/:phone_number/send_balance' do
     transcription = Transcription.new(params["TranscriptionText"])
     @twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
-    @twilio_service.send_text( \
-      to: params[:phone_number].strip, \
-      from: ENV['TWILIO_NUMBER'], \
-      body: "Hi! Your food stamp balance is #{transcription.ebt_amount} and your cash balance is #{transcription.cash_amount}." \
+    @twilio_service.send_text(
+      to: params[:phone_number].strip,
+      from: ENV['TWILIO_NUMBER'],
+      body: "Hi! Your food stamp balance is #{transcription.ebt_amount} and your cash balance is #{transcription.cash_amount}."
     )
   end
 end
