@@ -63,4 +63,19 @@ describe EbtBalanceSmsApp do
       expect(maxlength).to eq("18")
     end
   end
+
+  describe 'sending the balance to user' do
+    let(:phone_number) { "19998887777" }
+    let(:fake_twilio) { double("FakeTwilioService", :send_text => 'sent text') }
+
+    it 'sends the correct amounts to user' do
+      allow(TwilioService).to receive(:new).and_return(fake_twilio)
+      post "/#{phone_number}/send_balance", { "TranscriptionText" => "Your food stamp balance is $123.45 your cash account balance is $0 as a reminder by saving the receipt from your last purchase and your last a cash purchase for Cash Bank Transaction you will always have your current balance at and will also print your balance on the Cash Withdrawal receipt to hear the number of Cash Withdrawal for that a transaction fee (running?) this month press 1 to hear your last 10 transactions report a transaction there file a claim or check the status of a claim press 2 to report your card lost stolen or damaged press 3 for (pin?) replacement press 4 for additional options press 5" }
+      expect(fake_twilio).to have_received(:send_text).with(
+        to: phone_number,
+        from: 'loltwilionumber',
+        body: 'Hi! Your food stamp balance is $123.45 and your cash balance is $0.'
+      )
+    end
+  end
 end
