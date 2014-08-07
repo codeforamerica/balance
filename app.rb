@@ -2,30 +2,30 @@ require 'sinatra'
 require 'twilio-ruby'
 require File.expand_path('../lib/transcription', __FILE__)
 require File.expand_path('../lib/debit_card_number', __FILE__)
+require File.expand_path('../lib/twilio_service', __FILE__)
 
 class EbtBalanceSmsApp < Sinatra::Base
-  TWILIO_CLIENT = Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH'])
-
   post '/' do
+    @twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
     @texter_phone_number = params["From"]
     @debit_number = DebitCardNumber.new(params["Body"])
     @twiml_url = "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}/get_balance?phone_number=#{@texter_phone_number}"
     if @debit_number.is_valid?
-      call = TWILIO_CLIENT.account.calls.create( \
-        url: @twiml_url, \
-        to: "+18773289677", \
-        send_digits: "ww1ww#{@debit_number.to_s}", \
-        from: ENV['TWILIO_NUMBER'], \
-        record: "true", \
-        method: "GET" \
+      call = @twilio_service.make_call(
+        url: @twiml_url,
+        to: "+18773289677",
+        send_digits: "ww1ww#{@debit_number.to_s}",
+        from: ENV['TWILIO_NUMBER'],
+        record: "true",
+        method: "GET"
       )
-      text_message = TWILIO_CLIENT.account.messages.create( \
+      text_message = @twilio_service.send_text( \
         to: @texter_phone_number, \
         from: ENV['TWILIO_NUMBER'], \
         body: "Thanks! Please wait 1-2 minutes while we check your EBT balance." \
       )
     else
-      text_message = TWILIO_CLIENT.account.messages.create( \
+      text_message = @twilio_service.send_text( \
         to: @texter_phone_number, \
         from: ENV['TWILIO_NUMBER'], \
         body: "Sorry, that EBT number doesn't look right. Please try again." \
@@ -43,11 +43,11 @@ class EbtBalanceSmsApp < Sinatra::Base
 
   post '/:phone_number/send_balance' do
     transcription = Transcription.new(params["TranscriptionText"])
-    TWILIO_CLIENT.account.messages.create( \
+    @twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
+    @twilio_service.send_text( \
       to: params[:phone_number].strip, \
       from: ENV['TWILIO_NUMBER'], \
       body: "Hi! Your food stamp balance is #{transcription.ebt_amount} and your cash balance is #{transcription.cash_amount}." \
     )
   end
 end
-

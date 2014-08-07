@@ -8,4 +8,11 @@ Set the following environment variables:
 - TWILIO_SID
 - TWILIO_AUTH
 
+## Running tests
+
+Because we use `.env` for testing, you'll want to run your tests by running:
+
+```
+foreman run bundle exec rspec spec
+```
 
