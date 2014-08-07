@@ -30,6 +30,10 @@ describe EbtBalanceSmsApp do
           body: "Thanks! Please wait 1-2 minutes while we check your EBT balance."
         )
       end
+
+      it 'responds with 200 status' do
+        expect(last_response.status).to eq(200)
+      end
     end
 
     context 'with INVALID EBT number' do
@@ -49,6 +53,10 @@ describe EbtBalanceSmsApp do
           body: "Sorry, that EBT number doesn't look right. Please try again."
         )
       end
+
+      it 'responds with 200 status' do
+        expect(last_response.status).to eq(200)
+      end
     end
   end
 
@@ -61,6 +69,11 @@ describe EbtBalanceSmsApp do
       maxlength = record_attributes["maxLength"].value
       expect(callback).to eq("http://example.org/12223334444/send_balance")
       expect(maxlength).to eq("18")
+    end
+
+    it 'responds with 200 status' do
+      get '/get_balance?phone_number=+12223334444'
+      expect(last_response.status).to eq(200)
     end
   end
 
@@ -76,6 +89,13 @@ describe EbtBalanceSmsApp do
         from: 'loltwilionumber',
         body: 'Hi! Your food stamp balance is $123.45 and your cash balance is $0.'
       )
+    end
+  end
+
+  describe 'POST /get_balance' do
+    it 'responds with 200 status' do
+      post '/get_balance'
+      expect(last_response.status).to eq(200)
     end
   end
 end

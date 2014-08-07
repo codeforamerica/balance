@@ -41,6 +41,10 @@ class EbtBalanceSmsApp < Sinatra::Base
     @my_response.text
   end
 
+  post '/get_balance' do
+    # Twilio posts unused data here; necessary simply to avoid 404 error in logs
+  end
+
   post '/:phone_number/send_balance' do
     transcription = Transcription.new(params["TranscriptionText"])
     @twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
