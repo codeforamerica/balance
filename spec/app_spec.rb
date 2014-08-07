@@ -16,7 +16,6 @@ describe EbtBalanceSmsApp do
         record: 'true',
         method: 'GET'
       )
-      expect(last_response.status).to eq(200)
     end
   end
 end
