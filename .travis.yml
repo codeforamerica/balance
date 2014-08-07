@@ -3,3 +3,5 @@ rvm:
   - "2.1.1"
 before_install: gem install foreman
 script: foreman run bundle exec rspec spec
+notifications:
+  webhooks: http://project-monitor.codeforamerica.org/projects/418a62a0-e994-432d-9df5-0b398504c48f/status
