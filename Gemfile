@@ -10,4 +10,5 @@ group :test, :development do
   gem 'pry'
   gem 'dotenv'
   gem 'nokogiri'
+  gem 'foreman'
 end
