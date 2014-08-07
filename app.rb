@@ -19,13 +19,13 @@ class EbtBalanceSmsApp < Sinatra::Base
         record: "true",
         method: "GET"
       )
-      text_message = @twilio_service.account.messages.create( \
+      text_message = @twilio_service.send_text( \
         to: @texter_phone_number, \
         from: ENV['TWILIO_NUMBER'], \
         body: "Thanks! Please wait 1-2 minutes while we check your EBT balance." \
       )
     else
-      text_message = @twilio_service.account.messages.create( \
+      text_message = @twilio_service.send_text( \
         to: @texter_phone_number, \
         from: ENV['TWILIO_NUMBER'], \
         body: "Sorry, that EBT number doesn't look right. Please try again." \
