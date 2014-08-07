@@ -9,4 +9,5 @@ group :test, :development do
   gem 'rack-test'
   gem 'pry'
   gem 'dotenv'
+  gem 'nokogiri'
 end
