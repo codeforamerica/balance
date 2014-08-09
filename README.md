@@ -6,7 +6,6 @@ A text message interface for EBT balance
 
 Set the following environment variables:
 
-- TWILIO_NUMBER
 - TWILIO_SID
 - TWILIO_AUTH
 
