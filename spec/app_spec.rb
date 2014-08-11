@@ -91,21 +91,42 @@ describe EbtBalanceSmsApp do
     let(:twilio_number) { "+15556667777" }
     let(:fake_twilio) { double("FakeTwilioService", :send_text => 'sent text') }
 
-    before do
-      allow(TwilioService).to receive(:new).and_return(fake_twilio)
-      post "/#{to_phone_number}/#{twilio_number}/send_balance", { "TranscriptionText" => "Your food stamp balance is $123.45 your cash account balance is $0 as a reminder by saving the receipt from your last purchase and your last a cash purchase for Cash Bank Transaction you will always have your current balance at and will also print your balance on the Cash Withdrawal receipt to hear the number of Cash Withdrawal for that a transaction fee (running?) this month press 1 to hear your last 10 transactions report a transaction there file a claim or check the status of a claim press 2 to report your card lost stolen or damaged press 3 for (pin?) replacement press 4 for additional options press 5" }
+    context 'when EBT number is valid' do
+      before do
+        allow(TwilioService).to receive(:new).and_return(fake_twilio)
+        post "/#{to_phone_number}/#{twilio_number}/send_balance", { "TranscriptionText" => "Your food stamp balance is $123.45 your cash account balance is $0 as a reminder by saving the receipt from your last purchase and your last a cash purchase for Cash Bank Transaction you will always have your current balance at and will also print your balance on the Cash Withdrawal receipt to hear the number of Cash Withdrawal for that a transaction fee (running?) this month press 1 to hear your last 10 transactions report a transaction there file a claim or check the status of a claim press 2 to report your card lost stolen or damaged press 3 for (pin?) replacement press 4 for additional options press 5" }
+      end
+
+      it 'sends the correct amounts to user' do
+        expect(fake_twilio).to have_received(:send_text).with(
+          to: to_phone_number,
+          from: twilio_number,
+          body: 'Hi! Your food stamp balance is $123.45 and your cash balance is $0.'
+        )
+      end
+
+      it 'returns status 200' do
+        expect(last_response.status).to eq(200)
+      end
     end
 
-    it 'sends the correct amounts to user' do
-      expect(fake_twilio).to have_received(:send_text).with(
-        to: to_phone_number,
-        from: twilio_number,
-        body: 'Hi! Your food stamp balance is $123.45 and your cash balance is $0.'
-      )
-    end
+    context 'when EBT number is NOT valid' do
+      before do
+        allow(TwilioService).to receive(:new).and_return(fake_twilio)
+        post "/#{to_phone_number}/#{twilio_number}/send_balance", { "TranscriptionText" => "Our records indicate the number you have entered it's for an non working card in case your number was entered incorrectly please reenter your 16 digit card number followed by the pound sign."}
+      end
 
-    it 'returns status 200' do
-      expect(last_response.status).to eq(200)
+      it 'sends the user an error message' do
+        expect(fake_twilio).to have_received(:send_text).with(
+          to: to_phone_number,
+          from: twilio_number,
+          body: "I'm sorry, that card number was not found. Please try again. (Note: this service only works in California right now.)"
+        )
+      end
+
+      it 'returns status 200' do
+        expect(last_response.status).to eq(200)
+      end
     end
   end
 
