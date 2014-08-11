@@ -48,10 +48,18 @@ class EbtBalanceSmsApp < Sinatra::Base
   post '/:to_phone_number/:from_phone_number/send_balance' do
     transcription = Transcription.new(params["TranscriptionText"])
     twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
-    twilio_service.send_text(
-      to: params[:to_phone_number].strip,
-      from: params[:from_phone_number],
-      body: "Hi! Your food stamp balance is #{transcription.ebt_amount} and your cash balance is #{transcription.cash_amount}."
-    )
+    if transcription.invalid_ebt_number?
+      twilio_service.send_text(
+        to: params[:to_phone_number].strip,
+        from: params[:from_phone_number],
+        body: "I'm sorry, that card number was not found. Please try again. (Note: this service only works in California right now.)"
+      )
+    else
+      twilio_service.send_text(
+        to: params[:to_phone_number].strip,
+        from: params[:from_phone_number],
+        body: "Hi! Your food stamp balance is #{transcription.ebt_amount} and your cash balance is #{transcription.cash_amount}."
+      )
+    end
   end
 end

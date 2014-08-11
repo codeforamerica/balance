@@ -40,4 +40,13 @@ describe Transcription do
       expect(transcription.cash_amount).to eq("$0")
     end
   end
+
+  context 'when the transcription is for an invalid EBT number' do
+    let(:raw_text) { "Our records indicate the number you have entered it's for an non working card in case your number was entered incorrectly please reenter your 16 digit card number followed by the pound sign." }
+    let(:transcription) { Transcription.new(raw_text) }
+
+    it 'is declared invalid' do
+      expect(transcription.invalid_ebt_number?).to eq(true)
+    end
+  end
 end
