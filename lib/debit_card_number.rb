@@ -1,12 +1,17 @@
 class DebitCardNumber
   attr_accessor :number
 
-  def initialize(number)
-    @number = number
+  def initialize(input)
+    @number = extract_number_from_text(input)
   end
 
   def to_s
     @number
+  end
+
+  def extract_number_from_text(text)
+    number_matches = text.match(/\d+/)
+    number_matches.to_s
   end
 
   def is_valid?
