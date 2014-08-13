@@ -1,6 +1,6 @@
 # Balance
 
-[![Build Status](https://travis-ci.org/daguar/balance.svg?branch=master)](https://travis-ci.org/daguar/balance)
+[![Build Status](https://travis-ci.org/codeforamerica/balance.svg?branch=master)](https://travis-ci.org/codeforamerica/balance)
 
 A text message interface for checking one's CalFresh (food stamp) EBT card balance in California
 
