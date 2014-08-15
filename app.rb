@@ -28,7 +28,7 @@ class EbtBalanceSmsApp < Sinatra::Base
       twilio_service.send_text(
         to: texter_phone_number,
         from: inbound_twilio_number,
-        body: "Sorry, that EBT number doesn't look right. Please try again."
+        body: "Hi there! I can help you check your EBT balance. Just text me your 16-digit EBT number, like this: 1111222233334444"
       )
     end
   end

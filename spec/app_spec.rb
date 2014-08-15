@@ -36,22 +36,22 @@ describe EbtBalanceSmsApp do
       end
     end
 
-    context 'with INVALID EBT number' do
-      let(:invalid_ebt_number) { "111122223333" }
+    context 'with a message not including a valid EBT number' do
+      let(:message_without_ebt) { "Hi" }
       let(:texter_number) { "+12223334444" }
       let(:inbound_twilio_number) { "+15556667777" }
       let(:fake_twilio) { double("FakeTwilioService", :make_call => 'made call', :send_text => 'sent text') }
 
       before do
         allow(TwilioService).to receive(:new).and_return(fake_twilio)
-        post '/', { "Body" => invalid_ebt_number, "From" => texter_number, "To" => inbound_twilio_number }
+        post '/', { "Body" => message_without_ebt, "From" => texter_number, "To" => inbound_twilio_number }
       end
 
       it 'sends a text to the user with error message' do
         expect(fake_twilio).to have_received(:send_text).with(
           to: texter_number,
           from: inbound_twilio_number,
-          body: "Sorry, that EBT number doesn't look right. Please try again."
+          body: "Hi there! I can help you check your EBT balance. Just text me your 16-digit EBT number, like this: 1111222233334444"
         )
       end
 
