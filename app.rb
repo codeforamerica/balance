@@ -64,6 +64,13 @@ class EbtBalanceSmsApp < Sinatra::Base
   end
 
   post '/voice_call' do
-
+    twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
+    caller_phone_number = params["From"]
+    inbound_twilio_number = params["To"]
+    twilio_service.send_text(
+      to: caller_phone_number,
+      from: inbound_twilio_number,
+      body: 'Hi there! You can check your EBT card balance by text message here. Just reply to this message with your 16 digit EBT card number.'
+    )
   end
 end

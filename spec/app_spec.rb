@@ -138,9 +138,26 @@ describe EbtBalanceSmsApp do
   end
 
   describe 'inbound voice call' do
+    let(:caller_number) { "+12223334444" }
+    let(:inbound_twilio_number) { "+15556667777" }
+    let(:fake_twilio) { double("FakeTwilioService", :make_call => 'made call', :send_text => 'sent text') }
+
+    before do
+      allow(TwilioService).to receive(:new).and_return(fake_twilio)
+      post '/voice_call', { "From" => caller_number, "To" => inbound_twilio_number }
+    end
+
     it 'responds with 200 status' do
-      post '/voice_call'
       expect(last_response.status).to eq(200)
     end
+
+    it 'sends an outbound text to the number' do
+      expect(fake_twilio).to have_received(:send_text).with(
+        to: caller_number,
+        from: inbound_twilio_number,
+        body: 'Hi there! You can check your EBT card balance by text message here. Just reply to this message with your 16 digit EBT card number.'
+      )
+    end
+
   end
 end
