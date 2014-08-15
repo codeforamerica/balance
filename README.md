@@ -33,6 +33,10 @@ Because we use `.env` for testing, you'll want to run your tests by running:
 foreman run bundle exec rspec spec
 ```
 
+## Twilio Console
+
+The `twilio_console.rb` file just gets you a quick Ruby prompt with Twilio clients pre-loaded. This is useful for doing manual responses to users. To use this, you will need to set the environment variables specified in that file.
+
 ## Ops Details
 
 ### Twilio
