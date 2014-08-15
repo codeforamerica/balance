@@ -62,4 +62,8 @@ class EbtBalanceSmsApp < Sinatra::Base
       )
     end
   end
+
+  post '/voice_call' do
+
+  end
 end

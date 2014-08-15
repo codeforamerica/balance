@@ -136,4 +136,11 @@ describe EbtBalanceSmsApp do
       expect(last_response.status).to eq(200)
     end
   end
+
+  describe 'inbound voice call' do
+    it 'responds with 200 status' do
+      post '/voice_call'
+      expect(last_response.status).to eq(200)
+    end
+  end
 end
