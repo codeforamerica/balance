@@ -1,10 +1,13 @@
 require 'sinatra'
 require 'twilio-ruby'
+require 'rack/ssl'
 require File.expand_path('../lib/transcription', __FILE__)
 require File.expand_path('../lib/debit_card_number', __FILE__)
 require File.expand_path('../lib/twilio_service', __FILE__)
 
 class EbtBalanceSmsApp < Sinatra::Base
+  use Rack::SSL unless settings.environment == :development or settings.environment == :test
+
   post '/' do
     twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
     texter_phone_number = params["From"]
