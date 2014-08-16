@@ -52,10 +52,12 @@ class EbtBalanceSmsApp < Sinatra::Base
   end
 
   post '/get_balance' do
+    puts request.url
     # Twilio posts unused data here; necessary simply to avoid 404 error in logs
   end
 
   post '/:to_phone_number/:from_phone_number/send_balance' do
+    puts request.url
     transcription = Transcription.new(params["TranscriptionText"])
     twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
     if transcription.invalid_ebt_number?
