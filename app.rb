@@ -55,6 +55,11 @@ class EbtBalanceSmsApp < Sinatra::Base
 
   post '/get_balance' do
     # Twilio posts unused data here; necessary simply to avoid 404 error in logs
+    response = <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+</Response>
+EOF
   end
 
   post '/:to_phone_number/:from_phone_number/send_balance' do
