@@ -1,16 +1,28 @@
 require 'sinatra'
 require 'twilio-ruby'
+require 'rack/ssl'
 require File.expand_path('../lib/transcription', __FILE__)
 require File.expand_path('../lib/debit_card_number', __FILE__)
 require File.expand_path('../lib/twilio_service', __FILE__)
 
 class EbtBalanceSmsApp < Sinatra::Base
+  use Rack::SSL unless settings.environment == :development or settings.environment == :test
+  if settings.environment == :production
+    set :url_scheme, 'https'
+  else
+    set :url_scheme, 'http'
+  end
+
+  before do
+    puts "Request details — #{request.request_method} #{request.url}" unless settings.environment == :test
+  end
+
   post '/' do
     twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
     texter_phone_number = params["From"]
     inbound_twilio_number = params["To"]
     debit_number = DebitCardNumber.new(params["Body"])
-    twiml_url = "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}/get_balance?phone_number=#{texter_phone_number}&twilio_phone_number=#{inbound_twilio_number}"
+    twiml_url = "#{settings.url_scheme}://#{request.env['HTTP_HOST']}/get_balance?phone_number=#{texter_phone_number}&twilio_phone_number=#{inbound_twilio_number}"
     if debit_number.is_valid?
       twilio_service.make_call(
         url: twiml_url,
@@ -37,7 +49,7 @@ class EbtBalanceSmsApp < Sinatra::Base
     phone_number = params[:phone_number].strip
     twilio_number = params[:twilio_phone_number].strip
     Twilio::TwiML::Response.new do |r|
-      r.Record :transcribeCallback => "#{request.env['rack.url_scheme']}://#{request.env['HTTP_HOST']}/#{phone_number}/#{twilio_number}/send_balance", :maxLength => 18
+      r.Record :transcribeCallback => "#{settings.url_scheme}://#{request.env['HTTP_HOST']}/#{phone_number}/#{twilio_number}/send_balance", :maxLength => 18
     end.text
   end
 

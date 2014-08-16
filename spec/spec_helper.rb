@@ -22,6 +22,10 @@ require 'nokogiri'
 require File.expand_path('../../app', __FILE__)
 require File.expand_path('../rack_spec_helpers', __FILE__)
 
+class EbtBalanceSmsApp
+  set :environment, :test
+end
+
 RSpec.configure do |config|
   config.include RackSpecHelpers
   config.before do
