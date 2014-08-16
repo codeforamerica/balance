@@ -14,7 +14,7 @@ class EbtBalanceSmsApp < Sinatra::Base
   end
 
   before do
-    puts "Request details — #{request.request_method} #{request.url}"
+    puts "Request details — #{request.request_method} #{request.url}" unless settings.environment == :test
   end
 
   post '/' do
