@@ -155,9 +155,21 @@ describe EbtBalanceSmsApp do
       expect(fake_twilio).to have_received(:send_text).with(
         to: caller_number,
         from: inbound_twilio_number,
-        body: 'Hi there! You can check your EBT card balance by text message here. Just reply to this message with your 16 digit EBT card number.'
+        body: 'Hi there! You can check your EBT card balance by text message here. Just reply to this message with your 16-digit EBT card number.'
       )
     end
 
+    it 'plays welcome message to caller and allows them to go to state line' do
+      desired_response = <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Gather timeout="10" action="http://twimlets.com/forward?PhoneNumber=877-328-9677" method="GET" numDigits="1">
+    <Play>https://s3-us-west-1.amazonaws.com/balance-cfa/balance-splash.mp3</Play>
+  </Gather>
+  <Redirect method="GET">http://twimlets.com/forward?PhoneNumber=877-328-9677</Redirect>
+</Response>
+EOF
+      expect(last_response.body).to eq(desired_response)
+    end
   end
 end
