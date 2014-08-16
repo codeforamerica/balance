@@ -14,7 +14,7 @@ class EbtBalanceSmsApp < Sinatra::Base
   end
 
   post '/' do
-    puts request.url
+    puts "Request details — #{request.request_method} #{request.url}"
     twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
     texter_phone_number = params["From"]
     inbound_twilio_number = params["To"]
@@ -43,7 +43,7 @@ class EbtBalanceSmsApp < Sinatra::Base
   end
 
   get '/get_balance' do
-    puts request.url
+    puts "Request details — #{request.request_method} #{request.url}"
     phone_number = params[:phone_number].strip
     twilio_number = params[:twilio_phone_number].strip
     Twilio::TwiML::Response.new do |r|
@@ -52,12 +52,12 @@ class EbtBalanceSmsApp < Sinatra::Base
   end
 
   post '/get_balance' do
-    puts request.url
+    puts "Request details — #{request.request_method} #{request.url}"
     # Twilio posts unused data here; necessary simply to avoid 404 error in logs
   end
 
   post '/:to_phone_number/:from_phone_number/send_balance' do
-    puts request.url
+    puts "Request details — #{request.request_method} #{request.url}"
     transcription = Transcription.new(params["TranscriptionText"])
     twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
     if transcription.invalid_ebt_number?
@@ -76,7 +76,7 @@ class EbtBalanceSmsApp < Sinatra::Base
   end
 
   post '/voice_call' do
-    puts request.url
+    puts "Request details — #{request.request_method} #{request.url}"
     twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
     caller_phone_number = params["From"]
     inbound_twilio_number = params["To"]
