@@ -14,6 +14,7 @@ class EbtBalanceSmsApp < Sinatra::Base
   end
 
   post '/' do
+    puts request.url
     twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
     texter_phone_number = params["From"]
     inbound_twilio_number = params["To"]
@@ -42,6 +43,7 @@ class EbtBalanceSmsApp < Sinatra::Base
   end
 
   get '/get_balance' do
+    puts request.url
     phone_number = params[:phone_number].strip
     twilio_number = params[:twilio_phone_number].strip
     Twilio::TwiML::Response.new do |r|
@@ -72,6 +74,7 @@ class EbtBalanceSmsApp < Sinatra::Base
   end
 
   post '/voice_call' do
+    puts request.url
     twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
     caller_phone_number = params["From"]
     inbound_twilio_number = params["To"]
