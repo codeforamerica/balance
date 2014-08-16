@@ -62,4 +62,24 @@ class EbtBalanceSmsApp < Sinatra::Base
       )
     end
   end
+
+  post '/voice_call' do
+    twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
+    caller_phone_number = params["From"]
+    inbound_twilio_number = params["To"]
+    twilio_service.send_text(
+      to: caller_phone_number,
+      from: inbound_twilio_number,
+      body: 'Hi there! You can check your EBT card balance by text message here. Just reply to this message with your 16-digit EBT card number.'
+    )
+    response = <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Gather timeout="10" action="http://twimlets.com/forward?PhoneNumber=877-328-9677" method="GET" numDigits="1">
+    <Play>https://s3-us-west-1.amazonaws.com/balance-cfa/balance-splash.mp3</Play>
+  </Gather>
+  <Redirect method="GET">http://twimlets.com/forward?PhoneNumber=877-328-9677</Redirect>
+</Response>
+EOF
+  end
 end

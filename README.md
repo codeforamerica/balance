@@ -22,7 +22,11 @@ To deploy on Heroku, close and push the repo, and then set the following environ
 
 with your Twilio credentials.
 
-Then, go onto your Twilio account, purchase a phone number, and set the messaging URL for the phone number to a `POST` pointed at the root URL of your server (eg, http://my-balance-instance.herokuapp.com )
+Then, go onto your Twilio account and purchase a phone number. Configure that phone number with the following request URLs:
+
+Voice: http://my-balance-url.herokuapp.com/voice_call (choose HTTP POST from dropdown)
+
+Messaging: http://my-balance-url.herokuapp.com (choose HTTP POST from dropdown)
 
 
 ## Running tests
