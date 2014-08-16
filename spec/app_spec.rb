@@ -131,9 +131,21 @@ describe EbtBalanceSmsApp do
   end
 
   describe 'POST /get_balance' do
-    it 'responds with 200 status' do
+    before do
       post '/get_balance'
+    end
+
+    it 'responds with 200 status' do
       expect(last_response.status).to eq(200)
+    end
+
+    it 'responds with valid Twiml that does nothing' do
+      desired_response = <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+</Response>
+EOF
+      expect(last_response.body).to eq(desired_response)
     end
   end
 
