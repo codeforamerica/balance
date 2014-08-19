@@ -99,4 +99,13 @@ EOF
 </Response>
 EOF
   end
+
+  post '/welcome' do
+    twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
+      twilio_service.send_text(
+        to: params[:user_number].strip,
+        from: params[:twilio_number],
+        body: "Welcome! Reply with your 16-digit EBT card number to check your balance. Now is a good time to save this number in your phone."
+      )
+  end
 end

@@ -184,4 +184,31 @@ EOF
       expect(last_response.body).to eq(desired_response)
     end
   end
+
+  describe 'welcome text message' do
+    context 'with a valid phone number' do
+      let(:body) { "welcome" }
+      let(:user_number) { "+12223334444" }
+      let(:twilio_number) { "+15556667777" }
+      let(:fake_twilio) { double("FakeTwilioService", :send_text => 'sent text') }
+
+      before do
+        allow(TwilioService).to receive(:new).and_return(fake_twilio)
+        post '/welcome', { "Body" => body, "From" => twilio_number, "To" => user_number }
+      end
+
+      it 'sends a text to the user with instructions' do
+        expect(fake_twilio).to have_received(:send_text).with(
+          to: user_number,
+          from: twilio_number,
+          body: "welcome"
+        )
+      end
+
+      it 'responds with 200 status' do
+        expect(last_response.status).to eq(200)
+      end
+    end
+
+  end
 end
