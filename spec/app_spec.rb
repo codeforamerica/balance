@@ -30,7 +30,7 @@ describe EbtBalanceSmsApp do
 
       it 'initiates an outbound Twilio call to EBT line with correct details' do
         expect(fake_twilio).to have_received(:make_call).with(
-          url: "http://example.org/get_balance?phone_number=#{texter_number}&twilio_phone_number=#{inbound_twilio_number}",
+          url: "http://example.org/get_balance?phone_number=#{texter_number}&twilio_phone_number=#{inbound_twilio_number}&state=#{from_state}",
           to: fake_state_handler.phone_number,
           send_digits: fake_state_handler.button_sequence,
           from: inbound_twilio_number,
