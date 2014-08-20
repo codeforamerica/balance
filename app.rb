@@ -4,6 +4,7 @@ require 'rack/ssl'
 require File.expand_path('../lib/transcription', __FILE__)
 require File.expand_path('../lib/debit_card_number', __FILE__)
 require File.expand_path('../lib/twilio_service', __FILE__)
+require File.expand_path('../lib/state_handler', __FILE__)
 
 class EbtBalanceSmsApp < Sinatra::Base
   use Rack::SSL unless settings.environment == :development or settings.environment == :test
@@ -21,13 +22,14 @@ class EbtBalanceSmsApp < Sinatra::Base
     twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
     texter_phone_number = params["From"]
     inbound_twilio_number = params["To"]
+    state_handler = StateHandler.new(params["FromState"])
     debit_number = DebitCardNumber.new(params["Body"])
     twiml_url = "#{settings.url_scheme}://#{request.env['HTTP_HOST']}/get_balance?phone_number=#{texter_phone_number}&twilio_phone_number=#{inbound_twilio_number}"
     if debit_number.is_valid?
       twilio_service.make_call(
         url: twiml_url,
-        to: "+18773289677",
-        send_digits: "ww1ww#{debit_number.to_s}",
+        to: state_handler.phone_number,
+        send_digits: state_handler.button_sequence(debit_number.number),
         from: inbound_twilio_number,
         method: "GET"
       )
