@@ -33,14 +33,19 @@ module StateHandler::CA
   extend self
   extend StateHandler::GenericMethods
 
+  # Phone number formatted with +1, area code, 7-digit number
   def phone_number
     '+18773289677'
   end
 
+  # Sequence of waits (w) and keystrokes (eg, 1)
+  # for submitting EBT number to phone service
   def button_sequence(ebt_number)
     "ww1ww#{ebt_number}"
   end
 
+  # Array of integers of allowed digit-length of an EBT card number
+  # For example: [16], [16, 19]
   def allowed_number_of_ebt_card_digits
     [16]
   end
