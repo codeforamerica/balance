@@ -50,8 +50,9 @@ class EbtBalanceSmsApp < Sinatra::Base
   get '/get_balance' do
     phone_number = params[:phone_number].strip
     twilio_number = params[:twilio_phone_number].strip
+    state = params[:state]
     Twilio::TwiML::Response.new do |r|
-      r.Record :transcribeCallback => "#{settings.url_scheme}://#{request.env['HTTP_HOST']}/#{phone_number}/#{twilio_number}/send_balance", :maxLength => 18
+      r.Record :transcribeCallback => "#{settings.url_scheme}://#{request.env['HTTP_HOST']}/#{state}/#{phone_number}/#{twilio_number}/send_balance", :maxLength => 18
     end.text
   end
 
@@ -64,7 +65,7 @@ class EbtBalanceSmsApp < Sinatra::Base
 EOF
   end
 
-  post '/:to_phone_number/:from_phone_number/send_balance' do
+  post '/:state/:to_phone_number/:from_phone_number/send_balance' do
     transcription = Transcription.new(params["TranscriptionText"])
     twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
     if transcription.invalid_ebt_number?

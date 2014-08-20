@@ -82,9 +82,10 @@ describe EbtBalanceSmsApp do
   describe 'GET /get_balance' do
     let(:texter_number) { "+12223334444" }
     let(:inbound_twilio_number) { "+15556667777" }
+    let(:state) { 'CA' }
 
     before do
-      get "/get_balance?phone_number=#{texter_number}&twilio_phone_number=#{inbound_twilio_number}"
+      get "/get_balance?phone_number=#{texter_number}&twilio_phone_number=#{inbound_twilio_number}&state=#{state}"
       parsed_response = Nokogiri::XML(last_response.body)
       record_attributes = parsed_response.children.children[0].attributes
       @callback_url = record_attributes["transcribeCallback"].value
@@ -92,7 +93,7 @@ describe EbtBalanceSmsApp do
     end
 
     it 'responds with callback to correct URL (ie, correct phone number)' do
-      expect(@callback_url).to eq("http://example.org/12223334444/15556667777/send_balance")
+      expect(@callback_url).to eq("http://example.org/CA/12223334444/15556667777/send_balance")
     end
 
     it 'has max recording length set correctly' do
@@ -108,11 +109,12 @@ describe EbtBalanceSmsApp do
     let(:to_phone_number) { "19998887777" }
     let(:twilio_number) { "+15556667777" }
     let(:fake_twilio) { double("FakeTwilioService", :send_text => 'sent text') }
+    let(:state) { 'CA' }
 
     context 'when EBT number is valid' do
       before do
         allow(TwilioService).to receive(:new).and_return(fake_twilio)
-        post "/#{to_phone_number}/#{twilio_number}/send_balance", { "TranscriptionText" => "Your food stamp balance is $123.45 your cash account balance is $0 as a reminder by saving the receipt from your last purchase and your last a cash purchase for Cash Bank Transaction you will always have your current balance at and will also print your balance on the Cash Withdrawal receipt to hear the number of Cash Withdrawal for that a transaction fee (running?) this month press 1 to hear your last 10 transactions report a transaction there file a claim or check the status of a claim press 2 to report your card lost stolen or damaged press 3 for (pin?) replacement press 4 for additional options press 5" }
+        post "/#{state}/#{to_phone_number}/#{twilio_number}/send_balance", { "TranscriptionText" => "Your food stamp balance is $123.45 your cash account balance is $0 as a reminder by saving the receipt from your last purchase and your last a cash purchase for Cash Bank Transaction you will always have your current balance at and will also print your balance on the Cash Withdrawal receipt to hear the number of Cash Withdrawal for that a transaction fee (running?) this month press 1 to hear your last 10 transactions report a transaction there file a claim or check the status of a claim press 2 to report your card lost stolen or damaged press 3 for (pin?) replacement press 4 for additional options press 5" }
       end
 
       it 'sends the correct amounts to user' do
@@ -131,7 +133,7 @@ describe EbtBalanceSmsApp do
     context 'when EBT number is NOT valid' do
       before do
         allow(TwilioService).to receive(:new).and_return(fake_twilio)
-        post "/#{to_phone_number}/#{twilio_number}/send_balance", { "TranscriptionText" => "Our records indicate the number you have entered it's for an non working card in case your number was entered incorrectly please reenter your 16 digit card number followed by the pound sign."}
+        post "/#{state}/#{to_phone_number}/#{twilio_number}/send_balance", { "TranscriptionText" => "Our records indicate the number you have entered it's for an non working card in case your number was entered incorrectly please reenter your 16 digit card number followed by the pound sign."}
       end
 
       it 'sends the user an error message' do
