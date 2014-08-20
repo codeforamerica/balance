@@ -8,7 +8,7 @@ describe EbtBalanceSmsApp do
       let(:inbound_twilio_number) { "+15556667777" }
       let(:fake_twilio) { double("FakeTwilioService", :make_call => 'made call', :send_text => 'sent text') }
       let(:from_state) { 'CA' }
-      let(:fake_state_handler) { double('FakeStateHandler', :phone_number => 'fake_state_phone_number', :button_sequence => "fake_button_sequence" ) }
+      let(:fake_state_handler) { double('FakeStateHandler', :phone_number => 'fake_state_phone_number', :button_sequence => "fake_button_sequence", :extract_valid_ebt_number_from_text => ebt_number ) }
 
       before do
         allow(TwilioService).to receive(:new).and_return(fake_twilio)
@@ -22,6 +22,10 @@ describe EbtBalanceSmsApp do
 
       it "calls the handler's button_sequence() method with the ebt_number" do
         expect(fake_state_handler).to have_received(:button_sequence).with(ebt_number)
+      end
+
+      it 'uses the handler to extract the EBT card number' do
+        expect(fake_state_handler).to have_received(:extract_valid_ebt_number_from_text).with(ebt_number)
       end
 
       it 'initiates an outbound Twilio call to EBT line with correct details' do
@@ -51,11 +55,14 @@ describe EbtBalanceSmsApp do
       let(:invalid_ebt_number) { "111122223333" }
       let(:texter_number) { "+12223334444" }
       let(:inbound_twilio_number) { "+15556667777" }
+      let(:from_state) { 'CA' }
       let(:fake_twilio) { double("FakeTwilioService", :make_call => 'made call', :send_text => 'sent text') }
+      let(:fake_state_handler) { double('FakeStateHandler', :phone_number => 'fake_state_phone_number', :button_sequence => "fake_button_sequence", :extract_valid_ebt_number_from_text => :invalid_number ) }
 
       before do
         allow(TwilioService).to receive(:new).and_return(fake_twilio)
-        post '/', { "Body" => invalid_ebt_number, "From" => texter_number, "To" => inbound_twilio_number }
+        allow(StateHandler).to receive(:for).with(from_state).and_return(fake_state_handler)
+        post '/', { "Body" => invalid_ebt_number, "From" => texter_number, "To" => inbound_twilio_number, "FromState" => from_state }
       end
 
       it 'sends a text to the user with error message' do
