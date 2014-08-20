@@ -22,7 +22,7 @@ class EbtBalanceSmsApp < Sinatra::Base
     twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
     texter_phone_number = params["From"]
     inbound_twilio_number = params["To"]
-    state_handler = StateHandler.new(params["FromState"])
+    state_handler = StateHandler.for(params["FromState"] || 'no state abbreviation')
     debit_number = DebitCardNumber.new(params["Body"])
     twiml_url = "#{settings.url_scheme}://#{request.env['HTTP_HOST']}/get_balance?phone_number=#{texter_phone_number}&twilio_phone_number=#{inbound_twilio_number}"
     if debit_number.is_valid?

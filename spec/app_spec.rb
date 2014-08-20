@@ -12,12 +12,12 @@ describe EbtBalanceSmsApp do
 
       before do
         allow(TwilioService).to receive(:new).and_return(fake_twilio)
-        allow(StateHandler).to receive(:new).with(from_state).and_return(fake_state_handler)
+        allow(StateHandler).to receive(:for).with(from_state).and_return(fake_state_handler)
         post '/', { "Body" => ebt_number, "From" => texter_number, "To" => inbound_twilio_number, "FromState" => from_state }
       end
 
       it 'initializes a new state handler' do
-        expect(StateHandler).to have_received(:new).with(from_state)
+        expect(StateHandler).to have_received(:for).with(from_state)
       end
 
       it "calls the handler's button_sequence() method with the ebt_number" do
