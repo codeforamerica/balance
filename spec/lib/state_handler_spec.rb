@@ -28,6 +28,25 @@ describe StateHandler::CA do
     desired_sequence = subject.button_sequence(fake_ebt_number)
     expect(desired_sequence).to eq("ww1ww#{fake_ebt_number}")
   end
+
+  it 'tells the number of digits a CA EBT card has' do
+    expect(subject.allowed_number_of_ebt_card_digits).to eq([16])
+  end
+
+  describe 'EBT number extraction' do
+    it 'extracts a valid EBT number for that state from plain text' do
+      ebt_number = '1111222233334444'
+      inbound_text = "my ebt is #{ebt_number}"
+      extracted_number = subject.extract_valid_ebt_number_from_text(inbound_text)
+      expect(extracted_number).to eq(ebt_number)
+    end
+
+    it 'returns :invalid_number if not a valid number' do
+      inbound_text = 'my ebt is 123'
+      extracted_number = subject.extract_valid_ebt_number_from_text(inbound_text)
+      expect(extracted_number).to eq(:invalid_number)
+    end
+  end
 end
 
 describe StateHandler::UnhandledState do
