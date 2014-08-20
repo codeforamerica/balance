@@ -2,11 +2,15 @@ module StateHandler
   extend self
 
   def for(state_abbreviation)
-    if constants.include?(state_abbreviation.to_sym)
+    if handled_states.include?(state_abbreviation.to_sym)
       eval("StateHandler::#{state_abbreviation}")
     else
       StateHandler::UnhandledState #StateHandler::CA by default, likely
     end
+  end
+
+  def handled_states
+    constants
   end
 end
 
