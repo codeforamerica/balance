@@ -17,3 +17,15 @@ describe StateHandler do
     end
   end
 end
+
+describe StateHandler::CA do
+  it 'serves the correct phone number' do
+    expect(subject.phone_number).to eq('+18773289677')
+  end
+
+  it 'gives correct button sequence' do
+    fake_ebt_number = '11112222'
+    desired_sequence = subject.button_sequence(fake_ebt_number)
+    expect(desired_sequence).to eq("ww1ww#{fake_ebt_number}")
+  end
+end

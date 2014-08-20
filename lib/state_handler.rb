@@ -14,4 +14,13 @@ module StateHandler::UnhandledState
 end
 
 module StateHandler::CA
+  extend self
+
+  def phone_number
+    '+18773289677'
+  end
+
+  def button_sequence(ebt_number)
+    "ww1ww#{ebt_number}"
+  end
 end
