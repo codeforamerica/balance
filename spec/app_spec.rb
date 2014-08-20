@@ -125,6 +125,10 @@ describe EbtBalanceSmsApp do
         post "/#{state}/#{to_phone_number}/#{twilio_number}/send_balance", { "TranscriptionText" => transcription_for_good_ebt_number }
       end
 
+      it 'uses the handler to convert the transcription text into a user reply' do
+        expect(fake_state_handler).to have_received(:transcribe_balance_response).with(transcription_for_good_ebt_number)
+      end
+
       it 'sends the correct amounts to user' do
         expect(fake_twilio).to have_received(:send_text).with(
           to: to_phone_number,
@@ -146,6 +150,10 @@ describe EbtBalanceSmsApp do
       before do
         allow(StateHandler).to receive(:for).with(state).and_return(fake_state_handler)
         post "/#{state}/#{to_phone_number}/#{twilio_number}/send_balance", { "TranscriptionText" => transcription_for_bad_ebt_number }
+      end
+
+      it 'uses the handler to convert the transcription text into a user reply' do
+        expect(fake_state_handler).to have_received(:transcribe_balance_response).with(transcription_for_bad_ebt_number)
       end
 
       it 'sends the user an error message' do
