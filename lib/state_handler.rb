@@ -10,9 +10,6 @@ module StateHandler
   end
 end
 
-module StateHandler::UnhandledState
-end
-
 module StateHandler::CA
   extend self
 
@@ -23,4 +20,8 @@ module StateHandler::CA
   def button_sequence(ebt_number)
     "ww1ww#{ebt_number}"
   end
+end
+
+module StateHandler::UnhandledState
+  extend StateHandler::CA
 end

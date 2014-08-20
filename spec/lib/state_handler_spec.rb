@@ -29,3 +29,10 @@ describe StateHandler::CA do
     expect(desired_sequence).to eq("ww1ww#{fake_ebt_number}")
   end
 end
+
+describe StateHandler::UnhandledState do
+  it 'uses CA handler methods' do
+    expect(subject.phone_number).to eq(StateHandler::CA.phone_number)
+    expect(subject.button_sequence('123')).to eq(StateHandler::CA.button_sequence('123'))
+  end
+end
