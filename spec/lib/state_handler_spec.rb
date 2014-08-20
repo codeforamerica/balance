@@ -108,6 +108,59 @@ describe StateHandler::CA do
   end
 end
 
+describe StateHandler::MO do
+  it 'serves the correct phone number' do
+    expect(subject.phone_number).to eq('+18009977777')
+  end
+
+  it 'gives correct button sequence' do
+    fake_ebt_number = '11112222'
+    desired_sequence = subject.button_sequence(fake_ebt_number)
+    expect(desired_sequence).to eq("ww1ww2w#{fake_ebt_number}")
+  end
+
+  it 'tells the number of digits a CA EBT card has' do
+    expect(subject.allowed_number_of_ebt_card_digits).to eq([16])
+  end
+
+  describe 'EBT number extraction' do
+    it 'extracts a valid EBT number for that state from plain text' do
+      ebt_number = '1111222233334444'
+      inbound_text = "my ebt is #{ebt_number}"
+      extracted_number = subject.extract_valid_ebt_number_from_text(inbound_text)
+      expect(extracted_number).to eq(ebt_number)
+    end
+
+    it 'returns :invalid_number if not a valid number' do
+      inbound_text = 'my ebt is 123'
+      extracted_number = subject.extract_valid_ebt_number_from_text(inbound_text)
+      expect(extracted_number).to eq(:invalid_number)
+    end
+  end
+
+=begin
+  describe 'balance transcription processing' do
+    context 'with transcription containing balance variation 1' do
+      let(:successful_transcription_1) { "" }
+
+      it 'sends response with balance amounts' do
+        reply_for_user = subject.transcribe_balance_response(successful_transcription_1)
+        expect(reply_for_user).to eq("Hi! Your food stamp balance is $136.33 and your cash balance is $0.")
+      end
+    end
+
+    context 'with EBT card not found in system' do
+      let(:transcription_ebt_not_found) { "" }
+
+      it 'sends EBT-not-found message' do
+        reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found)
+        expect(reply_for_user).to eq("I'm sorry, that card number was not found. Please try again. (Note: this service only works in California right now.)")
+      end
+    end
+  end
+=end
+end
+
 describe StateHandler::UnhandledState do
   it 'uses CA handler methods' do
     expect(subject.phone_number).to eq(StateHandler::CA.phone_number)
