@@ -1,7 +1,6 @@
 require 'sinatra'
 require 'twilio-ruby'
 require 'rack/ssl'
-require File.expand_path('../lib/transcription', __FILE__)
 require File.expand_path('../lib/twilio_service', __FILE__)
 require File.expand_path('../lib/state_handler', __FILE__)
 
@@ -66,21 +65,14 @@ EOF
   end
 
   post '/:state/:to_phone_number/:from_phone_number/send_balance' do
-    transcription = Transcription.new(params["TranscriptionText"])
+    state_handler = StateHandler.for(params[:state])
+    processed_balance_response_for_user = state_handler.transcribe_balance_response(params["Body"])
     twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
-    if transcription.invalid_ebt_number?
-      twilio_service.send_text(
-        to: params[:to_phone_number].strip,
-        from: params[:from_phone_number],
-        body: "I'm sorry, that card number was not found. Please try again. (Note: this service only works in California right now.)"
-      )
-    else
-      twilio_service.send_text(
-        to: params[:to_phone_number].strip,
-        from: params[:from_phone_number],
-        body: "Hi! Your food stamp balance is #{transcription.ebt_amount} and your cash balance is #{transcription.cash_amount}."
-      )
-    end
+    twilio_service.send_text(
+      to: params[:to_phone_number].strip,
+      from: params[:from_phone_number],
+      body: processed_balance_response_for_user
+    )
   end
 
   post '/voice_call' do

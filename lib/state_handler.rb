@@ -49,6 +49,20 @@ module StateHandler::CA
   def allowed_number_of_ebt_card_digits
     [16]
   end
+
+  # A method that takes a transcription and returns EITHER:
+  # 1. A message with the balance, OR
+  # 2. A message that the system could not find the balance
+  def transcribe_balance_response(transcription_text)
+    if transcription_text.include?("non working card")
+      "I'm sorry, that card number was not found. Please try again. (Note: this service only works in California right now.)"
+    else
+      regex_matches = transcription_text.scan(/(\$\S+)/)
+      ebt_amount = regex_matches[0][0]
+      cash_amount = regex_matches[1][0]
+      "Hi! Your food stamp balance is #{ebt_amount} and your cash balance is #{cash_amount}."
+    end
+  end
 end
 
 module StateHandler::UnhandledState
