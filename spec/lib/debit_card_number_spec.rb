@@ -15,6 +15,12 @@ describe DebitCardNumber do
     expect(debit_number.to_s).to eq('1111222233334444')
   end
 
+  it 'validates valid 16-digit input with dashes' do
+    debit_number = DebitCardNumber.new('1111-2222-3333-4444')
+    expect(debit_number.is_valid?).to eq(true)
+    expect(debit_number.to_s).to eq('1111222233334444')
+  end
+
   it 'invalidates a wrong-length number' do
     debit_number = DebitCardNumber.new('12345678901234')
     expect(debit_number.is_valid?).to eq(false)

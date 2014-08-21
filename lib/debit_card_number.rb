@@ -11,7 +11,8 @@ class DebitCardNumber
 
   def extract_number_from_text(text)
     whitespace_free_text = text.gsub(" ", "")
-    number_matches = whitespace_free_text.match(/\d+/)
+    dash_and_whitespace_free_text = whitespace_free_text.gsub("-", "")
+    number_matches = dash_and_whitespace_free_text.match(/\d+/)
     number_matches.to_s
   end
 
