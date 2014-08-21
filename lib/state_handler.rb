@@ -93,13 +93,12 @@ module StateHandler::MO
   # 1. A message with the balance, OR
   # 2. A message that the system could not find the balance
   def transcribe_balance_response(transcription_text)
-    if transcription_text.include?("non working card")
-      "I'm sorry, that card number was not found. Please try again. (Note: this service only works in California right now.)"
+    if transcription_text.include?("say I don't have it")
+      "I'm sorry, that card number was not found. Please try again."
     else
-      #regex_matches = transcription_text.scan(/(\$\S+)/)
-      #ebt_amount = regex_matches[0][0]
-      #cash_amount = regex_matches[1][0]
-      "Hi! Your food stamp balance is ebt_amount and your cash balance is cash_amount."
+      regex_matches = transcription_text.scan(/(\$\S+)/)
+      ebt_amount = regex_matches[0][0]
+      "Hi! Your food stamp balance is #{ebt_amount}."
     end
   end
 end

@@ -138,27 +138,25 @@ describe StateHandler::MO do
     end
   end
 
-=begin
   describe 'balance transcription processing' do
     context 'with transcription containing balance variation 1' do
-      let(:successful_transcription_1) { "" }
+      let(:successful_transcription_1) { "That is the balance you have $154.70 for food stamps to hear that again say repeat that or if you're down here just." }
 
       it 'sends response with balance amounts' do
         reply_for_user = subject.transcribe_balance_response(successful_transcription_1)
-        expect(reply_for_user).to eq("Hi! Your food stamp balance is $136.33 and your cash balance is $0.")
+        expect(reply_for_user).to eq("Hi! Your food stamp balance is $154.70.")
       end
     end
 
     context 'with EBT card not found in system' do
-      let(:transcription_ebt_not_found) { "" }
+      let(:transcription_ebt_not_found) { "If you don't have a card number say I don't have it otherwise please say or the 16 digit EBT card number now." }
 
       it 'sends EBT-not-found message' do
         reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found)
-        expect(reply_for_user).to eq("I'm sorry, that card number was not found. Please try again. (Note: this service only works in California right now.)")
+        expect(reply_for_user).to eq("I'm sorry, that card number was not found. Please try again.")
       end
     end
   end
-=end
 end
 
 describe StateHandler::UnhandledState do
