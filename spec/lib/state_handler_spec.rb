@@ -116,7 +116,7 @@ describe StateHandler::MO do
   it 'gives correct button sequence' do
     fake_ebt_number = '11112222'
     desired_sequence = subject.button_sequence(fake_ebt_number)
-    expect(desired_sequence).to eq("ww1ww2w#{fake_ebt_number}")
+    expect(desired_sequence).to eq("wwwwwwwwwwwwww1wwwwwwwwwwwwwwwwww2wwwwwwww#{fake_ebt_number}")
   end
 
   it 'tells the number of digits a CA EBT card has' do

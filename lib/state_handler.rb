@@ -80,7 +80,7 @@ module StateHandler::MO
   # Sequence of waits (w) and keystrokes (eg, 1)
   # for submitting EBT number to phone service
   def button_sequence(ebt_number)
-    "ww1ww2w#{ebt_number}"
+    "wwwwwwwwwwwwww1wwwwwwwwwwwwwwwwww2wwwwwwww#{ebt_number}"
   end
 
   # Array of integers of allowed digit-length of an EBT card number
