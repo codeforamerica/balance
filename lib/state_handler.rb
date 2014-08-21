@@ -19,7 +19,8 @@ module StateHandler::GenericMethods
 
   def extract_valid_ebt_number_from_text(text)
     whitespace_free_text = text.gsub(" ", "")
-    number_matches = whitespace_free_text.match(/\d+/)
+    dash_and_whitespace_free_text = whitespace_free_text.gsub("-", "")
+    number_matches = dash_and_whitespace_free_text.match(/\d+/)
     number = number_matches.to_s
     if allowed_number_of_ebt_card_digits.include?(number.length) && number.match(/\D+/) == nil
       return number

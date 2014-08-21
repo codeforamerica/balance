@@ -41,6 +41,18 @@ describe StateHandler::CA do
       expect(extracted_number).to eq(ebt_number)
     end
 
+    it 'processes a valid EBT number with spaces' do
+      ebt_number = '1111 2222 3333 4444'
+      extracted_number = subject.extract_valid_ebt_number_from_text(ebt_number)
+      expect(extracted_number).to eq("1111222233334444")
+    end
+
+    it 'processes a valid EBT number with dashes' do
+      ebt_number = '1111-2222-3333-4444'
+      extracted_number = subject.extract_valid_ebt_number_from_text(ebt_number)
+      expect(extracted_number).to eq("1111222233334444")
+    end
+
     it 'returns :invalid_number if not a valid number' do
       inbound_text = 'my ebt is 123'
       extracted_number = subject.extract_valid_ebt_number_from_text(inbound_text)
