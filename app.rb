@@ -1,9 +1,8 @@
 require 'sinatra'
 require 'twilio-ruby'
 require 'rack/ssl'
-require File.expand_path('../lib/transcription', __FILE__)
-require File.expand_path('../lib/debit_card_number', __FILE__)
 require File.expand_path('../lib/twilio_service', __FILE__)
+require File.expand_path('../lib/state_handler', __FILE__)
 
 class EbtBalanceSmsApp < Sinatra::Base
   use Rack::SSL unless settings.environment == :development or settings.environment == :test
@@ -21,13 +20,15 @@ class EbtBalanceSmsApp < Sinatra::Base
     twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
     texter_phone_number = params["From"]
     inbound_twilio_number = params["To"]
-    debit_number = DebitCardNumber.new(params["Body"])
-    twiml_url = "#{settings.url_scheme}://#{request.env['HTTP_HOST']}/get_balance?phone_number=#{texter_phone_number}&twilio_phone_number=#{inbound_twilio_number}"
-    if debit_number.is_valid?
+    state_abbreviation = params["FromState"] || "no_state_abbreviation_received"
+    state_handler = StateHandler.for(state_abbreviation)
+    debit_number = state_handler.extract_valid_ebt_number_from_text(params["Body"])
+    twiml_url = "#{settings.url_scheme}://#{request.env['HTTP_HOST']}/get_balance?phone_number=#{texter_phone_number}&twilio_phone_number=#{inbound_twilio_number}&state=#{state_abbreviation}"
+    if debit_number != :invalid_number
       twilio_service.make_call(
         url: twiml_url,
-        to: "+18773289677",
-        send_digits: "ww1ww#{debit_number.to_s}",
+        to: state_handler.phone_number,
+        send_digits: state_handler.button_sequence(debit_number),
         from: inbound_twilio_number,
         method: "GET"
       )
@@ -48,8 +49,9 @@ class EbtBalanceSmsApp < Sinatra::Base
   get '/get_balance' do
     phone_number = params[:phone_number].strip
     twilio_number = params[:twilio_phone_number].strip
+    state = params[:state]
     Twilio::TwiML::Response.new do |r|
-      r.Record :transcribeCallback => "#{settings.url_scheme}://#{request.env['HTTP_HOST']}/#{phone_number}/#{twilio_number}/send_balance", :maxLength => 18
+      r.Record :transcribeCallback => "#{settings.url_scheme}://#{request.env['HTTP_HOST']}/#{state}/#{phone_number}/#{twilio_number}/send_balance", :maxLength => 18
     end.text
   end
 
@@ -62,22 +64,15 @@ class EbtBalanceSmsApp < Sinatra::Base
 EOF
   end
 
-  post '/:to_phone_number/:from_phone_number/send_balance' do
-    transcription = Transcription.new(params["TranscriptionText"])
+  post '/:state/:to_phone_number/:from_phone_number/send_balance' do
+    state_handler = StateHandler.for(params[:state])
+    processed_balance_response_for_user = state_handler.transcribe_balance_response(params["TranscriptionText"])
     twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
-    if transcription.invalid_ebt_number?
-      twilio_service.send_text(
-        to: params[:to_phone_number].strip,
-        from: params[:from_phone_number],
-        body: "I'm sorry, that card number was not found. Please try again. (Note: this service only works in California right now.)"
-      )
-    else
-      twilio_service.send_text(
-        to: params[:to_phone_number].strip,
-        from: params[:from_phone_number],
-        body: "Hi! Your food stamp balance is #{transcription.ebt_amount} and your cash balance is #{transcription.cash_amount}."
-      )
-    end
+    twilio_service.send_text(
+      to: params[:to_phone_number].strip,
+      from: params[:from_phone_number],
+      body: processed_balance_response_for_user
+    )
   end
 
   post '/voice_call' do
