@@ -63,7 +63,7 @@ module StateHandler::CA
       cash_amount = regex_matches[1][0]
       "Hi! Your food stamp balance is #{ebt_amount} and your cash balance is #{cash_amount}."
     else
-      "I'm sorry, we're having trouble with the system right now. Please text back in a few minutes."
+      "I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes."
     end
   end
 end
