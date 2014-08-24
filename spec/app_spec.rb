@@ -191,12 +191,16 @@ EOF
 
   describe 'inbound voice call' do
     let(:caller_number) { "+12223334444" }
-    let(:inbound_twilio_number) { "+15556667777" }
+    let(:inbound_twilio_number) { "+14156667777" }
+    let(:to_state) { 'CA' }
+    let(:fake_state_phone_number) { '+18882223333' }
+    let(:fake_state_handler) { double('FakeStateHandler', :phone_number => fake_state_phone_number) }
     let(:fake_twilio) { double("FakeTwilioService", :send_text => 'sent text') }
 
     before do
       allow(TwilioService).to receive(:new).and_return(fake_twilio)
-      post '/voice_call', { "From" => caller_number, "To" => inbound_twilio_number }
+      allow(StateHandler).to receive(:for).with(to_state).and_return(fake_state_handler)
+      post '/voice_call', { "From" => caller_number, "To" => inbound_twilio_number, "ToState" => to_state }
     end
 
     it 'responds with 200 status' do
@@ -207,7 +211,7 @@ EOF
       expect(fake_twilio).to have_received(:send_text).with(
         to: caller_number,
         from: inbound_twilio_number,
-        body: 'Hi there! You can check your EBT card balance by text message here. Just reply to this message with your 16-digit EBT card number.'
+        body: "Hi there! You can check your EBT card balance by text message here. Just reply to this message with your EBT card number."
       )
     end
 
@@ -215,10 +219,10 @@ EOF
       desired_response = <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <Response>
-  <Gather timeout="10" action="http://twimlets.com/forward?PhoneNumber=877-328-9677" method="GET" numDigits="1">
+  <Gather timeout="10" action="http://twimlets.com/forward?PhoneNumber=#{fake_state_phone_number}" method="GET" numDigits="1">
     <Play>https://s3-us-west-1.amazonaws.com/balance-cfa/balance-splash.mp3</Play>
   </Gather>
-  <Redirect method="GET">http://twimlets.com/forward?PhoneNumber=877-328-9677</Redirect>
+  <Redirect method="GET">http://twimlets.com/forward?PhoneNumber=#{fake_state_phone_number}</Redirect>
 </Response>
 EOF
       expect(last_response.body).to eq(desired_response)
