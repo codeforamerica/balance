@@ -156,6 +156,15 @@ describe StateHandler::MO do
         expect(reply_for_user).to eq("I'm sorry, that card number was not found. Please try again.")
       end
     end
+
+    context 'with an empty transcription' do
+      let(:transcription_ebt_not_found) { "" }
+
+      it 'sends EBT-not-found message' do
+        reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found)
+        expect(reply_for_user).to eq("I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes.")
+      end
+    end
   end
 end
 
