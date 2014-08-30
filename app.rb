@@ -51,7 +51,7 @@ class EbtBalanceSmsApp < Sinatra::Base
     twilio_number = params[:twilio_phone_number].strip
     state = params[:state]
     Twilio::TwiML::Response.new do |r|
-      r.Record :transcribeCallback => "#{settings.url_scheme}://#{request.env['HTTP_HOST']}/#{state}/#{phone_number}/#{twilio_number}/send_balance", :maxLength => 18
+      r.Record :transcribeCallback => "#{settings.url_scheme}://#{request.env['HTTP_HOST']}/#{state}/#{phone_number}/#{twilio_number}/send_balance", :maxLength => 30
     end.text
   end
 
