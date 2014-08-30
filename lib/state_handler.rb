@@ -68,6 +68,35 @@ module StateHandler::CA
   end
 end
 
+module StateHandler::IL
+  extend self
+  extend StateHandler::GenericMethods
+
+  # Phone number formatted with +1, area code, 7-digit number
+  def phone_number
+    '+18006785465'
+  end
+
+  # Sequence of waits (w) and keystrokes (eg, 1)
+  # for submitting EBT number to phone service
+  def button_sequence(ebt_number)
+    "wwwwww1wwwwww#{ebt_number}#"
+  end
+
+  # Array of integers of allowed digit-length of an EBT card number
+  # For example: [16], [16, 19]
+  def allowed_number_of_ebt_card_digits
+    [16, 19]
+  end
+
+  # A method that takes a transcription and returns EITHER:
+  # 1. A message with the balance, OR
+  # 2. A message that the system could not find the balance
+  def transcribe_balance_response(transcription_text)
+    transcription_text
+  end
+end
+
 module StateHandler::MO
   extend self
   extend StateHandler::GenericMethods
