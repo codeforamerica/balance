@@ -96,6 +96,8 @@ module StateHandler::IL
     regex_matches = transcription_text.scan(/(\$\S+)/)
     if transcription_text.include?("this is correct press 1")
       "I'm sorry, that card number was not found. Please try again."
+    elsif transcription_text.include?("entry was invalid")
+      "I'm sorry, that card number was not found. Please try again."
     elsif regex_matches.count > 1
       ebt_amount = regex_matches[0][0]
       cash_amount = regex_matches[1][0]

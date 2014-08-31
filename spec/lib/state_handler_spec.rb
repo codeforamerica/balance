@@ -155,7 +155,16 @@ describe StateHandler::IL do
       end
     end
 
-    context 'with EBT card not found in system' do
+    context 'with EBT card not found in system (with 6014-starting EBT number)' do
+      let(:transcription_ebt_not_found) { "Your entry was invalid please try again please enter your 16 or 19 digit link card number you may press * at any time to start over again if you don't have your card please press 1 for further options." }
+
+      it 'sends EBT-not-found message' do
+        reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found)
+        expect(reply_for_user).to eq("I'm sorry, that card number was not found. Please try again.")
+      end
+    end
+
+    context 'with EBT card not found in system (with non-6014-starting EBT number, 1111222233334444)' do
       let(:transcription_ebt_not_found) { "233-3344. If this is correct press 1 if not press 2" }
 
       it 'sends EBT-not-found message' do
