@@ -41,6 +41,7 @@ class EbtBalanceSmsApp < Sinatra::Base
         url: twiml_url,
         to: state_handler.phone_number,
         from: inbound_twilio_number,
+        record: true,
         method: "GET"
       )
       twilio_service.send_text(
