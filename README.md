@@ -13,6 +13,16 @@ The original idea was by @lippytak with influence from @alanjosephwilliams's exp
 
 This is a project of CFA's Health SpecOps Team.
 
+## Metrics
+Our primary metrics are:
+- # of successful balance checks (growth)
+- # of unique users with 1+ successful balance checks (growth)
+- % of users who check their balance more than once (engagement)
+
+[![Metrics](http://keep-your-balance.herokuapp.com/chart)](http://keep-your-balance.herokuapp.com/)
+
+(click for interactive graph - sorry it's so slow!)
+
 ## Deployment
 
 To deploy on Heroku, close and push the repo, and then set the following environment variables:
