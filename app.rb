@@ -21,6 +21,7 @@ class EbtBalanceSmsApp < Sinatra::Base
   end
 
   post '/' do
+    puts params
     twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
     texter_phone_number = params["From"]
     inbound_twilio_number = params["To"]
