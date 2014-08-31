@@ -93,7 +93,16 @@ module StateHandler::IL
   # 1. A message with the balance, OR
   # 2. A message that the system could not find the balance
   def transcribe_balance_response(transcription_text)
-    transcription_text
+    regex_matches = transcription_text.scan(/(\$\S+)/)
+    if transcription_text.include?("this is correct press 1")
+      "I'm sorry, that card number was not found. Please try again."
+    elsif regex_matches.count > 1
+      ebt_amount = regex_matches[0][0]
+      cash_amount = regex_matches[1][0]
+      "Hi! Your food stamp balance is #{ebt_amount} and your cash balance is #{cash_amount}."
+    else
+      "I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes."
+    end
   end
 end
 
