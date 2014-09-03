@@ -55,6 +55,9 @@ module StateHandler::CA
   # 1. A message with the balance, OR
   # 2. A message that the system could not find the balance
   def transcribe_balance_response(transcription_text)
+    if transcription_text == nil
+      return "I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes."
+    end
     regex_matches = transcription_text.scan(/(\$\S+)/)
     if transcription_text.include?("non working card")
       "I'm sorry, that card number was not found. Please try again. (Note: this service only works in California right now.)"
@@ -93,6 +96,9 @@ module StateHandler::MO
   # 1. A message with the balance, OR
   # 2. A message that the system could not find the balance
   def transcribe_balance_response(transcription_text)
+    if transcription_text == nil
+      return "I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes."
+    end
     regex_matches = transcription_text.scan(/(\$\S+)/)
     if transcription_text.include?("say I don't have it")
       "I'm sorry, that card number was not found. Please try again."
