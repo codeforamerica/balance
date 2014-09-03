@@ -2,12 +2,13 @@ require 'spec_helper'
 
 describe EbtBalanceSmsApp do
   describe 'initial text' do
+    let(:texter_number) { "+12223334444" }
+    let(:inbound_twilio_number) { "+15556667777" }
+    let(:fake_twilio) { double("FakeTwilioService", :make_call => 'made call', :send_text => 'sent text') }
+    let(:to_state) { 'CA' }
+
     context 'with valid EBT number' do
       let(:ebt_number) { "1111222233334444" }
-      let(:texter_number) { "+12223334444" }
-      let(:inbound_twilio_number) { "+15556667777" }
-      let(:fake_twilio) { double("FakeTwilioService", :make_call => 'made call', :send_text => 'sent text') }
-      let(:to_state) { 'CA' }
       let(:fake_state_handler) { double('FakeStateHandler', :phone_number => 'fake_state_phone_number', :button_sequence => "fake_button_sequence", :extract_valid_ebt_number_from_text => ebt_number ) }
 
       before do
@@ -53,10 +54,6 @@ describe EbtBalanceSmsApp do
 
     context 'with INVALID EBT number' do
       let(:invalid_ebt_number) { "111122223333" }
-      let(:texter_number) { "+12223334444" }
-      let(:inbound_twilio_number) { "+15556667777" }
-      let(:to_state) { 'CA' }
-      let(:fake_twilio) { double("FakeTwilioService", :make_call => 'made call', :send_text => 'sent text') }
       let(:fake_state_handler) { double('FakeStateHandler', :phone_number => 'fake_state_phone_number', :button_sequence => "fake_button_sequence", :extract_valid_ebt_number_from_text => :invalid_number ) }
 
       before do
@@ -74,6 +71,35 @@ describe EbtBalanceSmsApp do
       end
 
       it 'responds with 200 status' do
+        expect(last_response.status).to eq(200)
+      end
+    end
+
+    context 'using Spanish-language Twilio phone number' do
+      let(:ebt_number) { "1111222233334444" }
+      let(:spanish_twilio_number) { "+19998887777" }
+      let(:inbound_twilio_number) { spanish_twilio_number }
+      let(:fake_state_handler) { double('FakeStateHandler', :phone_number => 'fake_state_phone_number', :button_sequence => "fake_button_sequence", :extract_valid_ebt_number_from_text => ebt_number ) }
+      let(:spanish_message_generator) { double('SpanishMessageGenerator', :thanks_please_wait => 'spanish thankspleasewait') }
+
+      before do
+        allow(TwilioService).to receive(:new).and_return(fake_twilio)
+        allow(StateHandler).to receive(:for).with(to_state).and_return(fake_state_handler)
+        allow(MessageGenerator).to receive(:new).with(:spanish).and_return(spanish_message_generator)
+        post '/', { "Body" => ebt_number, "From" => texter_number, "To" => inbound_twilio_number, "ToState" => to_state }
+      end
+
+      it 'sends a text IN SPANISH to the user telling them wait time' do
+        pending
+        expect(fake_twilio).to have_received(:send_text).with(
+          to: texter_number,
+          from: inbound_twilio_number,
+          body: spanish_message_generator.thanks_please_wait
+        )
+      end
+
+      it 'responds with 200 status' do
+        pending
         expect(last_response.status).to eq(200)
       end
     end
