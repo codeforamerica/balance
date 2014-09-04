@@ -1,6 +1,6 @@
 require 'app_spec_helper'
 
-describe EbtBalanceSmsApp do
+describe EbtBalanceSmsApp, :type => :feature do
   describe 'initial text' do
     let(:texter_number) { "+12223334444" }
     let(:inbound_twilio_number) { "+15556667777" }

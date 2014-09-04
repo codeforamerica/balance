@@ -1,4 +1,4 @@
-require 'app_spec_helper'
+require 'spec_helper'
 require 'rack/test'
 require 'nokogiri'
 require 'sinatra'
@@ -10,7 +10,7 @@ end
 
 RSpec.configure do |config|
   config.include RackSpecHelpers
-  config.before do
+  config.before(:example, :type => :feature) do
     require File.expand_path('../../lib/phone_number_processor', __FILE__)
     require File.expand_path('../support/fone_number_processor', __FILE__)
     allow(PhoneNumberProcessor).to receive(:new).and_return(FoneNumberProcessor.new)

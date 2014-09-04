@@ -1,5 +1,4 @@
-require 'phone_number_processor_spec_helper'
-require File.expand_path('../../../lib/phone_number_processor', __FILE__)
+require File.expand_path('../../phone_number_processor_spec_helper', __FILE__)
 
 describe PhoneNumberProcessor do
   describe '#language_for' do

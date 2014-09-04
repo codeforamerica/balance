@@ -1,4 +1,5 @@
-require 'spec_helper'
+require File.expand_path('../spec_helper', __FILE__)
+require File.expand_path('../../lib/phone_number_processor', __FILE__)
 require 'twilio-ruby'
 require 'vcr'
 
