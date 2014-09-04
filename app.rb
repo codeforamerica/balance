@@ -70,8 +70,10 @@ EOF
   end
 
   post '/:state/:to_phone_number/:from_phone_number/send_balance' do
-    state_handler = StateHandler.for(params[:state])
-    processed_balance_response_for_user = state_handler.transcribe_balance_response(params["TranscriptionText"])
+    twilio_phone_number = params[:from_phone_number]
+    language = settings.phone_number_processor.language_for(twilio_phone_number)
+    transcriber = StateHandler.for(params[:state]).transcriber_for(language)
+    processed_balance_response_for_user = transcriber.transcribe_balance_response(params["TranscriptionText"])
     twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
     twilio_service.send_text(
       to: params[:to_phone_number].strip,
