@@ -210,6 +210,31 @@ describe StateHandler::MO do
         end
       end
     end
+
+    context 'for Spanish' do
+      let(:transcriber) { subject.transcriber_for(:spanish) }
+
+      context 'with transcription containing balance variation 1' do
+        it 'sends response with balance amounts' do
+          reply_for_user = transcriber.transcribe_balance_response(successful_transcription_1)
+          expect(reply_for_user).to eq("¡Hola! El saldo de su cuenta de estampillas para comida es $154.70.")
+        end
+      end
+
+      context 'with EBT card not found in system' do
+        it 'sends EBT-not-found message' do
+          reply_for_user = transcriber.transcribe_balance_response(transcription_ebt_not_found)
+          expect(reply_for_user).to eq("Lo siento, no se encontró el número de tarjeta. Por favor, inténtelo de nuevo.")
+        end
+      end
+
+      context 'with a failed (nil) transcription' do
+        it 'sends EBT-not-found message' do
+          reply_for_user = transcriber.transcribe_balance_response(failed_transcription)
+          expect(reply_for_user).to eq("¡Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos.")
+        end
+      end
+    end
   end
 end
 
