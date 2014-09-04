@@ -52,29 +52,57 @@ module StateHandler::CA
   end
 
   def transcriber_for(language)
-    BalanceTranscriber.new(language)
+    BalanceTranscriber.for(language)
   end
 
-  class BalanceTranscriber
-    def initialize(language)
+  module BalanceTranscriber
+    def self.for(language)
+      if language == :spanish
+        Spanish
+      else
+        English
+      end
     end
 
-    # A method that takes a transcription and returns EITHER:
-    # 1. A message with the balance, OR
-    # 2. A message that the system could not find the balance
-    def transcribe_balance_response(transcription_text)
-      if transcription_text == nil
-        return "I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes."
+    module English
+      # A method that takes a transcription and returns EITHER:
+      # 1. A message with the balance, OR
+      # 2. A message that the system could not find the balance
+      def self.transcribe_balance_response(transcription_text)
+        if transcription_text == nil
+          return "I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes."
+        end
+        regex_matches = transcription_text.scan(/(\$\S+)/)
+        if transcription_text.include?("non working card")
+          "I'm sorry, that card number was not found. Please try again. (Note: this service only works in California right now.)"
+        elsif regex_matches.count > 1
+          ebt_amount = regex_matches[0][0]
+          cash_amount = regex_matches[1][0]
+          "Hi! Your food stamp balance is #{ebt_amount} and your cash balance is #{cash_amount}."
+        else
+          "I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes."
+        end
       end
-      regex_matches = transcription_text.scan(/(\$\S+)/)
-      if transcription_text.include?("non working card")
-        "I'm sorry, that card number was not found. Please try again. (Note: this service only works in California right now.)"
-      elsif regex_matches.count > 1
-        ebt_amount = regex_matches[0][0]
-        cash_amount = regex_matches[1][0]
-        "Hi! Your food stamp balance is #{ebt_amount} and your cash balance is #{cash_amount}."
-      else
-        "I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes."
+    end
+
+    module Spanish
+      # A method that takes a transcription and returns EITHER:
+      # 1. A message with the balance, OR
+      # 2. A message that the system could not find the balance
+      def self.transcribe_balance_response(transcription_text)
+        if transcription_text == nil
+          return "¡Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos."
+        end
+        regex_matches = transcription_text.scan(/(\$\S+)/)
+        if transcription_text.include?("non working card")
+          "Lo siento, no se encontró el número de tarjeta. Por favor, inténtelo de nuevo. (Nota: este servicio sólo funciona en California en este momento.)"
+        elsif regex_matches.count > 1
+          ebt_amount = regex_matches[0][0]
+          cash_amount = regex_matches[1][0]
+          "¡Hola! El saldo de su cuenta de estampillas para comida es #{ebt_amount} y su balance de dinero en efectivo es #{cash_amount}."
+        else
+          "¡Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos."
+        end
       end
     end
   end
