@@ -90,7 +90,6 @@ describe EbtBalanceSmsApp do
       end
 
       it 'sends a text IN SPANISH to the user telling them wait time' do
-        pending
         expect(fake_twilio).to have_received(:send_text).with(
           to: texter_number,
           from: inbound_twilio_number,
@@ -99,7 +98,6 @@ describe EbtBalanceSmsApp do
       end
 
       it 'responds with 200 status' do
-        pending
         expect(last_response.status).to eq(200)
       end
     end

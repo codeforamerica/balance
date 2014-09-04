@@ -4,6 +4,7 @@ require 'rack/ssl'
 require File.expand_path('../lib/twilio_service', __FILE__)
 require File.expand_path('../lib/state_handler', __FILE__)
 require File.expand_path('../lib/phone_number_processor', __FILE__)
+require File.expand_path('../lib/message_generator', __FILE__)
 
 class EbtBalanceSmsApp < Sinatra::Base
   use Rack::SSL unless settings.environment == :development or settings.environment == :test
@@ -26,6 +27,8 @@ class EbtBalanceSmsApp < Sinatra::Base
     state_handler = StateHandler.for(state_abbreviation)
     debit_number = state_handler.extract_valid_ebt_number_from_text(params["Body"])
     twiml_url = "#{settings.url_scheme}://#{request.env['HTTP_HOST']}/get_balance?phone_number=#{texter_phone_number}&twilio_phone_number=#{inbound_twilio_number}&state=#{state_abbreviation}"
+    language = settings.phone_number_processor.language_for(inbound_twilio_number)
+    message_generator = MessageGenerator.new(language)
     if debit_number != :invalid_number
       twilio_service.make_call(
         url: twiml_url,
@@ -37,13 +40,13 @@ class EbtBalanceSmsApp < Sinatra::Base
       twilio_service.send_text(
         to: texter_phone_number,
         from: inbound_twilio_number,
-        body: "Thanks! Please wait 1-2 minutes while we check your EBT balance."
+        body: message_generator.thanks_please_wait
       )
     else
       twilio_service.send_text(
         to: texter_phone_number,
         from: inbound_twilio_number,
-        body: "Sorry, that EBT number doesn't look right. Please try again."
+        body: message_generator.sorry_try_again
       )
     end
   end
