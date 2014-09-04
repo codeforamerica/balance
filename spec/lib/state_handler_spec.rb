@@ -65,7 +65,6 @@ describe StateHandler::CA do
     let(:successful_transcription_2) { "(Stamp?) balance is $123.11 your cash account balance is $11.32 as a reminder by saving the receipt from your last purchase and your last a cash purchase or cash back transaction you will always have your current balance at and will also print the balance on the Cash Withdrawal receipt to hear the number of Cash Withdrawal for that a transaction fee this month press 1 to hear your last 10 transactions report a transaction there file a claim or check the status of a claim press 2 to report your card lost stolen or damaged press 3 for (pin?) replacement press 4 for additional options press 5" }
       let(:successful_transcription_3) { "Devon Alan is $156.89 your cash account balance is $4.23 as a reminder by saving the receipt from your last purchase and your last the cash purchase or cash back for (action?) you will always have your current balance. I'm at and will also print the balance on the Cash Withdrawal receipt to hear the number of Cash Withdrawal for that a transaction fee (running?) this month press 1 to hear your last 10 transactions report a transaction there file a claim or check the status of a claim press 2 to report your card lost stolen or damaged press 3 for pain placement press 4 for additional options press 5" }
       let(:transcription_ebt_not_found) { "Our records indicate the number you have entered it's for an non working card in case your number was entered incorrectly please reenter your 16 digit card number followed by the pound sign." }
-      let(:transcription_ebt_not_found) { "" }
 
     context 'with transcription containing balance variation 1' do
       it 'sends response with balance amounts' do
@@ -95,18 +94,11 @@ describe StateHandler::CA do
       end
     end
 
-    context 'with a blank transcription' do
-      it 'sends EBT-not-found message' do
-        reply_for_user = subject.transcriber_for(:english).transcribe_balance_response(transcription_ebt_not_found)
-        expect(reply_for_user).to eq("I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes.")
-      end
-    end
-
     context 'with a failed (nil) transcription' do
-      let(:transcription_ebt_not_found) { nil }
+      let(:failed_transcription) { nil }
 
       it 'sends EBT-not-found message' do
-        reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found)
+        reply_for_user = subject.transcriber_for(:english).transcribe_balance_response(failed_transcription)
         expect(reply_for_user).to eq("I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes.")
       end
     end
