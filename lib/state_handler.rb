@@ -51,22 +51,31 @@ module StateHandler::CA
     [16]
   end
 
-  # A method that takes a transcription and returns EITHER:
-  # 1. A message with the balance, OR
-  # 2. A message that the system could not find the balance
-  def transcribe_balance_response(transcription_text)
-    if transcription_text == nil
-      return "I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes."
+  def transcriber_for(language)
+    BalanceTranscriber.new(language)
+  end
+
+  class BalanceTranscriber
+    def initialize(language)
     end
-    regex_matches = transcription_text.scan(/(\$\S+)/)
-    if transcription_text.include?("non working card")
-      "I'm sorry, that card number was not found. Please try again. (Note: this service only works in California right now.)"
-    elsif regex_matches.count > 1
-      ebt_amount = regex_matches[0][0]
-      cash_amount = regex_matches[1][0]
-      "Hi! Your food stamp balance is #{ebt_amount} and your cash balance is #{cash_amount}."
-    else
-      "I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes."
+
+    # A method that takes a transcription and returns EITHER:
+    # 1. A message with the balance, OR
+    # 2. A message that the system could not find the balance
+    def transcribe_balance_response(transcription_text)
+      if transcription_text == nil
+        return "I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes."
+      end
+      regex_matches = transcription_text.scan(/(\$\S+)/)
+      if transcription_text.include?("non working card")
+        "I'm sorry, that card number was not found. Please try again. (Note: this service only works in California right now.)"
+      elsif regex_matches.count > 1
+        ebt_amount = regex_matches[0][0]
+        cash_amount = regex_matches[1][0]
+        "Hi! Your food stamp balance is #{ebt_amount} and your cash balance is #{cash_amount}."
+      else
+        "I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes."
+      end
     end
   end
 end
