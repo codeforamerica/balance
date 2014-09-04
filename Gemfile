@@ -12,4 +12,6 @@ group :test, :development do
   gem 'dotenv'
   gem 'nokogiri'
   gem 'foreman'
+  gem 'vcr'
+  gem 'webmock'
 end
