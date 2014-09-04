@@ -114,21 +114,21 @@ describe StateHandler::CA do
       context 'with transcription containing balance variation 1' do
         it 'sends response with balance amounts' do
           reply_for_user = transcriber.transcribe_balance_response(successful_transcription_1)
-          expect(reply_for_user).to eq("¡Hola! El saldo de su cuenta de estampillas para comida es $136.33 y su balance de dinero en efectivo es $0.")
+          expect(reply_for_user).to eq("Hola! El saldo de su cuenta de estampillas para comida es $136.33 y su balance de dinero en efectivo es $0.")
         end
       end
 
       context 'with transcription containing balance variation 2' do
         it 'sends response with balance amounts' do
           reply_for_user = transcriber.transcribe_balance_response(successful_transcription_2)
-          expect(reply_for_user).to eq("¡Hola! El saldo de su cuenta de estampillas para comida es $123.11 y su balance de dinero en efectivo es $11.32.")
+          expect(reply_for_user).to eq("Hola! El saldo de su cuenta de estampillas para comida es $123.11 y su balance de dinero en efectivo es $11.32.")
         end
       end
 
       context 'with transcription containing balance variation 3' do
         it 'sends response with balance amounts' do
           reply_for_user = transcriber.transcribe_balance_response(successful_transcription_3)
-          expect(reply_for_user).to eq("¡Hola! El saldo de su cuenta de estampillas para comida es $156.89 y su balance de dinero en efectivo es $4.23.")
+          expect(reply_for_user).to eq("Hola! El saldo de su cuenta de estampillas para comida es $156.89 y su balance de dinero en efectivo es $4.23.")
         end
       end
 
@@ -144,7 +144,7 @@ describe StateHandler::CA do
 
         it 'sends EBT-not-found message' do
           reply_for_user = transcriber.transcribe_balance_response(failed_transcription)
-          expect(reply_for_user).to eq("¡Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos.")
+          expect(reply_for_user).to eq("Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos.")
         end
       end
     end
@@ -217,7 +217,7 @@ describe StateHandler::MO do
       context 'with transcription containing balance variation 1' do
         it 'sends response with balance amounts' do
           reply_for_user = transcriber.transcribe_balance_response(successful_transcription_1)
-          expect(reply_for_user).to eq("¡Hola! El saldo de su cuenta de estampillas para comida es $154.70.")
+          expect(reply_for_user).to eq("Hola! El saldo de su cuenta de estampillas para comida es $154.70.")
         end
       end
 
@@ -231,7 +231,7 @@ describe StateHandler::MO do
       context 'with a failed (nil) transcription' do
         it 'sends EBT-not-found message' do
           reply_for_user = transcriber.transcribe_balance_response(failed_transcription)
-          expect(reply_for_user).to eq("¡Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos.")
+          expect(reply_for_user).to eq("Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos.")
         end
       end
     end

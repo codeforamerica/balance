@@ -96,7 +96,7 @@ module StateHandler::CA
 
     module SpanishTranscriptionMessages
       def having_trouble_try_again_message
-        "¡Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos."
+        "Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos."
       end
 
       def card_number_not_found_message
@@ -104,7 +104,7 @@ module StateHandler::CA
       end
 
       def balance_message_for(ebt_amount, cash_amount)
-        "¡Hola! El saldo de su cuenta de estampillas para comida es #{ebt_amount} y su balance de dinero en efectivo es #{cash_amount}."
+        "Hola! El saldo de su cuenta de estampillas para comida es #{ebt_amount} y su balance de dinero en efectivo es #{cash_amount}."
       end
     end
   end
@@ -175,7 +175,7 @@ module StateHandler::MO
 
     module SpanishTranscriptionMessages
       def having_trouble_try_again_message
-        "¡Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos."
+        "Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos."
       end
 
       def card_number_not_found_message
@@ -183,7 +183,7 @@ module StateHandler::MO
       end
 
       def balance_message_for(ebt_amount)
-        "¡Hola! El saldo de su cuenta de estampillas para comida es #{ebt_amount}."
+        "Hola! El saldo de su cuenta de estampillas para comida es #{ebt_amount}."
       end
     end
   end

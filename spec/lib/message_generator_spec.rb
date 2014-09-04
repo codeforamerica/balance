@@ -30,7 +30,7 @@ describe MessageGenerator do
 
     describe '#thanks_please_wait' do
       it "says Spanish version of 'thanks please wait...'" do
-        desired_message = "¡Gracias! Favor de esperar 1-2 minutos mientras verificamos su saldo de EBT."
+        desired_message = "Gracias! Favor de esperar 1-2 minutos mientras verificamos su saldo de EBT."
         expect(mg.thanks_please_wait).to eq(desired_message)
       end
     end

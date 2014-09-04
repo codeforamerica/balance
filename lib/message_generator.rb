@@ -7,7 +7,7 @@ class MessageGenerator
 
   def thanks_please_wait
     if language == :spanish
-      "¡Gracias! Favor de esperar 1-2 minutos mientras verificamos su saldo de EBT."
+      "Gracias! Favor de esperar 1-2 minutos mientras verificamos su saldo de EBT."
     else
       "Thanks! Please wait 1-2 minutes while we check your EBT balance."
     end
