@@ -182,39 +182,32 @@ describe StateHandler::MO do
   end
 
   describe 'balance transcription processing' do
-    context 'with transcription containing balance variation 1' do
-      let(:successful_transcription_1) { "That is the balance you have $154.70 for food stamps to hear that again say repeat that or if you're down here just." }
+    let(:successful_transcription_1) { "That is the balance you have $154.70 for food stamps to hear that again say repeat that or if you're down here just." }
+    let(:transcription_ebt_not_found) { "If you don't have a card number say I don't have it otherwise please say or the 16 digit EBT card number now." }
+    let(:failed_transcription) { nil }
 
-      it 'sends response with balance amounts' do
-        reply_for_user = subject.transcribe_balance_response(successful_transcription_1)
-        expect(reply_for_user).to eq("Hi! Your food stamp balance is $154.70.")
+    context 'for English' do
+      let(:transcriber) { subject.transcriber_for(:english) }
+
+      context 'with transcription containing balance variation 1' do
+        it 'sends response with balance amounts' do
+          reply_for_user = transcriber.transcribe_balance_response(successful_transcription_1)
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $154.70.")
+        end
       end
-    end
 
-    context 'with EBT card not found in system' do
-      let(:transcription_ebt_not_found) { "If you don't have a card number say I don't have it otherwise please say or the 16 digit EBT card number now." }
-
-      it 'sends EBT-not-found message' do
-        reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found)
-        expect(reply_for_user).to eq("I'm sorry, that card number was not found. Please try again.")
+      context 'with EBT card not found in system' do
+        it 'sends EBT-not-found message' do
+          reply_for_user = transcriber.transcribe_balance_response(transcription_ebt_not_found)
+          expect(reply_for_user).to eq("I'm sorry, that card number was not found. Please try again.")
+        end
       end
-    end
 
-    context 'with an empty transcription' do
-      let(:transcription_ebt_not_found) { "" }
-
-      it 'sends EBT-not-found message' do
-        reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found)
-        expect(reply_for_user).to eq("I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes.")
-      end
-    end
-
-    context 'with a failed (nil) transcription' do
-      let(:transcription_ebt_not_found) { nil }
-
-      it 'sends EBT-not-found message' do
-        reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found)
-        expect(reply_for_user).to eq("I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes.")
+      context 'with a failed (nil) transcription' do
+        it 'sends EBT-not-found message' do
+          reply_for_user = transcriber.transcribe_balance_response(failed_transcription)
+          expect(reply_for_user).to eq("I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes.")
+        end
       end
     end
   end
