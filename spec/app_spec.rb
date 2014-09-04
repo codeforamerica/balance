@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'app_spec_helper'
 
 describe EbtBalanceSmsApp do
   describe 'initial text' do

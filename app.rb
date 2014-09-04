@@ -3,6 +3,7 @@ require 'twilio-ruby'
 require 'rack/ssl'
 require File.expand_path('../lib/twilio_service', __FILE__)
 require File.expand_path('../lib/state_handler', __FILE__)
+require File.expand_path('../lib/phone_number_processor', __FILE__)
 
 class EbtBalanceSmsApp < Sinatra::Base
   use Rack::SSL unless settings.environment == :development or settings.environment == :test
@@ -11,6 +12,7 @@ class EbtBalanceSmsApp < Sinatra::Base
   else
     set :url_scheme, 'http'
   end
+  set :phone_number_processor, PhoneNumberProcessor.new
 
   before do
     puts "Request details — #{request.request_method} #{request.url}" unless settings.environment == :test
