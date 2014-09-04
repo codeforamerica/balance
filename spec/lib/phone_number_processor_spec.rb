@@ -18,6 +18,15 @@ describe PhoneNumberProcessor do
       end
     end
 
+    context "given a phone number missing a + sign" do
+      let(:twilio_phone_number) { '14151112222' }
+
+      it 'returns the correct language' do
+        result = @pnp.language_for(twilio_phone_number)
+        expect(result).to eq(:spanish)
+      end
+    end
+
     context "given a phone number with no language in its friendly name" do
       let(:twilio_phone_number) { '+15103334444' }
 

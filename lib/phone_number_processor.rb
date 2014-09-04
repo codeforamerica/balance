@@ -19,6 +19,11 @@ class PhoneNumberProcessor
   end
 
   def language_for(phone_number)
-    lookup_hash[phone_number]
+    if phone_number.include?('+') == false
+      phone_number_with_plus = '+' + phone_number
+      lookup_hash[phone_number_with_plus]
+    else
+      lookup_hash[phone_number]
+    end
   end
 end
