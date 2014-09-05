@@ -70,6 +70,10 @@ describe StateHandler::CA do
     context 'for English' do
       let(:transcriber) { subject.transcriber_for(:english) }
 
+      it 'sets the language to :english' do
+        expect(transcriber.language).to eq(:english)
+      end
+
       context 'with transcription containing balance variation 1' do
         it 'sends response with balance amounts' do
           reply_for_user = transcriber.transcribe_balance_response(successful_transcription_1)
@@ -110,6 +114,10 @@ describe StateHandler::CA do
 
     context 'for Spanish' do
       let(:transcriber) { subject.transcriber_for(:spanish) }
+
+      it 'sets the language to :spanish' do
+        expect(transcriber.language).to eq(:spanish)
+      end
 
       context 'with transcription containing balance variation 1' do
         it 'sends response with balance amounts' do
@@ -189,6 +197,10 @@ describe StateHandler::MO do
     context 'for English' do
       let(:transcriber) { subject.transcriber_for(:english) }
 
+      it 'sets the language to :english' do
+        expect(transcriber.language).to eq(:english)
+      end
+
       context 'with transcription containing balance variation 1' do
         it 'sends response with balance amounts' do
           reply_for_user = transcriber.transcribe_balance_response(successful_transcription_1)
@@ -213,6 +225,10 @@ describe StateHandler::MO do
 
     context 'for Spanish' do
       let(:transcriber) { subject.transcriber_for(:spanish) }
+
+      it 'sets the language to :spanish' do
+        expect(transcriber.language).to eq(:spanish)
+      end
 
       context 'with transcription containing balance variation 1' do
         it 'sends response with balance amounts' do

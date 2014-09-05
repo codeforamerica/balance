@@ -52,19 +52,22 @@ module StateHandler::CA
   end
 
   def transcriber_for(language)
-    BalanceTranscriber.for(language)
+    BalanceTranscriber.new(language)
   end
 
-  module BalanceTranscriber
-    def self.for(language)
-      if language == :spanish
+  class BalanceTranscriber
+    attr_reader :language
+
+    def initialize(language)
+      @language = language
+      if @language == :spanish
         extend SpanishTranscriptionMessages
       else
         extend EnglishTranscriptionMessages
       end
     end
 
-    def self.transcribe_balance_response(transcription_text)
+    def transcribe_balance_response(transcription_text)
       if transcription_text == nil
         return having_trouble_try_again_message
       end
@@ -132,11 +135,14 @@ module StateHandler::MO
   end
 
   def transcriber_for(language)
-    BalanceTranscriber.for(language)
+    BalanceTranscriber.new(language)
   end
 
-  module BalanceTranscriber
-    def self.for(language)
+  class BalanceTranscriber
+    attr_reader :language
+
+    def initialize(language)
+      @language = language
       if language == :spanish
         extend SpanishTranscriptionMessages
       else
@@ -144,7 +150,7 @@ module StateHandler::MO
       end
     end
 
-    def self.transcribe_balance_response(transcription_text)
+    def transcribe_balance_response(transcription_text)
       if transcription_text == nil
         return having_trouble_try_again_message
       end
