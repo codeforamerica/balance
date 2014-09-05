@@ -212,10 +212,12 @@ EOF
     let(:fake_state_phone_number) { '+18882223333' }
     let(:fake_state_handler) { double('FakeStateHandler', :phone_number => fake_state_phone_number) }
     let(:fake_twilio) { double("FakeTwilioService", :send_text => 'sent text') }
+    let(:fake_message_generator) { double('MessageGenerator', :inbound_voice_call_text_message => 'voice call text message') }
 
     before do
       allow(TwilioService).to receive(:new).and_return(fake_twilio)
       allow(StateHandler).to receive(:for).with(to_state).and_return(fake_state_handler)
+      allow(MessageGenerator).to receive(:new).and_return(fake_message_generator)
       post '/voice_call', { "From" => caller_number, "To" => inbound_twilio_number, "ToState" => to_state }
     end
 
@@ -227,7 +229,7 @@ EOF
       expect(fake_twilio).to have_received(:send_text).with(
         to: caller_number,
         from: inbound_twilio_number,
-        body: "Hi there! You can check your EBT card balance by text message here. Just reply to this message with your EBT card number."
+        body: fake_message_generator.inbound_voice_call_text_message
       )
     end
 

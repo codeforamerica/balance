@@ -20,4 +20,12 @@ class MessageGenerator
       "Sorry, that EBT number doesn't look right. Please try again."
     end
   end
+
+  def inbound_voice_call_text_message
+    if language == :spanish
+      'Hola! Usted puede verificar su saldo de EBT por mensaje de texto. Solo responda a este mensaje con su número de tarjeta de EBT.'
+    else
+      'Hi there! You can check your EBT card balance by text message here. Just reply to this message with your EBT card number.'
+    end
+  end
 end

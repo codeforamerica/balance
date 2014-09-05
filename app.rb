@@ -87,10 +87,12 @@ EOF
     caller_phone_number = params["From"]
     inbound_twilio_number = params["To"]
     state_handler = StateHandler.for(params["ToState"])
+    language = settings.phone_number_processor.language_for(inbound_twilio_number)
+    message_generator = MessageGenerator.new(language)
     twilio_service.send_text(
       to: caller_phone_number,
       from: inbound_twilio_number,
-      body: 'Hi there! You can check your EBT card balance by text message here. Just reply to this message with your EBT card number.'
+      body: message_generator.inbound_voice_call_text_message
     )
     response = <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
