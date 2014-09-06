@@ -1,0 +1,67 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://mytwiliosid:mytwilioauth@api.twilio.com/2010-04-01/Accounts/mytwiliosid/IncomingPhoneNumbers.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Charset:
+      - utf-8
+      User-Agent:
+      - twilio-ruby/3.11.6 (ruby/x86_64-darwin11.0 2.1.1-p76)
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Thu, 04 Sep 2014 21:09:10 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '7170'
+      Connection:
+      - close
+      X-Powered-By:
+      - AT-5000
+      X-Shenanigans:
+      - none
+      Access-Control-Allow-Origin:
+      - https://www.twilio.com
+    body:
+      encoding: UTF-8
+      string: '{"first_page_uri": "/2010-04-01/Accounts/mytwiliosid/IncomingPhoneNumbers.json?Page=0&PageSize=50",
+        "end": 1, "previous_page_uri": null, "incoming_phone_numbers": [{"sid": "fakesid1",
+        "account_sid": "mytwiliosid", "friendly_name": "california-spanish",
+        "phone_number": "+14151112222", "voice_url": "https://demo.twilio.com/welcome/voice/",
+        "voice_method": "GET", "voice_fallback_url": "", "voice_fallback_method":
+        "POST", "voice_caller_id_lookup": false, "date_created": "Sun, 31 Aug 2014
+        19:42:51 +0000", "date_updated": "Sun, 31 Aug 2014 21:18:02 +0000", "sms_url":
+        "http://4352f121.ngrok.com/", "sms_method": "GET", "sms_fallback_url": "",
+        "sms_fallback_method": "POST", "capabilities": {"voice": true, "sms": true,
+        "mms": false}, "status_callback": "", "status_callback_method": "POST", "api_version":
+        "2010-04-01", "voice_application_sid": "", "sms_application_sid": "", "uri":
+        "/2010-04-01/Accounts/mytwiliosid/IncomingPhoneNumbers/fakesid1.json"},
+        {"sid": "fakesid2", "account_sid": "mytwiliosid",
+        "friendly_name": "adwords-splash-page", "phone_number": "+15103334444", "voice_url":
+        "https://example.com/voice_call", "voice_method": "POST",
+        "voice_fallback_url": "", "voice_fallback_method": "POST", "voice_caller_id_lookup":
+        false, "date_created": "Sun, 31 Aug 2014 20:10:34 +0000", "date_updated":
+        "Sun, 31 Aug 2014 20:15:37 +0000", "sms_url": "https://example.com",
+        "sms_method": "POST", "sms_fallback_url": "", "sms_fallback_method": "POST",
+        "capabilities": {"voice": true, "sms": true, "mms": false}, "status_callback":
+        "", "status_callback_method": "POST", "api_version": "2010-04-01", "voice_application_sid":
+        "", "sms_application_sid": "", "uri": "/2010-04-01/Accounts/mytwiliosid/IncomingPhoneNumbers/fakesid2.json"}],
+        "uri": "/2010-04-01/Accounts/mytwiliosid/IncomingPhoneNumbers.json",
+        "page_size": 50, "num_pages": 1, "start": 0, "next_page_uri": null, "total":
+        2, "last_page_uri": "/2010-04-01/Accounts/mytwiliosid/IncomingPhoneNumbers.json?Page=0&PageSize=50",
+        "page": 0}'
+    http_version:
+  recorded_at: Thu, 04 Sep 2014 21:09:10 GMT
+recorded_with: VCR 2.9.0
