@@ -285,8 +285,8 @@ describe StateHandler::TX do
   end
 
   describe 'balance transcription processing' do
-    let(:successful_transcription_1) { "" }
-    let(:transcription_ebt_not_found) { "" }
+    let(:successful_transcription_1) { "(Who?) the account balance for the card number entered is $154.70 to end this call press 1 to repeat your account balance press 2 to report a lost or still in card press 3 if you would like to select a new pen for your account." }
+    let(:transcription_ebt_not_found) { "Hey, Dan Invalid Card Number please enter the 16 numbers on the first line of the card and the last 3 numbers in the lower left hand corner on the second line of the card if your card has been lost or stolen and you do not have your card number please hold to disable your card please enter (then?)." }
     let(:failed_transcription) { nil }
 
     context 'for English' do

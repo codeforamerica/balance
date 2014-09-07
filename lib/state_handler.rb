@@ -233,13 +233,11 @@ module StateHandler::TX
     end
 
     def transcribe_balance_response(transcription_text)
-      return transcription_text
-=begin
       if transcription_text == nil
         return having_trouble_try_again_message
       end
       regex_matches = transcription_text.scan(/(\$\S+)/)
-      if transcription_text.include?("say I don't have it")
+      if transcription_text.include?("please enter the")
         card_number_not_found_message
       elsif regex_matches.count > 0
         ebt_amount = regex_matches[0][0]
@@ -247,7 +245,6 @@ module StateHandler::TX
       else
         having_trouble_try_again_message
       end
-=end
     end
 
     module EnglishTranscriptionMessages
