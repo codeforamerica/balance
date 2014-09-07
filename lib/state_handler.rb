@@ -155,7 +155,7 @@ module StateHandler::MA
         return having_trouble_try_again_message
       end
       regex_matches = transcription_text.scan(/(\$\S+)/)
-      if transcription_text.include?("non working card")
+      if transcription_text.include?("invalid card number")
         card_number_not_found_message
       elsif regex_matches.count > 1
         ebt_amount = regex_matches[0][0]
@@ -172,7 +172,7 @@ module StateHandler::MA
       end
 
       def card_number_not_found_message
-        "I'm sorry, that card number was not found. Please try again. (Note: this service only works in California right now.)"
+        "I'm sorry, that card number was not found. Please try again."
       end
 
       def balance_message_for(ebt_amount, cash_amount)
