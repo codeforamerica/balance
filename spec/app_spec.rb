@@ -21,19 +21,10 @@ describe EbtBalanceSmsApp, :type => :feature do
         expect(StateHandler).to have_received(:for).with(to_state)
       end
 
-      it "calls the handler's button_sequence() method with the ebt_number" do
-        expect(fake_state_handler).to have_received(:button_sequence).with(ebt_number)
-      end
-
-      it 'uses the handler to extract the EBT card number' do
-        expect(fake_state_handler).to have_received(:extract_valid_ebt_number_from_text).with(ebt_number)
-      end
-
       it 'initiates an outbound Twilio call to EBT line with correct details' do
         expect(fake_twilio).to have_received(:make_call).with(
-          url: "http://example.org/get_balance?phone_number=#{texter_number}&twilio_phone_number=#{inbound_twilio_number}&state=#{to_state}",
+          url: "http://example.org/get_balance?phone_number=#{texter_number}&twilio_phone_number=#{inbound_twilio_number}&state=#{to_state}&ebt_number=#{ebt_number}",
           to: fake_state_handler.phone_number,
-          send_digits: fake_state_handler.button_sequence,
           from: inbound_twilio_number,
           method: 'GET'
         )
@@ -105,15 +96,27 @@ describe EbtBalanceSmsApp, :type => :feature do
 
   describe 'GET /get_balance' do
     let(:texter_number) { "+12223334444" }
+    let(:ebt_number) { "5555444433332222" }
     let(:inbound_twilio_number) { "+15556667777" }
     let(:state) { 'CA' }
+    let(:ebt_number) { "1111222233334444" }
+    let(:fake_state_handler) { double('FakeStateHandler', :button_sequence => "fake_button_sequence" ) }
 
     before do
-      get "/get_balance?phone_number=#{texter_number}&twilio_phone_number=#{inbound_twilio_number}&state=#{state}"
+      allow(StateHandler).to receive(:for).and_return(fake_state_handler)
+      get "/get_balance?phone_number=#{texter_number}&twilio_phone_number=#{inbound_twilio_number}&state=#{state}&ebt_number=#{ebt_number}"
       parsed_response = Nokogiri::XML(last_response.body)
-      record_attributes = parsed_response.children.children[0].attributes
-      @callback_url = record_attributes["transcribeCallback"].value
-      @maxlength = record_attributes["maxLength"].value
+      @play_digits = parsed_response.children.children[0].get_attribute("digits")
+      @callback_url = parsed_response.children.children[1].get_attribute("transcribeCallback")
+      @maxlength = parsed_response.children.children[1].get_attribute("maxLength")
+    end
+
+    it "passes the EBT number to the state handler's button sequence method" do
+      expect(fake_state_handler).to have_received(:button_sequence).with(ebt_number)
+    end
+
+    it 'plays the button sequence for the state' do
+      expect(@play_digits).to eq('fake_button_sequence')
     end
 
     it 'responds with callback to correct URL (ie, correct phone number)' do
