@@ -233,6 +233,8 @@ module StateHandler::TX
     end
 
     def transcribe_balance_response(transcription_text)
+      return transcription_text
+=begin
       if transcription_text == nil
         return having_trouble_try_again_message
       end
@@ -245,6 +247,7 @@ module StateHandler::TX
       else
         having_trouble_try_again_message
       end
+=end
     end
 
     module EnglishTranscriptionMessages
