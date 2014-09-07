@@ -15,22 +15,12 @@
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
-require 'rack/test'
 require 'pry'
 require 'dotenv'
-require 'nokogiri'
-require File.expand_path('../../app', __FILE__)
-require File.expand_path('../rack_spec_helpers', __FILE__)
-
-class EbtBalanceSmsApp
-  set :environment, :test
-end
 
 RSpec.configure do |config|
-  config.include RackSpecHelpers
   config.before do
     Dotenv.load
-    self.app = EbtBalanceSmsApp
   end
 # The settings below are suggested to provide a good initial experience
 # with RSpec, but feel free to customize to your heart's content.
