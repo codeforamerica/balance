@@ -63,7 +63,7 @@ class EbtBalanceSmsApp < Sinatra::Base
     Twilio::TwiML::Response.new do |r|
       r.Play digits: state_handler.button_sequence(params['debit_number'])
       r.Record transcribe: true,
-        transcribeCallback: '/transcribe_callback',
+        transcribeCallback: "#{settings.url_scheme}://#{request.env['HTTP_HOST']}/#{state}/#{phone_number}/#{twilio_number}/send_balance",
         maxLength: 18
     end.text
   end
