@@ -151,21 +151,19 @@ module StateHandler::MA
     end
 
     def transcribe_balance_response(transcription_text)
-      return transcription_text
-=begin
       if transcription_text == nil
         return having_trouble_try_again_message
       end
       regex_matches = transcription_text.scan(/(\$\S+)/)
-      if transcription_text.include?("say I don't have it")
+      if transcription_text.include?("non working card")
         card_number_not_found_message
-      elsif regex_matches.count > 0
+      elsif regex_matches.count > 1
         ebt_amount = regex_matches[0][0]
-        balance_message_for(ebt_amount)
+        cash_amount = regex_matches[1][0]
+        balance_message_for(ebt_amount, cash_amount)
       else
         having_trouble_try_again_message
       end
-=end
     end
 
     module EnglishTranscriptionMessages
@@ -174,11 +172,11 @@ module StateHandler::MA
       end
 
       def card_number_not_found_message
-        "I'm sorry, that card number was not found. Please try again."
+        "I'm sorry, that card number was not found. Please try again. (Note: this service only works in California right now.)"
       end
 
-      def balance_message_for(ebt_amount)
-        "Hi! Your food stamp balance is #{ebt_amount}."
+      def balance_message_for(ebt_amount, cash_amount)
+        "Hi! Your food stamp balance is #{ebt_amount} and your cash balance is #{cash_amount}."
       end
     end
 
@@ -188,11 +186,11 @@ module StateHandler::MA
       end
 
       def card_number_not_found_message
-        "Lo siento, no se encontró el número de tarjeta. Por favor, inténtelo de nuevo."
+        "Lo siento, no se encontró el número de tarjeta. Por favor, inténtelo de nuevo. (Nota: este servicio sólo funciona en California en este momento.)"
       end
 
-      def balance_message_for(ebt_amount)
-        "Hola! El saldo de su cuenta de estampillas para comida es #{ebt_amount}."
+      def balance_message_for(ebt_amount, cash_amount)
+        "Hola! El saldo de su cuenta de estampillas para comida es #{ebt_amount} y su balance de dinero en efectivo es #{cash_amount}."
       end
     end
   end
