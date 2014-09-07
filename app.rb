@@ -25,16 +25,16 @@ class EbtBalanceSmsApp < Sinatra::Base
     inbound_twilio_number = params["To"]
     state_abbreviation = params["ToState"] || "no_state_abbreviation_received"
     state_handler = StateHandler.for(state_abbreviation)
-    debit_number = state_handler.extract_valid_ebt_number_from_text(params["Body"])
+    ebt_number = state_handler.extract_valid_ebt_number_from_text(params["Body"])
     twiml_url = "#{settings.url_scheme}://"
     twiml_url << "#{request.env['HTTP_HOST']}/get_balance"
     twiml_url << "?phone_number=#{texter_phone_number}"
     twiml_url << "&twilio_phone_number=#{inbound_twilio_number}"
     twiml_url << "&state=#{state_abbreviation}"
-    twiml_url << "&debit_number=#{debit_number}"
+    twiml_url << "&ebt_number=#{ebt_number}"
     language = settings.phone_number_processor.language_for(inbound_twilio_number)
     message_generator = MessageGenerator.new(language)
-    if debit_number != :invalid_number
+    if ebt_number != :invalid_number
       twilio_service.make_call(
         url: twiml_url,
         to: state_handler.phone_number,
@@ -61,7 +61,7 @@ class EbtBalanceSmsApp < Sinatra::Base
     state = params[:state]
     state_handler = StateHandler.for(state)
     Twilio::TwiML::Response.new do |r|
-      r.Play digits: state_handler.button_sequence(params['debit_number'])
+      r.Play digits: state_handler.button_sequence(params['ebt_number'])
       r.Record transcribe: true,
         transcribeCallback: "#{settings.url_scheme}://#{request.env['HTTP_HOST']}/#{state}/#{phone_number}/#{twilio_number}/send_balance",
         maxLength: 18
