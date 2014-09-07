@@ -28,4 +28,12 @@ class MessageGenerator
       'Hi there! You can check your EBT card balance by text message here. Just reply to this message with your EBT card number.'
     end
   end
+  
+  def welcome
+    if language == :spanish
+      'Hola! Usted puede verificar su saldo de EBT por mensaje de texto. Solo responda a este mensaje con su número de tarjeta de EBT.'
+    else
+      "Hi there! Reply to this message with your EBT card number and I'll check your balance for you."
+    end
+  end
 end
