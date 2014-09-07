@@ -121,7 +121,7 @@ EOF
       texter_phone_number = Phoner::Phone.parse(texter_phone_number).to_s
       inbound_twilio_number = params["inbound_twilio_number"]
       language = settings.phone_number_processor.language_for(inbound_twilio_number)
-      message_generator = MessageGenerator.new(language)    
+      message_generator = MessageGenerator.new(language)
       twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
         twilio_service.send_text(
           to: texter_phone_number,
