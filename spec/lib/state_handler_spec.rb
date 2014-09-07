@@ -26,7 +26,7 @@ describe StateHandler::CA do
   it 'gives correct button sequence' do
     fake_ebt_number = '11112222'
     desired_sequence = subject.button_sequence(fake_ebt_number)
-    expect(desired_sequence).to eq("ww1ww#{fake_ebt_number}")
+    expect(desired_sequence).to eq("wwww1wwwwww#{fake_ebt_number}ww")
   end
 
   it 'tells the number of digits a CA EBT card has' do
@@ -192,6 +192,101 @@ describe StateHandler::MO do
   describe 'balance transcription processing' do
     let(:successful_transcription_1) { "That is the balance you have $154.70 for food stamps to hear that again say repeat that or if you're down here just." }
     let(:transcription_ebt_not_found) { "If you don't have a card number say I don't have it otherwise please say or the 16 digit EBT card number now." }
+    let(:failed_transcription) { nil }
+
+    context 'for English' do
+      let(:transcriber) { subject.transcriber_for(:english) }
+
+      it 'sets the language to :english' do
+        expect(transcriber.language).to eq(:english)
+      end
+
+      context 'with transcription containing balance variation 1' do
+        it 'sends response with balance amounts' do
+          reply_for_user = transcriber.transcribe_balance_response(successful_transcription_1)
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $154.70.")
+        end
+      end
+
+      context 'with EBT card not found in system' do
+        it 'sends EBT-not-found message' do
+          reply_for_user = transcriber.transcribe_balance_response(transcription_ebt_not_found)
+          expect(reply_for_user).to eq("I'm sorry, that card number was not found. Please try again.")
+        end
+      end
+
+      context 'with a failed (nil) transcription' do
+        it 'sends EBT-not-found message' do
+          reply_for_user = transcriber.transcribe_balance_response(failed_transcription)
+          expect(reply_for_user).to eq("I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes.")
+        end
+      end
+    end
+
+    context 'for Spanish' do
+      let(:transcriber) { subject.transcriber_for(:spanish) }
+
+      it 'sets the language to :spanish' do
+        expect(transcriber.language).to eq(:spanish)
+      end
+
+      context 'with transcription containing balance variation 1' do
+        it 'sends response with balance amounts' do
+          reply_for_user = transcriber.transcribe_balance_response(successful_transcription_1)
+          expect(reply_for_user).to eq("Hola! El saldo de su cuenta de estampillas para comida es $154.70.")
+        end
+      end
+
+      context 'with EBT card not found in system' do
+        it 'sends EBT-not-found message' do
+          reply_for_user = transcriber.transcribe_balance_response(transcription_ebt_not_found)
+          expect(reply_for_user).to eq("Lo siento, no se encontró el número de tarjeta. Por favor, inténtelo de nuevo.")
+        end
+      end
+
+      context 'with a failed (nil) transcription' do
+        it 'sends EBT-not-found message' do
+          reply_for_user = transcriber.transcribe_balance_response(failed_transcription)
+          expect(reply_for_user).to eq("Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos.")
+        end
+      end
+    end
+  end
+end
+
+describe StateHandler::TX do
+  it 'serves the correct phone number' do
+    expect(subject.phone_number).to eq('+18007777328')
+  end
+
+  it 'gives correct button sequence' do
+    fake_ebt_number = '11112222'
+    desired_sequence = subject.button_sequence(fake_ebt_number)
+    expect(desired_sequence).to eq("wwww1wwwwww#{fake_ebt_number}ww")
+  end
+
+  it 'tells the number of digits a CA EBT card has' do
+    expect(subject.allowed_number_of_ebt_card_digits).to eq([19])
+  end
+
+  describe 'EBT number extraction' do
+    it 'extracts a valid EBT number for that state from plain text' do
+      ebt_number = '1111222233334444555'
+      inbound_text = "my ebt is #{ebt_number}"
+      extracted_number = subject.extract_valid_ebt_number_from_text(inbound_text)
+      expect(extracted_number).to eq(ebt_number)
+    end
+
+    it 'returns :invalid_number if not a valid number' do
+      inbound_text = 'my ebt is 123'
+      extracted_number = subject.extract_valid_ebt_number_from_text(inbound_text)
+      expect(extracted_number).to eq(:invalid_number)
+    end
+  end
+
+  describe 'balance transcription processing' do
+    let(:successful_transcription_1) { "(Who?) the account balance for the card number entered is $154.70 to end this call press 1 to repeat your account balance press 2 to report a lost or still in card press 3 if you would like to select a new pen for your account." }
+    let(:transcription_ebt_not_found) { "Hey, Dan Invalid Card Number please enter the 16 numbers on the first line of the card and the last 3 numbers in the lower left hand corner on the second line of the card if your card has been lost or stolen and you do not have your card number please hold to disable your card please enter (then?)." }
     let(:failed_transcription) { nil }
 
     context 'for English' do
