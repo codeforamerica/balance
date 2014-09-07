@@ -17,6 +17,7 @@ GEM
     multi_json (1.10.1)
     nokogiri (1.6.3.1)
       mini_portile (= 0.6.0)
+    phone (1.2.3)
     pry (0.9.12.6)
       coderay (~> 1.0)
       method_source (~> 0.8)
@@ -64,6 +65,7 @@ DEPENDENCIES
   dotenv
   foreman
   nokogiri
+  phone
   pry
   rack-ssl
   rack-test
