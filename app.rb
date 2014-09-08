@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'twilio-ruby'
 require 'rack/ssl'
+require 'phone'
 require File.expand_path('../lib/twilio_service', __FILE__)
 require File.expand_path('../lib/state_handler', __FILE__)
 require File.expand_path('../lib/phone_number_processor', __FILE__)
@@ -111,5 +112,25 @@ EOF
   <Redirect method="GET">http://twimlets.com/forward?PhoneNumber=#{state_handler.phone_number}</Redirect>
 </Response>
 EOF
+  end
+
+  post '/welcome' do
+    Phoner::Phone.default_country_code = '1'
+    texter_phone_number = params["texter_phone_number"]
+    if Phoner::Phone.valid? texter_phone_number
+      texter_phone_number = Phoner::Phone.parse(texter_phone_number).to_s
+      inbound_twilio_number = params["inbound_twilio_number"]
+      language = settings.phone_number_processor.language_for(inbound_twilio_number)
+      message_generator = MessageGenerator.new(language)
+      twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
+        twilio_service.send_text(
+          to: texter_phone_number,
+          from: inbound_twilio_number,
+          body: message_generator.welcome
+        )
+      "Great! I just sent you a text message with instructions. I hope you find this service useful!"
+    else
+      redirect "#{request.referrer}"
+    end
   end
 end
