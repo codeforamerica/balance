@@ -159,6 +159,82 @@ describe StateHandler::CA do
   end
 end
 
+describe StateHandler::IL do
+  it 'serves the correct phone number' do
+    expect(subject.phone_number).to eq('+18006785465')
+  end
+
+  it 'gives correct button sequence' do
+    fake_ebt_number = '11112222'
+    desired_sequence = subject.button_sequence(fake_ebt_number)
+    expect(desired_sequence).to eq("wwwwww1wwww#{fake_ebt_number}")
+  end
+
+  it 'tells the number of digits a CA EBT card has' do
+    expect(subject.allowed_number_of_ebt_card_digits).to eq([16, 19])
+  end
+
+  describe 'EBT number extraction' do
+    it 'extracts a valid (16-digit) EBT number for that state from plain text' do
+      ebt_number = '1111222233334444'
+      inbound_text = "my ebt is #{ebt_number}"
+      extracted_number = subject.extract_valid_ebt_number_from_text(inbound_text)
+      expect(extracted_number).to eq(ebt_number)
+    end
+
+    it 'extracts a valid (19-digit) EBT number for that state from plain text' do
+      ebt_number = '1111222233334444111'
+      inbound_text = "my ebt is #{ebt_number}"
+      extracted_number = subject.extract_valid_ebt_number_from_text(inbound_text)
+      expect(extracted_number).to eq(ebt_number)
+    end
+
+    it 'returns :invalid_number if not a valid number' do
+      inbound_text = 'my ebt is 123'
+      extracted_number = subject.extract_valid_ebt_number_from_text(inbound_text)
+      expect(extracted_number).to eq(:invalid_number)
+    end
+  end
+
+  describe 'balance transcription processing' do
+    context 'with transcription containing balance variation 1' do
+      let(:successful_transcription_1) { "Your snap balance is $267.87 your cash balance is $0 a pending death benefit of 100809." }
+
+      it 'sends response with balance amounts' do
+        reply_for_user = subject.transcribe_balance_response(successful_transcription_1)
+        expect(reply_for_user).to eq("Hi! Your food stamp balance is $267.87 and your cash balance is $0.")
+      end
+    end
+
+    context 'with EBT card not found in system (with 6014-starting EBT number)' do
+      let(:transcription_ebt_not_found) { "Your entry was invalid please try again please enter your 16 or 19 digit link card number you may press * at any time to start over again if you don't have your card please press 1 for further options." }
+
+      it 'sends EBT-not-found message' do
+        reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found)
+        expect(reply_for_user).to eq("I'm sorry, that card number was not found. Please try again.")
+      end
+    end
+
+    context 'with EBT card not found in system (with non-6014-starting EBT number, 1111222233334444)' do
+      let(:transcription_ebt_not_found) { "233-3344. If this is correct press 1 if not press 2" }
+
+      it 'sends EBT-not-found message' do
+        reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found)
+        expect(reply_for_user).to eq("I'm sorry, that card number was not found. Please try again.")
+      end
+    end
+
+    context 'with an empty transcription' do
+      let(:transcription_ebt_not_found) { "" }
+
+      it 'sends EBT-not-found message' do
+        reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found)
+        expect(reply_for_user).to eq("I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes.")
+      end
+    end
+  end
+end
+
 describe StateHandler::MO do
   it 'serves the correct phone number' do
     expect(subject.phone_number).to eq('+18009977777')
