@@ -143,13 +143,17 @@ describe EbtBalanceSmsApp, :type => :feature do
     end
 
     context 'when EBT number is valid' do
+      let(:transcription_text)  { 'fake raw transcription containing balance' }
       let(:handler_balance_response) { 'Hi! Your balance is...' }
-      let(:fake_transcriber) { double('FakeTranscriber', :transcribe_balance_response => handler_balance_response) }
-      let(:fake_state_handler) { double('FakeStateHandler', :transcriber_for => fake_transcriber ) }
+      let(:fake_state_handler) { double('FakeStateHandler', :transcribe_balance_response => handler_balance_response) }
 
       before do
         allow(StateHandler).to receive(:for).with(state).and_return(fake_state_handler)
-        post "/#{state}/#{to_phone_number}/#{twilio_number}/send_balance", { "TranscriptionText" => 'fake raw transcription containing balance' }
+        post "/#{state}/#{to_phone_number}/#{twilio_number}/send_balance", { "TranscriptionText" => transcription_text }
+      end
+
+      it 'sends transcription text and language to the handler' do
+        expect(fake_state_handler).to have_received(:transcribe_balance_response).with(transcription_text, :english)
       end
 
       it 'sends the correct amounts to user' do
@@ -167,8 +171,7 @@ describe EbtBalanceSmsApp, :type => :feature do
 
     context 'when EBT number is NOT valid' do
       let(:handler_balance_response) { 'Sorry...' }
-      let(:fake_transcriber) { double('FakeTranscriber', :transcribe_balance_response => handler_balance_response) }
-      let(:fake_state_handler) { double('FakeStateHandler', :transcriber_for => fake_transcriber ) }
+      let(:fake_state_handler) { double('FakeStateHandler', :transcribe_balance_response => handler_balance_response) }
 
       before do
         allow(StateHandler).to receive(:for).with(state).and_return(fake_state_handler)
