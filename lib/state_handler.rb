@@ -36,6 +36,10 @@ class StateHandler::Base
       return :invalid_number
     end
   end
+
+  def transcribe_balance_response(transcription_text, language = :english)
+    transcription_text
+  end
 end
 
 class StateHandler::CA < StateHandler::Base

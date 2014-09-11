@@ -18,6 +18,16 @@ describe StateHandler do
   end
 end
 
+describe StateHandler::Base do
+  let(:subject) { StateHandler::Base.new }
+
+  describe 'default #transcribe_balance_response for a handler' do
+    it 'gives back the verbatim input' do
+      expect(subject.transcribe_balance_response("hi")).to eq("hi")
+    end
+  end
+end
+
 describe StateHandler::CA do
   let(:handler) { StateHandler::CA.new }
 
