@@ -1,3 +1,5 @@
+require File.expand_path('../message_generator', __FILE__)
+
 module StateHandler
   extend self
 
@@ -45,63 +47,23 @@ class StateHandler::CA < StateHandler::Base
   end
 
   def transcribe_balance_response(transcription_text, language = :english)
-    BalanceTranscriber.new(language).transcribe_balance_response(transcription_text)
-  end
-
-  class BalanceTranscriber
-    attr_reader :language
-
-    def initialize(language)
-      @language = language
-      if @language == :spanish
-        extend SpanishTranscriptionMessages
-      else
-        extend EnglishTranscriptionMessages
-      end
+    mg = MessageGenerator.new(language)
+    if transcription_text == nil
+      return mg.having_trouble_try_again_message
     end
-
-    def transcribe_balance_response(transcription_text)
-      if transcription_text == nil
-        return having_trouble_try_again_message
-      end
-      regex_matches = transcription_text.scan(/(\$\S+)/)
-      if transcription_text.include?("non working card")
-        card_number_not_found_message
-      elsif regex_matches.count > 1
-        ebt_amount = regex_matches[0][0]
-        cash_amount = regex_matches[1][0]
-        balance_message_for(ebt_amount, cash_amount)
+    regex_matches = transcription_text.scan(/(\$\S+)/)
+    if transcription_text.include?("non working card")
+      mg.card_number_not_found_message
+    elsif regex_matches.count > 1
+      ebt_amount = regex_matches[0][0]
+      cash_amount = regex_matches[1][0]
+      if language == :spanish
+        "Hola! El saldo de su cuenta de estampillas para comida es #{ebt_amount} y su balance de dinero en efectivo es #{cash_amount}."
       else
-        having_trouble_try_again_message
-      end
-    end
-
-    module EnglishTranscriptionMessages
-      def having_trouble_try_again_message
-        "I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes."
-      end
-
-      def card_number_not_found_message
-        "I'm sorry, that card number was not found. Please try again. (Note: this service only works in California right now.)"
-      end
-
-      def balance_message_for(ebt_amount, cash_amount)
         "Hi! Your food stamp balance is #{ebt_amount} and your cash balance is #{cash_amount}."
       end
-    end
-
-    module SpanishTranscriptionMessages
-      def having_trouble_try_again_message
-        "Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos."
-      end
-
-      def card_number_not_found_message
-        "Lo siento, no se encontró el número de tarjeta. Por favor, inténtelo de nuevo. (Nota: este servicio sólo funciona en California en este momento.)"
-      end
-
-      def balance_message_for(ebt_amount, cash_amount)
-        "Hola! El saldo de su cuenta de estampillas para comida es #{ebt_amount} y su balance de dinero en efectivo es #{cash_amount}."
-      end
+    else
+      mg.having_trouble_try_again_message
     end
   end
 end
