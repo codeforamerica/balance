@@ -3,9 +3,9 @@ module StateHandler
 
   def for(state_abbreviation)
     if handled_states.include?(state_abbreviation.to_sym)
-      eval("StateHandler::#{state_abbreviation}")
+      eval("StateHandler::#{state_abbreviation}.new")
     else
-      StateHandler::UnhandledState #StateHandler::CA by default, likely
+      StateHandler::UnhandledState.new #StateHandler::CA by default, likely
     end
   end
 
@@ -14,9 +14,7 @@ module StateHandler
   end
 end
 
-module StateHandler::GenericMethods
-  extend self
-
+class StateHandler::Base
   def extract_valid_ebt_number_from_text(text)
     whitespace_free_text = text.gsub(" ", "")
     dash_and_whitespace_free_text = whitespace_free_text.gsub("-", "")
@@ -30,10 +28,7 @@ module StateHandler::GenericMethods
   end
 end
 
-module StateHandler::CA
-  extend self
-  extend StateHandler::GenericMethods
-
+class StateHandler::CA < StateHandler::Base
   # Phone number formatted with +1, area code, 7-digit number
   def phone_number
     '+18773289677'
@@ -51,8 +46,8 @@ module StateHandler::CA
     [16]
   end
 
-  def transcriber_for(language)
-    BalanceTranscriber.new(language)
+  def transcribe_balance_response(transcription_text, language = :english)
+    BalanceTranscriber.new(language).transcribe_balance_response(transcription_text)
   end
 
   class BalanceTranscriber
@@ -113,10 +108,7 @@ module StateHandler::CA
   end
 end
 
-module StateHandler::MO
-  extend self
-  extend StateHandler::GenericMethods
-
+class StateHandler::MO < StateHandler::Base
   # Phone number formatted with +1, area code, 7-digit number
   def phone_number
     '+18009977777'
@@ -134,8 +126,8 @@ module StateHandler::MO
     [16]
   end
 
-  def transcriber_for(language)
-    BalanceTranscriber.new(language)
+  def transcribe_balance_response(transcription_text, language = :english)
+    BalanceTranscriber.new(language).transcribe_balance_response(transcription_text)
   end
 
   class BalanceTranscriber
@@ -195,10 +187,7 @@ module StateHandler::MO
   end
 end
 
-module StateHandler::TX
-  extend self
-  extend StateHandler::GenericMethods
-
+class StateHandler::TX < StateHandler::Base
   # Phone number formatted with +1, area code, 7-digit number
   def phone_number
     '+18007777328'
@@ -216,8 +205,8 @@ module StateHandler::TX
     [19]
   end
 
-  def transcriber_for(language)
-    BalanceTranscriber.new(language)
+  def transcribe_balance_response(transcription_text, language = :english)
+    BalanceTranscriber.new(language).transcribe_balance_response(transcription_text)
   end
 
   class BalanceTranscriber
@@ -277,6 +266,5 @@ module StateHandler::TX
   end
 end
 
-module StateHandler::UnhandledState
-  extend StateHandler::CA
+class StateHandler::UnhandledState < StateHandler::CA
 end
