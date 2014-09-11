@@ -15,6 +15,14 @@ module StateHandler
 end
 
 class StateHandler::Base
+  def phone_number
+    self.class.const_get(:PHONE_NUMBER)
+  end
+
+  def allowed_number_of_ebt_card_digits
+    self.class.const_get(:ALLOWED_NUMBER_OF_EBT_CARD_DIGITS)
+  end
+
   def extract_valid_ebt_number_from_text(text)
     whitespace_free_text = text.gsub(" ", "")
     dash_and_whitespace_free_text = whitespace_free_text.gsub("-", "")
@@ -29,21 +37,11 @@ class StateHandler::Base
 end
 
 class StateHandler::CA < StateHandler::Base
-  # Phone number formatted with +1, area code, 7-digit number
-  def phone_number
-    '+18773289677'
-  end
+  PHONE_NUMBER = '+18773289677'
+  ALLOWED_NUMBER_OF_EBT_CARD_DIGITS = [16]
 
-  # Sequence of waits (w) and keystrokes (eg, 1)
-  # for submitting EBT number to phone service
   def button_sequence(ebt_number)
     "wwww1wwwwww#{ebt_number}ww"
-  end
-
-  # Array of integers of allowed digit-length of an EBT card number
-  # For example: [16], [16, 19]
-  def allowed_number_of_ebt_card_digits
-    [16]
   end
 
   def transcribe_balance_response(transcription_text, language = :english)
@@ -109,21 +107,11 @@ class StateHandler::CA < StateHandler::Base
 end
 
 class StateHandler::MO < StateHandler::Base
-  # Phone number formatted with +1, area code, 7-digit number
-  def phone_number
-    '+18009977777'
-  end
+  PHONE_NUMBER = '+18009977777'
+  ALLOWED_NUMBER_OF_EBT_CARD_DIGITS = [16]
 
-  # Sequence of waits (w) and keystrokes (eg, 1)
-  # for submitting EBT number to phone service
   def button_sequence(ebt_number)
     "wwwwwwwwwwwwww1wwwwwwwwwwwwwwwwww2wwwwwwww#{ebt_number}"
-  end
-
-  # Array of integers of allowed digit-length of an EBT card number
-  # For example: [16], [16, 19]
-  def allowed_number_of_ebt_card_digits
-    [16]
   end
 
   def transcribe_balance_response(transcription_text, language = :english)
@@ -188,21 +176,11 @@ class StateHandler::MO < StateHandler::Base
 end
 
 class StateHandler::TX < StateHandler::Base
-  # Phone number formatted with +1, area code, 7-digit number
-  def phone_number
-    '+18007777328'
-  end
+  PHONE_NUMBER = '+18007777328'
+  ALLOWED_NUMBER_OF_EBT_CARD_DIGITS = [19]
 
-  # Sequence of waits (w) and keystrokes (eg, 1)
-  # for submitting EBT number to phone service
   def button_sequence(ebt_number)
     "wwww1wwwwww#{ebt_number}ww"
-  end
-
-  # Array of integers of allowed digit-length of an EBT card number
-  # For example: [16], [16, 19]
-  def allowed_number_of_ebt_card_digits
-    [19]
   end
 
   def transcribe_balance_response(transcription_text, language = :english)
