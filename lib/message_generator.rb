@@ -47,9 +47,9 @@ class MessageGenerator
 
   def card_number_not_found_message
     if language == :spanish
-      "Lo siento, no se encontró el número de tarjeta. Por favor, inténtelo de nuevo. (Nota: este servicio sólo funciona en California en este momento.)"
+      "Lo siento, no se encontró el número de tarjeta. Por favor, inténtelo de nuevo."
     else
-      "I'm sorry, that card number was not found. Please try again. (Note: this service only works in California right now.)"
+      "I'm sorry, that card number was not found. Please try again."
     end
   end
 end

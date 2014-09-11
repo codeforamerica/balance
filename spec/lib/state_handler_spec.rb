@@ -96,7 +96,7 @@ describe StateHandler::CA do
       context 'with EBT card not found in system' do
         it 'sends EBT-not-found message' do
           reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found)
-          expect(reply_for_user).to eq("I'm sorry, that card number was not found. Please try again. (Note: this service only works in California right now.)")
+          expect(reply_for_user).to eq("I'm sorry, that card number was not found. Please try again.")
         end
       end
 
@@ -137,7 +137,7 @@ describe StateHandler::CA do
       context 'with EBT card not found in system' do
         it 'sends EBT-not-found message' do
           reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found, language)
-          expect(reply_for_user).to eq("Lo siento, no se encontró el número de tarjeta. Por favor, inténtelo de nuevo. (Nota: este servicio sólo funciona en California en este momento.)")
+          expect(reply_for_user).to eq("Lo siento, no se encontró el número de tarjeta. Por favor, inténtelo de nuevo.")
         end
       end
 
