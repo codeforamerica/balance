@@ -23,9 +23,9 @@ class MessageGenerator
 
   def inbound_voice_call_text_message
     if language == :spanish
-      'Hola! Usted puede verificar su saldo de EBT por mensaje de texto. Solo responda a este mensaje con su número de tarjeta de EBT.'
+      'Hola! Para obtener su saldo, responda a este mensaje con el numero de su tarjeta EBT.'
     else
-      'Hi there! You can check your EBT card balance by text message here. Just reply to this message with your EBT card number.'
+      'Hi! Please reply with your EBT card number to get your balance.'
     end
   end
 
