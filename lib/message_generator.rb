@@ -36,4 +36,20 @@ class MessageGenerator
       "Hi there! Reply to this message with your EBT card number and I'll check your balance for you."
     end
   end
+
+  def having_trouble_try_again_message
+    if language == :spanish
+      "Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos."
+    else
+      "I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes."
+    end
+  end
+
+  def card_number_not_found_message
+    if language == :spanish
+      "Lo siento, no se encontró el número de tarjeta. Por favor, inténtelo de nuevo."
+    else
+      "I'm sorry, that card number was not found. Please try again."
+    end
+  end
 end
