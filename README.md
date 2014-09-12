@@ -4,7 +4,7 @@
 
 A text message interface for checking one's CalFresh (food stamp) EBT card balance in California
 
-![Alt text](balance-screenshot.png)
+![Alt text](screenshots/balance-screenshot.png)
 
 ## What it is
 
