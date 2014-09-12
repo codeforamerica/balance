@@ -218,7 +218,7 @@ EOF
     let(:fake_state_phone_number) { '+18882223333' }
     let(:fake_state_handler) { double('FakeStateHandler', :phone_number => fake_state_phone_number) }
     let(:fake_twilio) { double("FakeTwilioService", :send_text => 'sent text') }
-    let(:fake_message_generator) { double('MessageGenerator', :inbound_voice_call_text_message => 'voice call text message') }
+    let(:fake_message_generator) { double('MessageGenerator', :inbound_voice_call_text_message => 'voice call text message', :call_in_voice_file_url => 'fakeurl') }
 
     before do
       allow(TwilioService).to receive(:new).and_return(fake_twilio)
@@ -244,7 +244,7 @@ EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Gather timeout="10" action="http://twimlets.com/forward?PhoneNumber=#{fake_state_phone_number}" method="GET" numDigits="1">
-    <Play>https://s3-us-west-1.amazonaws.com/balance-cfa/balance-voice-splash-v2-090714.mp3</Play>
+    <Play>#{fake_message_generator.call_in_voice_file_url}</Play>
   </Gather>
   <Redirect method="GET">http://twimlets.com/forward?PhoneNumber=#{fake_state_phone_number}</Redirect>
 </Response>
