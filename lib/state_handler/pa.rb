@@ -35,7 +35,7 @@ class StateHandler::PA < StateHandler::Base
     regex_matches = transcription_text.scan(/(\$\S+)/)
     if regex_matches.count > 1
       ebt_amount = regex_matches[0][0]
-      cash_amount = regex_matches[0][1]
+      cash_amount = regex_matches[1][0]
       return "Hi! Your food stamp balance is #{ebt_amount} and your cash balance is #{cash_amount}."
     end
 
