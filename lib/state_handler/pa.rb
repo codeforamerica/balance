@@ -13,7 +13,6 @@ class StateHandler::PA < StateHandler::Base
     "wwww1wwww#{ebt_number}ww"
   end
 
-=begin # Delete this line when ready to transcribe!
   def transcribe_balance_response(transcription_text, language = :english)
     mg = MessageGenerator.new(language)
 
@@ -25,7 +24,7 @@ class StateHandler::PA < StateHandler::Base
 
     # Deal with an invalid card number
     ### Step 4. EXAMPLE — Edit for your state! ###
-    phrase_indicating_invalid_card_number = "CHANGE ME"
+    phrase_indicating_invalid_card_number = "Invalid Card Number"
 
     if transcription_text.include?(phrase_indicating_invalid_card_number)
       return mg.card_number_not_found_message
@@ -36,12 +35,12 @@ class StateHandler::PA < StateHandler::Base
     regex_matches = transcription_text.scan(/(\$\S+)/)
     if regex_matches.count > 1
       ebt_amount = regex_matches[0][0]
-      return "Hi! Your food stamp balance is #{ebt_amount}."
+      cash_amount = regex_matches[0][1]
+      return "Hi! Your food stamp balance is #{ebt_amount} and your cash balance is #{cash_amount}."
     end
 
     # Deal with any other transcription (catching weird errors)
     # You do not need to change this. :D
     return mg.having_trouble_try_again_message
   end
-=end # Delete this line when ready to transcribe
 end
