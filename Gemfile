@@ -5,6 +5,7 @@ gem 'sinatra'
 gem 'twilio-ruby'
 gem 'rack-ssl'
 gem 'phone'
+gem 'require_all'
 
 group :test, :development do
   gem 'rspec'
