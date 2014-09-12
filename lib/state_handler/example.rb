@@ -1,5 +1,5 @@
 # Step 0. Change "::Example" below to a state abbreviation
-# For example, "::PA"
+# For example, "::PA" for Pennsylvania
 class StateHandler::Example < StateHandler::Base
 
   # Step 1. EXAMPLE — Edit for your state!
