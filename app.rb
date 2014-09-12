@@ -107,7 +107,7 @@ EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Gather timeout="10" action="http://twimlets.com/forward?PhoneNumber=#{state_handler.phone_number}" method="GET" numDigits="1">
-    <Play>https://s3-us-west-1.amazonaws.com/balance-cfa/balance-voice-splash-v2-090714.mp3</Play>
+    <Play>#{message_generator.call_in_voice_file_url}</Play>
   </Gather>
   <Redirect method="GET">http://twimlets.com/forward?PhoneNumber=#{state_handler.phone_number}</Redirect>
 </Response>
