@@ -1,6 +1,6 @@
 # Step 0. Change "::Example" below to a state abbreviation
 # For example, "::PA" for Pennsylvania
-class StateHandler::Example < StateHandler::Base
+class StateHandler::PA < StateHandler::Base
 
   # Step 1. EXAMPLE — Edit for your state!
   PHONE_NUMBER = '+18883287366'
