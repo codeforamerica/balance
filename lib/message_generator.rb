@@ -52,4 +52,12 @@ class MessageGenerator
       "I'm sorry, that card number was not found. Please try again."
     end
   end
+
+  def call_in_voice_file_url
+    if language == :spanish
+      'https://s3-us-west-1.amazonaws.com/balance-cfa/balance-voice-splash-spanish-v1-091214.mp3'
+    else
+      'https://s3-us-west-1.amazonaws.com/balance-cfa/balance-voice-splash-v3-091214.mp3'
+    end
+  end
 end

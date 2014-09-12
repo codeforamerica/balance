@@ -30,6 +30,13 @@ describe MessageGenerator do
         expect(mg.inbound_voice_call_text_message).to eq(desired_message)
       end
     end
+
+    describe '#call_in_voice_file_url' do
+      it "gives the English s3 file URL" do
+        url = 'https://s3-us-west-1.amazonaws.com/balance-cfa/balance-voice-splash-v3-091214.mp3'
+        expect(mg.call_in_voice_file_url).to eq(url)
+      end
+    end
   end
 
   context 'for Spanish' do
@@ -53,6 +60,13 @@ describe MessageGenerator do
       it "says Spanish version of 'hi! you can check your balance here...'" do
         desired_message = 'Hola! Usted puede verificar su saldo de EBT por mensaje de texto. Solo responda a este mensaje con su número de tarjeta de EBT.'
         expect(mg.inbound_voice_call_text_message).to eq(desired_message)
+      end
+    end
+
+    describe '#call_in_voice_file_url' do
+      it "gives the Spanish s3 file URL" do
+        url = 'https://s3-us-west-1.amazonaws.com/balance-cfa/balance-voice-splash-spanish-v1-091214.mp3'
+        expect(mg.call_in_voice_file_url).to eq(url)
       end
     end
   end
