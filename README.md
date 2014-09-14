@@ -2,13 +2,20 @@
 
 [![Build Status](https://travis-ci.org/codeforamerica/balance.svg?branch=master)](https://travis-ci.org/codeforamerica/balance)
 
-A text message interface for checking one's CalFresh (food stamp) EBT card balance in California
+A text message interface for people to check their EBT card balance for SNAP and other human service benefits
 
 ![Alt text](balance-screenshot.png)
 
+Currently available in:
+
+- California
+- Texas
+- Missouri
+- Pennsylvania
+
 ## What it is
 
-This is a simple Ruby app built on Twilio that creates a text message interface for people to check their food stamp EBT card balance in California (and potentially for other programs utilizing EBT cards in the future). 
+This is a simple Ruby app built on Twilio that creates a text message interface for people to check their food stamp EBT card balance (and cash balance for other programs).
 
 The original idea was by @lippytak with influence from @alanjosephwilliams's experience on Code for America's [health project ideas](https://github.com/codeforamerica/health-project-ideas/issues/34) repo.
 
