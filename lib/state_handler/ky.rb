@@ -10,7 +10,7 @@ class StateHandler::KY < StateHandler::Base
 
   def button_sequence(ebt_number)
     # Step 3. EXAMPLE — Edit for your state!
-    "wwwwwwwwww1wwwwwwwwwwww#{ebt_number}wwwwwwwwwwwwwwwwwwww"
+    "wwwwwwwwww1wwwwwwwwwwww#{ebt_number}wwwwwwww"
   end
 
   def transcribe_balance_response(transcription_text, language = :english)
