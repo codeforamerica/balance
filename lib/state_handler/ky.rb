@@ -10,7 +10,7 @@ class StateHandler::Example < StateHandler::Base
 
   def button_sequence(ebt_number)
     # Step 3. EXAMPLE — Edit for your state!
-    "wwwwwwwwwwww1wwwwwwww#{ebt_number}wwwwwwwwwwwwwwwwwwww"
+    "wwwwwwwwwwww1wwwwwwwwwwwwww#{ebt_number}wwwwwwwwwwwwwwwwwwww"
   end
 
 =begin # Delete this line when ready to transcribe!
