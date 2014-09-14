@@ -60,9 +60,15 @@ class StateHandler::Example < StateHandler::Base
 # …
 ```
 
+
+
 Add your state's information for the steps shown.
 
-For the button sequence: 
+Change `StateHandler::Example` to a state abbreviation 
+For example, `StateHandler::PA` for Pennsylvania
+
+
+For the button sequence:
   - Use `w` to mean "wait 1/2 of a second"
   - Put `#{ebt_number}` where you would enter the EBT #
 
