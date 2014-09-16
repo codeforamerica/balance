@@ -3,11 +3,12 @@
 
 ## Collect state info (no coding necessary!)
 
-The first step for adding a state is finding some basic information. We keep this info in a Google Spreadsheet here: [https://docs.google.com/a/codeforamerica.org/spreadsheets/d/12jOXkz1bt7bHzhuXhHYdHhTd45IgrmyVg8-hw93BjIo/edit?usp=sharing](https://docs.google.com/a/codeforamerica.org/spreadsheets/d/12jOXkz1bt7bHzhuXhHYdHhTd45IgrmyVg8-hw93BjIo/edit?usp=sharing)
+The first step for adding a state is finding some basic information. We keep this info in a Google Spreadsheet here:
+<a href="https://docs.google.com/a/codeforamerica.org/spreadsheets/d/12jOXkz1bt7bHzhuXhHYdHhTd45IgrmyVg8-hw93BjIo/edit?usp=sharing" target="_blank">https://docs.google.com/a/codeforamerica.org/spreadsheets/d/12jOXkz1bt7bHzhuXhHYdHhTd45IgrmyVg8-hw93BjIo/edit?usp=sharing</a>
 
-If your state's info is _not_ there — add it! You will need:
+If your state's info is _not_ there — add it!
 
-1. The **phone number for checking SNAP balance** in your state. You can find this by searching on Google for "STATENAME snap ebt balance."
+1. The **existing phone number for checking SNAP balance** in your state. You can find this by searching on Google for "STATENAME snap ebt balance."
 
 2. **\# of digits** an EBT card has in your state (check your state's SNAP web site)
 
@@ -20,59 +21,47 @@ Here's an example for Massachusetts:
 
 ## Write a basic handler (for developers)
 
-Clone the Balance repo from GitHub and `cd` into the project:
-
+1. Clone the Balance repo from GitHub and `cd` into the project:
 ```
 git clone https://github.com/codeforamerica/balance.git
 cd balance
 ```
-
-Check out a feature branch for adding your state, for example:
-
+2. Check out a feature branch for adding your state, for example:
 ```
 git checkout -b add-massachusetts
 ```
-
-Copy the `example.rb` state handler into a new file named after your state's abbreviation. For Massachusetts, we would do:
-
+3. Copy the `example.rb` state handler into a new file named after your state's abbreviation. For Massachusetts, we would do:
 ```
 cp lib/state_handler/example.rb lib/state_handler/ma.rb
 ```
-
-Now, open up your new state handler file. The top part will look like this:
-
+4. Edit your new state handler. The top part will look like this:
 ```ruby
-# Step 0. Change "::Example" below to a state abbreviation
+# Step 1. Change "::Example" below to a state abbreviation
 # For example, "::PA" for Pennsylvania
 class StateHandler::Example < StateHandler::Base
 
-  # Step 1. EXAMPLE — Edit for your state!
+  # Step 2. EXAMPLE — Edit for your state!
   PHONE_NUMBER = '+1222333444'
 
-  # Step 2. EXAMPLE — Edit for your state!
+  # Step 3. EXAMPLE — Edit for your state!
   ALLOWED_NUMBER_OF_EBT_CARD_DIGITS = [16]
 
   def button_sequence(ebt_number)
-    # Step 3. EXAMPLE — Edit for your state!
+    # Step 4. EXAMPLE — Edit for your state!
     "wwww1wwww#{ebt_number}ww"
   end
 
 # …
 ```
-
-
-
-Add your state's information for the steps shown.
-
-Change `StateHandler::Example` to a state abbreviation 
-For example, `StateHandler::PA` for Pennsylvania
-
-
-For the button sequence:
+  1. Add your state's information for the steps shown.
+  Change `StateHandler::Example` to a state abbreviation 
+  For example, `StateHandler::PA` for Pennsylvania
+  
+  2. For the button sequence:
   - Use `w` to mean "wait 1/2 of a second"
   - Put `#{ebt_number}` where you would enter the EBT #
 
-With our MA example, our file will now look something like this:
+  With our MA example, our file will now look something like this:
 
 ```ruby
 class StateHandler::MA < StateHandler::Base
@@ -85,9 +74,7 @@ class StateHandler::MA < StateHandler::Base
 
 # …
 ```
-
-Add and commit your changes:
-
+5. Add and commit your changes:
 ```
 git add .
 git commit -m "Initial work on MA handler"
