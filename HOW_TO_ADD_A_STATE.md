@@ -8,11 +8,11 @@ The first step for adding a state is finding some basic information. We keep thi
 
 If your state's info is _not_ there — add it!
 
-1. The **existing phone number for checking SNAP balance** in your state. You can find this by searching on Google for "STATENAME snap ebt balance."
+1) The **existing phone number for checking SNAP balance** in your state. You can find this by searching on Google for "STATENAME snap ebt balance."
 
-2. **\# of digits** an EBT card has in your state (check your state's SNAP web site)
+2) **\# of digits** an EBT card has in your state (check your state's SNAP web site)
 
-3. The **button push sequence** for checking your balance. Figure this out by calling the phone number and writing down the steps for checking your balance in English. Count the seconds you wait and write that down too.
+3) The **button push sequence** for checking your balance. Figure this out by calling the phone number and writing down the steps for checking your balance in English. Count the seconds you wait and write that down too.
 
 Here's an example for Massachusetts:
 
@@ -20,21 +20,23 @@ Here's an example for Massachusetts:
 
 
 ## Write a basic handler (for developers)
-
-1. Clone the Balance repo from GitHub and `cd` into the project:
+1) Clone the Balance repo from GitHub and `cd` into the project:
 ```
 git clone https://github.com/codeforamerica/balance.git
 cd balance
 ```
-2. Check out a feature branch for adding your state, for example:
+
+2) Check out a feature branch for adding your state, for example:
 ```
 git checkout -b add-massachusetts
 ```
-3. Copy the `example.rb` state handler into a new file named after your state's abbreviation. For Massachusetts, we would do:
+
+3) Copy the `example.rb` state handler into a new file named after your state's abbreviation. For Massachusetts, we would do:
 ```
 cp lib/state_handler/example.rb lib/state_handler/ma.rb
 ```
-4. Edit your new state handler. The top part will look like this:
+
+4) Edit your new state handler file. The top part will look like this:
 ```ruby
 # Step 1. Change "::Example" below to a state abbreviation
 # For example, "::PA" for Pennsylvania
@@ -53,15 +55,15 @@ class StateHandler::Example < StateHandler::Base
 
 # …
 ```
-  1. Add your state's information for the steps shown.
-  Change `StateHandler::Example` to a state abbreviation 
-  For example, `StateHandler::PA` for Pennsylvania
+- Add your state's information for the steps shown.
+  - Change `StateHandler::Example` to a state abbreviation 
+  - For example, `StateHandler::PA` for Pennsylvania
   
-  2. For the button sequence:
+- For the button sequence:
   - Use `w` to mean "wait 1/2 of a second"
   - Put `#{ebt_number}` where you would enter the EBT #
 
-  With our MA example, our file will now look something like this:
+With our MA example, our file will now look something like this:
 
 ```ruby
 class StateHandler::MA < StateHandler::Base
@@ -74,7 +76,8 @@ class StateHandler::MA < StateHandler::Base
 
 # …
 ```
-5. Add and commit your changes:
+
+5) Add and commit your changes:
 ```
 git add .
 git commit -m "Initial work on MA handler"
@@ -82,28 +85,27 @@ git commit -m "Initial work on MA handler"
 
 ## Test your basic handler
 
-Now, find one of the project leads and ask to be added as a collaborator to the Heroku dev app set up for this.
+1) Now, find one of the project leads and ask to be added as a collaborator to the Heroku dev app set up for this.
 
-Once you're a collaborator, add a git remote for the Heroku test app. For MA, this would be:
-
+2) Once you're a collaborator, add a git remote for the Heroku test app. For MA, this would be:
 `git remote add heroku git@heroku.com:balance-summit-ma.git`
 
-Now deploy your branch to Heroku, for example:
-
+3) Now deploy your branch to Heroku, for example:
 `git push heroku add-massachusetts:master`
 
-Now the fun part! Ask one of the project leads for (1) the Twilio phone number configured for your state and (2) the sample EBT card #.
+4) Now the fun part! Ask one of the project leads for (1) the Twilio phone number configured for your state and (2) the sample EBT card #.
 
 **Send a text message containing the EBT card number to the Twilio phone number!**
 
 Your basic handler will send back the exact transcription of what the phone line says. 
 
-Tinker with your button sequence (redeploying it to Heroku to test) if you don't get the balance in the text. A common solution is to add `ww` after `#{ebt_number}` to tell Twilio to wait a second before starting recording.
+5) Tinker with your button sequence (redeploying it to Heroku to test) if you don't get the balance in the text. A common solution is to add `ww` after `#{ebt_number}` to tell Twilio to wait a second before starting recording.
 
 
 ## Write a balance transcriber
+Next, we will deal with invalid card numbers and successful balances.
 
-When you can get the balance coming through with your basic handler, open your state handler and uncomment the `transcribe_balance_response` method, which will look like this:
+1) When you can get the balance coming through with your basic handler, open your state handler and **uncomment the `transcribe_balance_response` method**, which will look like this:
 
 ```ruby
   def transcribe_balance_response(transcription_text, language = :english)
@@ -137,9 +139,7 @@ When you can get the balance coming through with your basic handler, open your s
   end
 ```
 
-Your job will be to implement the two middle cases — invalid card numbers and successful balances.
-
-### Dealing with invalid card numbers
+2) Deal with **invalid card numbers**
 
 To write this, first send a text message to your basic handler with the EBT number, but change the first two digits to be `0` (for example, instead of `50771234` send a text with `00771234`).
 
@@ -151,7 +151,7 @@ Change the code to put this phrase in there:
     phrase_indicating_invalid_card_number = "invalid card number"
 ```
 
-### Formatting a successful balance transcription
+3) Format a **successful balance transcription**
 
 Next, we want to write some code that takes a successful balance response and formats it a bit more nicely — it should say "Hi! Your food stamp balance is…" and optionall have more information.
 
