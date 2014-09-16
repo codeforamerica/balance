@@ -93,7 +93,7 @@ git commit -m "Initial work on MA handler"
 3) Now deploy your branch to Heroku, for example:
 `git push heroku add-massachusetts:master`
 
-4) Now the fun part! Ask one of the project leads for (1) the Twilio phone number configured for your state and (2) the sample EBT card #.
+4) Now the fun part! Ask one of the project leads for (1) the Twilio phone number configured for your state (also in [the spreadsheet](https://docs.google.com/a/codeforamerica.org/spreadsheets/d/12jOXkz1bt7bHzhuXhHYdHhTd45IgrmyVg8-hw93BjIo/edit#gid=0)) and (2) the sample EBT card #.
 
 **Send a text message containing the EBT card number to the Twilio phone number!**
 
@@ -153,7 +153,7 @@ Change the code to put this phrase in there:
 
 3) Format a **successful balance transcription**
 
-Next, we want to write some code that takes a successful balance response and formats it a bit more nicely — it should say "Hi! Your food stamp balance is…" and optionall have more information.
+Next, we want to write some code that takes a successful balance response and formats it a bit more nicely — it should say "Hi! Your food stamp balance is…" and optionally have more information.
 
 In most cases, this is easily done with a regex looking for dollar amounts like `$123.45`.
 
