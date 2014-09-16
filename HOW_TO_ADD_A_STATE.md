@@ -194,5 +194,5 @@ git push origin add-massachusetts
 ![Pull Example for Massachusetts](screenshots/state-pull-example.png)
 
 3) PARTY!
-- Add your Twitter handle to the [Google Spreadsheet](https://docs.google.com/a/codeforamerica.org/spreadsheets/d/12jOXkz1bt7bHzhuXhHYdHhTd45IgrmyVg8-hw93BjIo/edit#gid=0) so we can send you some love.
-- Thank [@daguar](http://www.twitter.com/daguar) for such beautiful code and awesome instructions.
+- Add your Twitter handle to the [Google Spreadsheet](https://docs.google.com/a/codeforamerica.org/spreadsheets/d/12jOXkz1bt7bHzhuXhHYdHhTd45IgrmyVg8-hw93BjIo/edit#gid=0) so we can let you know when it's live.
+- Send [@daguar](http://www.twitter.com/daguar) some twitter love! Include a link to your PR to make him extra happy :)
