@@ -20,23 +20,25 @@ Here's an example for Massachusetts:
 
 
 ## Write a basic handler (for developers)
-1) Clone the Balance repo from GitHub and `cd` into the project:
+1) Fork the Balance repo to your Github account
+
+2) Clone and `cd` into the project:
 ```
-git clone https://github.com/codeforamerica/balance.git
+git clone https://github.com/[USERNAME]/balance.git
 cd balance
 ```
 
-2) Check out a feature branch for adding your state, for example:
+3) Check out a feature branch for adding your state, for example:
 ```
 git checkout -b add-massachusetts
 ```
 
-3) Copy the `example.rb` state handler into a new file named after your state's abbreviation. For Massachusetts, we would do:
+4) Copy the `example.rb` state handler into a new file named after your state's abbreviation. For Massachusetts, we would do:
 ```
 cp lib/state_handler/example.rb lib/state_handler/ma.rb
 ```
 
-4) Edit your new state handler file. The top part will look like this:
+5) Edit your new state handler file. The top part will look like this:
 ```ruby
 # Step 1. Change "::Example" below to a state abbreviation
 # For example, "::PA" for Pennsylvania
@@ -77,7 +79,7 @@ class StateHandler::MA < StateHandler::Base
 # …
 ```
 
-5) Add and commit your changes:
+6) Add and commit your changes:
 ```
 git add .
 git commit -m "Initial work on MA handler"
@@ -179,3 +181,17 @@ For an example of a more complicated transcription, we can look at California wh
       return "Hi! Your food stamp balance is #{ebt_amount} and your cash balance is #{cash_amount}."
     end
 ```
+## PR + CELEBRATE!!
+1) Commit and push your branch to Github
+```
+git add .
+git commit -m "Finished work on MA!"
+git push origin add-massachusetts
+```
+
+2) Go to your forked repo and create a pull request
+![Pull Example for Massachusetts](screenshots/state-pull-example.png)
+
+3) PARTY!
+- Add your Twitter handle to the [Google Spreadsheet](https://docs.google.com/a/codeforamerica.org/spreadsheets/d/12jOXkz1bt7bHzhuXhHYdHhTd45IgrmyVg8-hw93BjIo/edit#gid=0) so we can send you some love.
+- Thank [@daguar](http://www.twitter.com/daguar) for such beautiful code and awesome instructions.
