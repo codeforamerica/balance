@@ -190,6 +190,7 @@ git push origin add-massachusetts
 ```
 
 2) Go to your forked repo and create a pull request
+
 ![Pull Example for Massachusetts](screenshots/state-pull-example.png)
 
 3) PARTY!
