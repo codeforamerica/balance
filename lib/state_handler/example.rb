@@ -1,15 +1,15 @@
-# Step 0. Change "::Example" below to a state abbreviation
+# Step 1. Change "::Example" below to a state abbreviation
 # For example, "::PA" for Pennsylvania
 class StateHandler::Example < StateHandler::Base
 
-  # Step 1. EXAMPLE — Edit for your state!
+  # Step 2. EXAMPLE — Edit for your state!
   PHONE_NUMBER = '+1222333444'
 
-  # Step 2. EXAMPLE — Edit for your state!
+  # Step 3. EXAMPLE — Edit for your state!
   ALLOWED_NUMBER_OF_EBT_CARD_DIGITS = [16]
 
   def button_sequence(ebt_number)
-    # Step 3. EXAMPLE — Edit for your state!
+    # Step 4. EXAMPLE — Edit for your state!
     "wwww1wwww#{ebt_number}ww"
   end
 
@@ -24,7 +24,7 @@ class StateHandler::Example < StateHandler::Base
     end
 
     # Deal with an invalid card number
-    ### Step 4. EXAMPLE — Edit for your state! ###
+    ### Step 5. EXAMPLE — Edit for your state! ###
     phrase_indicating_invalid_card_number = "CHANGE ME"
 
     if transcription_text.include?(phrase_indicating_invalid_card_number)
@@ -32,7 +32,7 @@ class StateHandler::Example < StateHandler::Base
     end
 
     # Deal with a successful balance transcription
-    ### Step 5. EXAMPLE — Edit for your state! ###
+    ### Step 6. EXAMPLE — Edit for your state! ###
     regex_matches = transcription_text.scan(/(\$\S+)/)
     if regex_matches.count > 1
       ebt_amount = regex_matches[0][0]
