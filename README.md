@@ -4,7 +4,7 @@
 
 A text message interface for people to check their EBT card balance for SNAP and other human service benefits
 
-![Alt text](balance-screenshot.png)
+![Alt text](screenshots/balance-screenshot.png)
 
 Currently available in:
 
