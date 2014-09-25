@@ -10,7 +10,7 @@ class StateHandler::NC < StateHandler::Base
 
   def button_sequence(ebt_number)
     # Step 4. EXAMPLE — Edit for your state!
-    "wwww1wwwwww#{ebt_number}wwww"
+    "wwww1wwwwww#{ebt_number}ww"
   end
 
   def transcribe_balance_response(transcription_text, language = :english)
@@ -24,9 +24,7 @@ class StateHandler::NC < StateHandler::Base
 
     # Deal with an invalid card number
     ### Step 5. EXAMPLE — Edit for your state! ###
-    phrase_indicating_invalid_card_number = "CHANGE ME"
-
-    puts "[DEBUG] #{transcription_text.inspect}"
+    phrase_indicating_invalid_card_number = "incorrect"
 
     if transcription_text.include?(phrase_indicating_invalid_card_number)
       return mg.card_number_not_found_message
