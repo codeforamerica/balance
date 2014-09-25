@@ -26,6 +26,8 @@ class StateHandler::Nc < StateHandler::Base
     ### Step 5. EXAMPLE — Edit for your state! ###
     phrase_indicating_invalid_card_number = "CHANGE ME"
 
+    puts transcription_text.inspect
+
     if transcription_text.include?(phrase_indicating_invalid_card_number)
       return mg.card_number_not_found_message
     end
