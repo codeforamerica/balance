@@ -23,10 +23,7 @@ class StateHandler::NC < StateHandler::Base
     end
 
     # Deal with an invalid card number
-    ### Step 5. EXAMPLE — Edit for your state! ###
-    phrase_indicating_invalid_card_number = "to reenter your card number"
-
-    if transcription_text.include?(phrase_indicating_invalid_card_number)
+    if transcription_text.include?("re enter") || transcription_text.include?("reenter")
       return mg.card_number_not_found_message
     end
 
