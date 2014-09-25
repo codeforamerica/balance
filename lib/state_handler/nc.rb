@@ -38,6 +38,8 @@ class StateHandler::NC < StateHandler::Base
       return "Hi! Your food stamp balance is #{ebt_amount}."
     end
 
+    puts "[DEBUG] #{transcription_text.inspect}"
+
     # Deal with any other transcription (catching weird errors)
     # You do not need to change this. :D
     return mg.having_trouble_try_again_message
