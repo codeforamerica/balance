@@ -13,7 +13,6 @@ class StateHandler::Nc < StateHandler::Base
     "wwww1wwwwww#{ebt_number}wwww"
   end
 
-=begin # Delete this line when ready to transcribe!
   def transcribe_balance_response(transcription_text, language = :english)
     mg = MessageGenerator.new(language)
 
@@ -43,5 +42,4 @@ class StateHandler::Nc < StateHandler::Base
     # You do not need to change this. :D
     return mg.having_trouble_try_again_message
   end
-=end # Delete this line when ready to transcribe
 end
