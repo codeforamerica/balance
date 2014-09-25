@@ -1,6 +1,6 @@
 # Step 1. Change "::Example" below to a state abbreviation
 # For example, "::PA" for Pennsylvania
-class StateHandler::Nc < StateHandler::Base
+class StateHandler::NC < StateHandler::Base
 
   # Step 2. EXAMPLE — Edit for your state!
   PHONE_NUMBER = '+18886227328'
@@ -26,7 +26,7 @@ class StateHandler::Nc < StateHandler::Base
     ### Step 5. EXAMPLE — Edit for your state! ###
     phrase_indicating_invalid_card_number = "CHANGE ME"
 
-    puts transcription_text.inspect
+    puts "[DEBUG] #{transcription_text.inspect}"
 
     if transcription_text.include?(phrase_indicating_invalid_card_number)
       return mg.card_number_not_found_message
