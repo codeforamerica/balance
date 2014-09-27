@@ -22,7 +22,7 @@ class StateHandler::OK < StateHandler::Base
     end
 
     # Deal with a successful balance transcription
-    regex_matches = transcription_text.scan(/(\$[0-9]+.[0-9]+)/)
+    regex_matches = transcription_text.scan(/(\$\d+\.?\d*)/)
         
     if regex_matches.count == 1
       ebt_amount = regex_matches[0][0]+""
