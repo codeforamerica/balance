@@ -13,7 +13,7 @@ class StateHandler::AK < StateHandler::Base
     "wwwwwwww1wwww#{ebt_number}ww"
   end
 
-=begin # Delete this line when ready to transcribe!
+
   def transcribe_balance_response(transcription_text, language = :english)
     mg = MessageGenerator.new(language)
 
@@ -25,7 +25,7 @@ class StateHandler::AK < StateHandler::Base
 
     # Deal with an invalid card number
     ### Step 5. EXAMPLE — Edit for your state! ###
-    phrase_indicating_invalid_card_number = "CHANGE ME"
+    phrase_indicating_invalid_card_number = "having trouble locating"
 
     if transcription_text.include?(phrase_indicating_invalid_card_number)
       return mg.card_number_not_found_message
@@ -43,5 +43,4 @@ class StateHandler::AK < StateHandler::Base
     # You do not need to change this. :D
     return mg.having_trouble_try_again_message
   end
-=end # Delete this line when ready to transcribe
 end
