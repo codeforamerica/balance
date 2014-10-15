@@ -27,7 +27,7 @@ Our primary metrics are:
 - # of unique users with 1+ successful balance checks (growth)
 - % of users who check their balance more than once (engagement)
 
-[![Metrics](http://keep-your-balance.herokuapp.com/chart)](http://keep-your-balance.herokuapp.com/)
+[![Metrics](https://plot.ly/~lippytak/184.png)](http://keep-your-balance.herokuapp.com/)
 
 (click for interactive graph - sorry it's so slow!)
 
