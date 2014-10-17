@@ -76,6 +76,14 @@ For A/B testing different outreach media, we can buy a new phone number on the s
 
 We're deployed on Heroku on CFA's main account with both staging and production instances. Currently only @daguar is configured as a collaborator.
 
+### Adding new phone numbers
+
+If you add a new phone number, you will need to restart the app to get it working (this is because we pull down the list of phone numbers and their names when the app starts up, so it requires a restart to refresh this list.)
+
+To do this, simply restart production:
+
+`heroku restart -a balance-production`
+
 ## Copyright & License
 
 Copyright Code for America Labs, 2014 — MIT License
