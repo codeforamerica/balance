@@ -195,4 +195,4 @@ git push origin add-massachusetts
 
 3) PARTY!
 - Add your Twitter handle to the [Google Spreadsheet](https://docs.google.com/a/codeforamerica.org/spreadsheets/d/12jOXkz1bt7bHzhuXhHYdHhTd45IgrmyVg8-hw93BjIo/edit#gid=0) so we can let you know when it's live.
-- Send [@daguar](http://www.twitter.com/daguar) some twitter love! Include a link to your PR to make him extra happy :)
+- Send [Dave](http://www.twitter.com/allafarce) some twitter love! Include a link to your PR to make him extra happy :)
