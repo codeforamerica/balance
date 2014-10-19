@@ -32,7 +32,7 @@ class StateHandler::NC < StateHandler::Base
     regex_matches = transcription_text.scan(/(\$\S+)/)
     if regex_matches.count == 1
       ebt_amount = regex_matches[0][0]
-      return "Your food and nutritional benefits balance is #{ebt_amount}. Thanks."
+      return "Hi! Your food and nutrition benefits balance is #{ebt_amount}."
     end
 
     puts "[DEBUG] #{transcription_text.inspect}"
