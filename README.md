@@ -12,6 +12,10 @@ Currently available in:
 - Texas
 - Missouri
 - Pennsylvania
+- Alaska
+- North Carolina
+- Virginia
+- Oklahoma
 
 ## What it is
 
