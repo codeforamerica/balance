@@ -6,6 +6,7 @@ describe EbtBalanceSmsApp, :type => :feature do
     let(:inbound_twilio_number) { "+15556667777" }
     let(:fake_twilio) { double("FakeTwilioService", :make_call => 'made call', :send_text => 'sent text') }
     let(:to_state) { 'CA' }
+    let(:fake_message_generator) { double("MessageGenerator", :thanks_please_wait => "fake thanks please wait msg") }
 
     context 'with valid EBT number' do
       let(:ebt_number) { "1111222233334444" }
@@ -13,6 +14,7 @@ describe EbtBalanceSmsApp, :type => :feature do
 
       before do
         allow(TwilioService).to receive(:new).and_return(fake_twilio)
+        allow(MessageGenerator).to receive(:new).and_return(fake_message_generator)
         allow(StateHandler).to receive(:for).with(to_state).and_return(fake_state_handler)
         post '/', { "Body" => ebt_number, "From" => texter_number, "To" => inbound_twilio_number, "ToState" => to_state }
       end
@@ -34,7 +36,7 @@ describe EbtBalanceSmsApp, :type => :feature do
         expect(fake_twilio).to have_received(:send_text).with(
           to: texter_number,
           from: inbound_twilio_number,
-          body: "Thanks! Please wait 1-2 minutes while we check your EBT balance."
+          body: fake_message_generator.thanks_please_wait
         )
       end
 
