@@ -18,9 +18,38 @@ describe MessageGenerator do
     end
 
     describe '#sorry_try_again' do
-      it "says 'sorry, try again...'" do
-        desired_message = "Sorry, that EBT number doesn't look right. Please try again."
-        expect(mg.sorry_try_again).to eq(desired_message)
+      context 'with a single digit length for that state' do
+        it "says 'sorry, try again...'" do
+          digit_lengths = [16]
+          desired_message = "Sorry! That number doesn't look right. Please reply with your 16-digit EBT card number."
+          response = mg.sorry_try_again(digit_lengths)
+          expect(response).to eq(desired_message)
+        end
+      end
+
+      context 'with multiple possible digit lengths in the state' do
+        it "says 'sorry...' with multiple digits" do
+          digit_lengths = [16, 19]
+          desired_message = "Sorry! That number doesn't look right. Please reply with your 16- or 19-digit EBT card number."
+          response = mg.sorry_try_again([16, 19])
+          expect(response).to eq(desired_message)
+        end
+      end
+
+      context 'with no argument passed in' do
+        it "says 'sorry, try again...'" do
+          desired_message = "Sorry! That number doesn't look right. Please reply with your EBT card number."
+          response = mg.sorry_try_again
+          expect(response).to eq(desired_message)
+        end
+      end
+
+      context 'with nil passed in' do
+        it "says 'sorry, try again...'" do
+          desired_message = "Sorry! That number doesn't look right. Please reply with your EBT card number."
+          response = mg.sorry_try_again(nil)
+          expect(response).to eq(desired_message)
+        end
       end
     end
 

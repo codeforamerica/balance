@@ -10,7 +10,7 @@ describe EbtBalanceSmsApp, :type => :feature do
 
     context 'with valid EBT number' do
       let(:ebt_number) { "1111222233334444" }
-      let(:fake_state_handler) { double('FakeStateHandler', :phone_number => 'fake_state_phone_number', :button_sequence => "fake_button_sequence", :extract_valid_ebt_number_from_text => ebt_number ) }
+      let(:fake_state_handler) { double('FakeStateHandler', :phone_number => 'fake_state_phone_number', :button_sequence => "fake_button_sequence", :extract_valid_ebt_number_from_text => ebt_number) }
 
       before do
         allow(TwilioService).to receive(:new).and_return(fake_twilio)
@@ -47,7 +47,7 @@ describe EbtBalanceSmsApp, :type => :feature do
 
     context 'with INVALID EBT number' do
       let(:invalid_ebt_number) { "111122223333" }
-      let(:fake_state_handler) { double('FakeStateHandler', :phone_number => 'fake_state_phone_number', :button_sequence => "fake_button_sequence", :extract_valid_ebt_number_from_text => :invalid_number ) }
+      let(:fake_state_handler) { double('FakeStateHandler', :phone_number => 'fake_state_phone_number', :button_sequence => "fake_button_sequence", :extract_valid_ebt_number_from_text => :invalid_number, :allowed_number_of_ebt_card_digits => [14] ) }
 
       before do
         allow(TwilioService).to receive(:new).and_return(fake_twilio)
@@ -55,11 +55,15 @@ describe EbtBalanceSmsApp, :type => :feature do
         post '/', { "Body" => invalid_ebt_number, "From" => texter_number, "To" => inbound_twilio_number, "ToState" => to_state }
       end
 
+      it 'asks the state handler for the EBT card number of digits (to produce sorry msg)' do
+        expect(fake_state_handler).to have_received(:allowed_number_of_ebt_card_digits)
+      end
+
       it 'sends a text to the user with error message' do
         expect(fake_twilio).to have_received(:send_text).with(
           to: texter_number,
           from: inbound_twilio_number,
-          body: "Sorry, that EBT number doesn't look right. Please try again."
+          body: "Sorry! That number doesn't look right. Please reply with your 14-digit EBT card number."
         )
       end
 
