@@ -51,7 +51,7 @@ class EbtBalanceSmsApp < Sinatra::Base
       twilio_service.send_text(
         to: texter_phone_number,
         from: inbound_twilio_number,
-        body: message_generator.sorry_try_again
+        body: message_generator.sorry_try_again(state_handler.allowed_number_of_ebt_card_digits)
       )
     end
   end

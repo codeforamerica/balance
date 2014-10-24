@@ -13,11 +13,19 @@ class MessageGenerator
     end
   end
 
-  def sorry_try_again
+  def sorry_try_again(digits_array = [])
     if language == :spanish
       "Perdon, ese número de EBT no esta trabajando. Favor de intentarlo otra vez."
     else
-      "Sorry, that EBT number doesn't look right. Please try again."
+      if digits_array == nil
+        "Sorry! That number doesn't look right. Please reply with your EBT card number."
+      elsif digits_array.length == 1
+        "Sorry! That number doesn't look right. Please reply with your #{digits_array[0]}-digit EBT card number."
+      elsif digits_array.length == 2
+        "Sorry! That number doesn't look right. Please reply with your #{digits_array[0]}- or #{digits_array[1]}-digit EBT card number."
+      else
+        "Sorry! That number doesn't look right. Please reply with your EBT card number."
+      end
     end
   end
 
