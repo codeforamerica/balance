@@ -26,7 +26,10 @@ class StateHandler::OK < StateHandler::Base
         
     if regex_matches.count == 1
       ebt_amount = regex_matches[0][0]+""
-      return "Hi! Your food stamp balance is #{ebt_amount}."
+      if language == :spanish
+        return "Hola! El saldo de su cuenta de estampillas para comida es #{ebt_amount}."
+      else
+        return "Hi! Your food stamp balance is #{ebt_amount}."
     end
 
     # Deal with any other transcription (catching weird errors)
