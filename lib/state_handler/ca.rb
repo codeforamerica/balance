@@ -17,11 +17,7 @@ class StateHandler::CA < StateHandler::Base
     elsif regex_matches.count > 1
       ebt_amount = regex_matches[0][0]
       cash_amount = regex_matches[1][0]
-      if language == :spanish
-        "Hola! El saldo de su cuenta de estampillas para comida es #{ebt_amount} y su balance de dinero en efectivo es #{cash_amount}."
-      else
-        "Hi! Your food stamp balance is #{ebt_amount} and your cash balance is #{cash_amount}."
-      end
+      return mg.balance_message(ebt_amount, cash: cash_amount)
     else
       mg.having_trouble_try_again_message
     end
