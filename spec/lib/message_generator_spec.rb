@@ -95,6 +95,23 @@ describe MessageGenerator do
       end
     end
 
+    describe '#balance_message' do
+      context 'with single argument' do
+        it 'reports just the food stamp balance in Spanish' do
+          balance_message = mg.balance_message("$123.45")
+          expect(balance_message).to eq("Hola! El saldo de su cuenta de estampillas para comida es $123.45.")
+        end
+      end
+
+      context 'with a cash balance in second argument' do
+        it 'reports both food stamp and cash balances in Spanish' do
+          balance_message = mg.balance_message("$123.45", cash: "$42.11")
+          desired_message = "Hola! El saldo de su cuenta de estampillas para comida es $123.45 y su balance de dinero en efectivo es $42.11."
+          expect(balance_message).to eq(desired_message)
+        end
+      end
+    end
+
     describe '#sorry_try_again' do
       it "says Spanish version of 'sorry, try again...'" do
         desired_message = "Perdon, ese número de EBT no esta trabajando. Favor de intentarlo otra vez."
