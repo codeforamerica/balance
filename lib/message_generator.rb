@@ -13,6 +13,15 @@ class MessageGenerator
     end
   end
 
+  def balance_message(food_stamp_balance, optional_balances = {})
+    if optional_balances[:cash]
+      balance_message = "Hi! Your food stamp balance is #{food_stamp_balance} and your cash balance is #{optional_balances[:cash]}."
+    else
+      balance_message = "Hi! Your food stamp balance is #{food_stamp_balance}."
+    end
+    balance_message
+  end
+
   def sorry_try_again(digits_array = [])
     if language == :spanish
       "Perdon, ese número de EBT no esta trabajando. Favor de intentarlo otra vez."

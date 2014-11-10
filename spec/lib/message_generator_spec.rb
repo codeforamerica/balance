@@ -17,6 +17,23 @@ describe MessageGenerator do
       end
     end
 
+    describe '#balance_message' do
+      context 'with single argument' do
+        it 'reports just the food stamp balance' do
+          balance_message = mg.balance_message("$123.45")
+          expect(balance_message).to eq("Hi! Your food stamp balance is $123.45.")
+        end
+      end
+
+      context 'with a cash balance in second argument' do
+        it 'reports both food stamp and cash balances' do
+          balance_message = mg.balance_message("$123.45", cash: "$42.11")
+          desired_message = "Hi! Your food stamp balance is $123.45 and your cash balance is $42.11."
+          expect(balance_message).to eq(desired_message)
+        end
+      end
+    end
+
     describe '#sorry_try_again' do
       context 'with a single digit length for that state' do
         it "says 'sorry, try again...'" do
