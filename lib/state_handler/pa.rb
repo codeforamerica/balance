@@ -24,9 +24,9 @@ class StateHandler::PA < StateHandler::Base
 
     # Deal with an invalid card number
     ### Step 4. EXAMPLE — Edit for your state! ###
-    phrase_indicating_invalid_card_number = "Invalid Card Number"
+    phrase_indicating_invalid_card_number = "invalid card number"
 
-    if transcription_text.include?(phrase_indicating_invalid_card_number)
+    if transcription_text.downcase.include?(phrase_indicating_invalid_card_number)
       return mg.card_number_not_found_message
     end
 
