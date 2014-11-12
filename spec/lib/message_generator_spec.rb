@@ -17,6 +17,23 @@ describe MessageGenerator do
       end
     end
 
+    describe '#balance_message' do
+      context 'with single argument' do
+        it 'reports just the food stamp balance' do
+          balance_message = mg.balance_message("$123.45")
+          expect(balance_message).to eq("Hi! Your food stamp balance is $123.45.")
+        end
+      end
+
+      context 'with a cash balance in second argument' do
+        it 'reports both food stamp and cash balances' do
+          balance_message = mg.balance_message("$123.45", cash: "$42.11")
+          desired_message = "Hi! Your food stamp balance is $123.45 and your cash balance is $42.11."
+          expect(balance_message).to eq(desired_message)
+        end
+      end
+    end
+
     describe '#sorry_try_again' do
       context 'with a single digit length for that state' do
         it "says 'sorry, try again...'" do
@@ -75,6 +92,23 @@ describe MessageGenerator do
       it "says Spanish version of 'thanks please wait...'" do
         desired_message = "Gracias! Favor de esperar 1-2 minutos mientras verificamos su saldo de EBT."
         expect(mg.thanks_please_wait).to eq(desired_message)
+      end
+    end
+
+    describe '#balance_message' do
+      context 'with single argument' do
+        it 'reports just the food stamp balance in Spanish' do
+          balance_message = mg.balance_message("$123.45")
+          expect(balance_message).to eq("Hola! El saldo de su cuenta de estampillas para comida es $123.45.")
+        end
+      end
+
+      context 'with a cash balance in second argument' do
+        it 'reports both food stamp and cash balances in Spanish' do
+          balance_message = mg.balance_message("$123.45", cash: "$42.11")
+          desired_message = "Hola! El saldo de su cuenta de estampillas para comida es $123.45 y su balance de dinero en efectivo es $42.11."
+          expect(balance_message).to eq(desired_message)
+        end
       end
     end
 

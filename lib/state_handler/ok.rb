@@ -23,10 +23,10 @@ class StateHandler::OK < StateHandler::Base
 
     # Deal with a successful balance transcription
     regex_matches = transcription_text.scan(/(\$\d+\.?\d*)/)
-        
+
     if regex_matches.count == 1
       ebt_amount = regex_matches[0][0]+""
-      return "Hi! Your food stamp balance is #{ebt_amount}."
+      return mg.balance_message(ebt_amount)
     end
 
     # Deal with any other transcription (catching weird errors)

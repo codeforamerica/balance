@@ -19,11 +19,7 @@ class StateHandler::TX < StateHandler::Base
       if ebt_amount.match(/(\d{5,10})/)
         ebt_amount.gsub!("0","")
       end
-      if language == :spanish
-        "Hola! El saldo de su cuenta de estampillas para comida es #{ebt_amount}."
-      else
-        "Hi! Your food stamp balance is #{ebt_amount}."
-      end
+      return mg.balance_message(ebt_amount)
     else
       mg.having_trouble_try_again_message
     end
