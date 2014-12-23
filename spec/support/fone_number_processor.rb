@@ -6,6 +6,10 @@ class FoneNumberProcessor
     @language_hash = { '+15556667777' => :english, '+19998887777' => :spanish }
   end
 
+  def twilio_number?(phone_number)
+    @language_hash.keys.include?(phone_number)
+  end
+
   def language_for(phone_number)
     @language_hash[phone_number] or :english
   end
