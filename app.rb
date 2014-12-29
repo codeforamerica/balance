@@ -16,6 +16,17 @@ class EbtBalanceSmsApp < Sinatra::Base
   end
   set :phone_number_processor, PhoneNumberProcessor.new
 
+  helpers do
+    def validate_phone_number(phone_number)
+      Phoner::Phone.default_country_code = '1'
+      is_it_valid = Phoner::Phone.valid?(phone_number) &&
+        phone_number.length < 13 &&
+        phone_number.length > 11 &&
+        settings.phone_number_processor.twilio_number?(phone_number) == false
+      is_it_valid
+    end
+  end
+
   before do
     puts "Request details — #{request.request_method} #{request.url}" unless settings.environment == :test
   end
@@ -117,7 +128,7 @@ EOF
   post '/welcome' do
     Phoner::Phone.default_country_code = '1'
     texter_phone_number = Phoner::Phone.parse(params["texter_phone_number"]).to_s
-    if Phoner::Phone.valid?(texter_phone_number) && texter_phone_number.length < 13 && texter_phone_number.length > 11 && settings.phone_number_processor.twilio_number?(texter_phone_number) == false
+    if validate_phone_number(texter_phone_number)
       inbound_twilio_number = params["inbound_twilio_number"]
       language = settings.phone_number_processor.language_for(inbound_twilio_number)
       message_generator = MessageGenerator.new(language)
