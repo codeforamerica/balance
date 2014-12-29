@@ -18,6 +18,10 @@ class PhoneNumberProcessor
     end
   end
 
+  def twilio_number?(number)
+    lookup_hash.keys.include?(number)
+  end
+
   def language_for(phone_number)
     if phone_number.include?('+') == false
       phone_number_with_plus = '+' + phone_number

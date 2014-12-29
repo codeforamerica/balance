@@ -260,16 +260,17 @@ EOF
   end
 
   describe 'welcome text message' do
-    context 'with a valid phone number' do
-      let(:body) { "Hi there! Reply to this message with your EBT card number and I'll check your balance for you." }
-      let(:texter_phone_number) { "+12223334444" }
-      let(:inbound_twilio_number) { "+15556667777" }
-      let(:fake_twilio) { double("FakeTwilioService", :send_text => 'sent text') }
+    let(:body) { "Hi there! Reply to this message with your EBT card number and I'll check your balance for you." }
+    let(:fake_twilio) { double("FakeTwilioService", :send_text => 'sent text') }
+    let(:inbound_twilio_number) { "+15556667777" }
 
-      before do
-        allow(TwilioService).to receive(:new).and_return(fake_twilio)
-        post '/welcome', { "inbound_twilio_number" => inbound_twilio_number, "texter_phone_number" => texter_phone_number }
-      end
+    before(:each) do
+      allow(TwilioService).to receive(:new).and_return(fake_twilio)
+      post '/welcome', { "inbound_twilio_number" => inbound_twilio_number, "texter_phone_number" => texter_phone_number }
+    end
+
+    context 'with a valid phone number' do
+      let(:texter_phone_number) { "+12223334444" }
 
       it 'sends a text to the user with instructions' do
         expect(fake_twilio).to have_received(:send_text).with(
@@ -284,5 +285,16 @@ EOF
       end
     end
 
+    context "with a user inputting one of the app's Twilio phone numbers" do
+      let(:texter_phone_number) { "+15556667777" }
+
+      it 'does NOT send a text' do
+        expect(fake_twilio).to_not have_received(:send_text)
+      end
+
+      it 'responds with 200 status' do
+        expect(last_response.status).to eq(200)
+      end
+    end
   end
 end
