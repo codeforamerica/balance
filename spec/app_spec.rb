@@ -263,6 +263,7 @@ EOF
     let(:body) { "Hi there! Reply to this message with your EBT card number and I'll check your balance for you." }
     let(:fake_twilio) { double("FakeTwilioService", :send_text => 'sent text') }
     let(:inbound_twilio_number) { "+15556667777" }
+    let(:invalid_number_message_text) { "Sorry! That number is not valid. Please go back and try again." }
 
     before(:each) do
       allow(TwilioService).to receive(:new).and_return(fake_twilio)
@@ -285,6 +286,54 @@ EOF
       end
     end
 
+    context "with garbage input" do
+      let(:texter_phone_number) { "asfljhasgkjshgkj" }
+
+      it 'does NOT send a text' do
+        expect(fake_twilio).to_not have_received(:send_text)
+      end
+
+      it 'responds with 200 status' do
+        expect(last_response.status).to eq(200)
+      end
+
+      it 'gives error message telling you to try again' do
+        expect(last_response.body).to include(invalid_number_message_text)
+      end
+    end
+
+    context "with an invalid phone number" do
+      let(:texter_phone_number) { "41522233334" }
+
+      it 'does NOT send a text' do
+        expect(fake_twilio).to_not have_received(:send_text)
+      end
+
+      it 'responds with 200 status' do
+        expect(last_response.status).to eq(200)
+      end
+
+      it 'gives error message telling you to try again' do
+        expect(last_response.body).to include(invalid_number_message_text)
+      end
+    end
+
+    context "with an invalid (too short) phone number" do
+      let(:texter_phone_number) { "415222333" }
+
+      it 'does NOT send a text' do
+        expect(fake_twilio).to_not have_received(:send_text)
+      end
+
+      it 'responds with 200 status' do
+        expect(last_response.status).to eq(200)
+      end
+
+      it 'gives error message telling you to try again' do
+        expect(last_response.body).to include(invalid_number_message_text)
+      end
+    end
+
     context "with a user inputting one of the app's Twilio phone numbers" do
       let(:texter_phone_number) { "+15556667777" }
 
@@ -294,6 +343,10 @@ EOF
 
       it 'responds with 200 status' do
         expect(last_response.status).to eq(200)
+      end
+
+      it 'gives error message telling you to try again' do
+        expect(last_response.body).to include(invalid_number_message_text)
       end
     end
   end
