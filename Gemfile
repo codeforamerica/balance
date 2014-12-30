@@ -6,6 +6,7 @@ gem 'twilio-ruby'
 gem 'rack-ssl'
 gem 'phone'
 gem 'require_all'
+gem 'unicorn'
 
 group :test, :development do
   gem 'rspec'
