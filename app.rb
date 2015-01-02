@@ -1,7 +1,6 @@
 require 'sinatra'
 require 'twilio-ruby'
 require 'rack/ssl'
-require 'phone'
 require File.expand_path('../lib/twilio_service', __FILE__)
 require File.expand_path('../lib/state_handler', __FILE__)
 require File.expand_path('../lib/phone_number_processor', __FILE__)
@@ -17,13 +16,26 @@ class EbtBalanceSmsApp < Sinatra::Base
   set :phone_number_processor, PhoneNumberProcessor.new
 
   helpers do
-    def validate_phone_number(phone_number)
-      Phoner::Phone.default_country_code = '1'
-      is_it_valid = Phoner::Phone.valid?(phone_number) &&
-        phone_number.length < 13 &&
-        phone_number.length > 11 &&
-        settings.phone_number_processor.twilio_number?(phone_number) == false
+    def valid_phone_number?(phone_number)
+      contains_good_number_of_phone_digits?(phone_number) && !one_of_our_twilio_numbers?(phone_number)
+    end
+
+    def contains_good_number_of_phone_digits?(phone_number)
+      is_it_valid = (phone_number.length == 10) || (phone_number.length == 11 && phone_number[0] == '1')
       is_it_valid
+    end
+
+    def one_of_our_twilio_numbers?(phone_number)
+      formatted_phone_number = convert_to_e164_phone_number(phone_number)
+      settings.phone_number_processor.twilio_number?(formatted_phone_number)
+    end
+
+    def convert_to_e164_phone_number(phone_number)
+      if phone_number.length == 10
+        '+1' + phone_number
+      elsif phone_number.length == 11
+        '+' + phone_number
+      end
     end
   end
 
@@ -126,21 +138,22 @@ EOF
   end
 
   post '/welcome' do
-    Phoner::Phone.default_country_code = '1'
-    texter_phone_number = Phoner::Phone.parse(params["texter_phone_number"]).to_s
-    if validate_phone_number(texter_phone_number)
+    puts "/welcome request params: #{params}" unless settings.environment == :test
+    digits_only_input = params['texter_phone_number'].gsub(/\D/, "")
+    if valid_phone_number?(digits_only_input)
+      formatted_phone_number = convert_to_e164_phone_number(digits_only_input)
       inbound_twilio_number = params["inbound_twilio_number"]
       language = settings.phone_number_processor.language_for(inbound_twilio_number)
       message_generator = MessageGenerator.new(language)
       twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
       twilio_service.send_text(
-        to: texter_phone_number,
+        to: formatted_phone_number,
         from: inbound_twilio_number,
         body: message_generator.welcome
       )
       "Great! I just sent you a text message with instructions. I hope you find this service useful!"
     else
-      "Sorry! That number is not valid. Please go back and try again."
+      "Sorry! That number doesn't look right. Please go back and try again."
     end
   end
 end

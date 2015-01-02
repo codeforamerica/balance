@@ -263,7 +263,7 @@ EOF
     let(:body) { "Hi there! Reply to this message with your EBT card number and I'll check your balance for you." }
     let(:fake_twilio) { double("FakeTwilioService", :send_text => 'sent text') }
     let(:inbound_twilio_number) { "+15556667777" }
-    let(:invalid_number_message_text) { "Sorry! That number is not valid. Please go back and try again." }
+    let(:invalid_number_message_text) { "Sorry! That number doesn't look right. Please go back and try again." }
 
     before(:each) do
       allow(TwilioService).to receive(:new).and_return(fake_twilio)
@@ -276,6 +276,22 @@ EOF
       it 'sends a text to the user with instructions' do
         expect(fake_twilio).to have_received(:send_text).with(
           to: texter_phone_number,
+          from: inbound_twilio_number,
+          body: body
+        )
+      end
+
+      it 'responds with 200 status' do
+        expect(last_response.status).to eq(200)
+      end
+    end
+
+    context "with a valid (with formatting) phone number" do
+      let(:texter_phone_number) { "(510) 111-2222" }
+
+      it 'sends a text' do
+        expect(fake_twilio).to have_received(:send_text).with(
+          to: '+15101112222',
           from: inbound_twilio_number,
           body: body
         )
@@ -302,7 +318,7 @@ EOF
       end
     end
 
-    context "with an invalid phone number" do
+    context "with an invalid (too long) phone number" do
       let(:texter_phone_number) { "41522233334" }
 
       it 'does NOT send a text' do
@@ -335,7 +351,23 @@ EOF
     end
 
     context "with a user inputting one of the app's Twilio phone numbers" do
-      let(:texter_phone_number) { "+15556667777" }
+      let(:texter_phone_number) { "555 666 7777" }
+
+      it 'does NOT send a text' do
+        expect(fake_twilio).to_not have_received(:send_text)
+      end
+
+      it 'responds with 200 status' do
+        expect(last_response.status).to eq(200)
+      end
+
+      it 'gives error message telling you to try again' do
+        expect(last_response.body).to include(invalid_number_message_text)
+      end
+    end
+
+    context '7 digit phone number' do
+      let(:texter_phone_number) { "2223333" }
 
       it 'does NOT send a text' do
         expect(fake_twilio).to_not have_received(:send_text)
