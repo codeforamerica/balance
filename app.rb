@@ -15,6 +15,10 @@ class EbtBalanceSmsApp < Sinatra::Base
   end
   set :phone_number_processor, PhoneNumberProcessor.new
 
+  configure :production do
+    require 'newrelic_rpm'
+  end
+
   helpers do
     def valid_phone_number?(phone_number)
       contains_good_number_of_phone_digits?(phone_number) && !one_of_our_twilio_numbers?(phone_number)

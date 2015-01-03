@@ -7,6 +7,7 @@ gem 'rack-ssl'
 gem 'require_all'
 gem 'unicorn'
 gem 'rack-timeout'
+gem 'newrelic_rpm'
 
 group :test, :development do
   gem 'rspec'
