@@ -12,7 +12,7 @@ describe MessageGenerator do
 
     describe '#thanks_please_wait' do
       it "says 'thanks please wait...'" do
-        desired_message = "Thanks! Please wait 1-2 minutes while we check your EBT balance."
+        desired_message = "Thanks! Please wait 1-2 min while we check your balance. Help us improve this service & earn a $5 Amazon credit. Text 415-877-4154 & answer 4 quick questions."
         expect(mg.thanks_please_wait).to eq(desired_message)
       end
     end

@@ -9,7 +9,7 @@ class MessageGenerator
     if language == :spanish
       "Gracias! Favor de esperar 1-2 minutos mientras verificamos su saldo de EBT."
     else
-      "Thanks! Please wait 1-2 minutes while we check your EBT balance."
+      "Thanks! Please wait 1-2 min while we check your balance. Help us improve this service & earn a $5 Amazon credit. Text 415-877-4154 & answer 4 quick questions."
     end
   end
 
