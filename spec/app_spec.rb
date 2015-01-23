@@ -237,12 +237,8 @@ EOF
       expect(last_response.status).to eq(200)
     end
 
-    it 'sends an outbound text to the number' do
-      expect(fake_twilio).to have_received(:send_text).with(
-        to: caller_number,
-        from: inbound_twilio_number,
-        body: fake_message_generator.inbound_voice_call_text_message
-      )
+    it 'does NOT send an outbound text to the number' do
+      expect(fake_twilio).to_not have_received(:send_text)
     end
 
     it 'plays welcome message to caller and allows them to go to state line' do
