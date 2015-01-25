@@ -72,7 +72,7 @@ describe MessageGenerator do
 
     describe '#call_in_voice_file_url' do
       it "gives the English s3 file URL" do
-        url = 'https://s3-us-west-1.amazonaws.com/balance-cfa/balance-voice-splash-v3-091214.mp3'
+        url = 'https://s3-us-west-1.amazonaws.com/balance-cfa/balance-voice-splash-v4-012515.mp3'
         expect(mg.call_in_voice_file_url).to eq(url)
       end
     end
@@ -114,7 +114,7 @@ describe MessageGenerator do
 
     describe '#call_in_voice_file_url' do
       it "gives the Spanish s3 file URL" do
-        url = 'https://s3-us-west-1.amazonaws.com/balance-cfa/balance-voice-splash-spanish-v1-091214.mp3'
+        url = 'https://s3-us-west-1.amazonaws.com/balance-cfa/balance-voice-splash-spanish-v2-012515.mp3'
         expect(mg.call_in_voice_file_url).to eq(url)
       end
     end
