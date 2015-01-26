@@ -46,14 +46,6 @@ class MessageGenerator
     end
   end
 
-  def inbound_voice_call_text_message
-    if language == :spanish
-      'Hola! Para obtener su saldo, responda a este mensaje con el numero de su tarjeta EBT.'
-    else
-      'Hi! Please reply with your EBT card number to get your balance.'
-    end
-  end
-
   def welcome
     if language == :spanish
       'Hola! Usted puede verificar su saldo de EBT por mensaje de texto. Solo responda a este mensaje con su número de tarjeta de EBT.'
@@ -80,9 +72,9 @@ class MessageGenerator
 
   def call_in_voice_file_url
     if language == :spanish
-      'https://s3-us-west-1.amazonaws.com/balance-cfa/balance-voice-splash-spanish-v1-091214.mp3'
+      'https://s3-us-west-1.amazonaws.com/balance-cfa/balance-voice-splash-spanish-v2-012515.mp3'
     else
-      'https://s3-us-west-1.amazonaws.com/balance-cfa/balance-voice-splash-v3-091214.mp3'
+      'https://s3-us-west-1.amazonaws.com/balance-cfa/balance-voice-splash-v4-012515.mp3'
     end
   end
 end
