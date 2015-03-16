@@ -92,7 +92,7 @@ class EbtBalanceSmsApp < Sinatra::Base
       r.Play digits: state_handler.button_sequence(params['ebt_number'])
       r.Record transcribe: true,
         transcribeCallback: "#{settings.url_scheme}://#{request.env['HTTP_HOST']}/#{state}/#{phone_number}/#{twilio_number}/send_balance",
-        maxLength: 18
+        maxLength: state_handler.max_message_length
     end.text
   end
 

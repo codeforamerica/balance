@@ -22,4 +22,8 @@ class StateHandler::CA < StateHandler::Base
       mg.having_trouble_try_again_message
     end
   end
+
+  def max_message_length
+    22
+  end
 end

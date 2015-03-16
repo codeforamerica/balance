@@ -22,4 +22,8 @@ class StateHandler::Base
   def transcribe_balance_response(transcription_text, language = :english)
     transcription_text
   end
+
+  def max_message_length
+    18
+  end
 end

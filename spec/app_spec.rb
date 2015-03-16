@@ -106,7 +106,7 @@ describe EbtBalanceSmsApp, :type => :feature do
     let(:inbound_twilio_number) { "+15556667777" }
     let(:state) { 'CA' }
     let(:ebt_number) { "1111222233334444" }
-    let(:fake_state_handler) { double('FakeStateHandler', :button_sequence => "fake_button_sequence" ) }
+    let(:fake_state_handler) { double('FakeStateHandler', :button_sequence => "fake_button_sequence", :max_message_length => 22) }
 
     before do
       allow(StateHandler).to receive(:for).and_return(fake_state_handler)
@@ -130,7 +130,7 @@ describe EbtBalanceSmsApp, :type => :feature do
     end
 
     it 'has max recording length set correctly' do
-      expect(@maxlength).to eq("18")
+      expect(@maxlength).to eq("22")
     end
 
     it 'responds with 200 status' do
