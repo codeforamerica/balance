@@ -10,12 +10,12 @@ Currently available in:
 
 - California
 - Texas
-- Missouri
 - Pennsylvania
 - Alaska
-- North Carolina
 - Virginia
 - Oklahoma
+
+If you want to use Balance with real SNAP recipients, check out the [list of official Balance phone numbers](https://github.com/codeforamerica/balance/wiki#phone-numbers).
 
 ## What it is
 
