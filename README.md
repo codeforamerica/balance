@@ -10,12 +10,12 @@ Currently available in:
 
 - California
 - Texas
-- Missouri
 - Pennsylvania
 - Alaska
-- North Carolina
 - Virginia
 - Oklahoma
+
+If you want to use Balance with real SNAP recipients, check out the [list of official Balance phone numbers](https://github.com/codeforamerica/balance/wiki#phone-numbers).
 
 ## What it is
 
@@ -23,7 +23,7 @@ This is a simple Ruby app built on Twilio that creates a text message interface 
 
 The original idea was by @lippytak with influence from @alanjosephwilliams's experience on Code for America's [health project ideas](https://github.com/codeforamerica/health-project-ideas/issues/34) repo.
 
-This is a project of CFA's Health SpecOps Team.
+This is a project of CFA's Health Lab Team.
 
 ## Metrics
 Our primary metrics are:
@@ -34,6 +34,9 @@ Our primary metrics are:
 [![Metrics](https://plot.ly/~lippytak/184.png)](http://keep-your-balance.herokuapp.com/)
 
 (click for interactive graph - sorry it's so slow!)
+
+## Contribute
+We aren't accepting contributions right now because it takes a lot of work to QA each new state and we don't have it. Sorry about that! If you're really interested and/or work for a gov agency please feel free to get in touch: health-lab@codeforamerica.org.
 
 ## Deployment
 

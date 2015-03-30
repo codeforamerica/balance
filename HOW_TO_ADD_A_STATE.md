@@ -1,3 +1,4 @@
+Note: We aren't accepting contributions right now. Sorry! See the readme for details: https://github.com/codeforamerica/balance#contribute
 
 # How to add a state to Balance
 
