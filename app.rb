@@ -62,24 +62,29 @@ class EbtBalanceSmsApp < Sinatra::Base
     twiml_url << "&ebt_number=#{ebt_number}"
     language = settings.phone_number_processor.language_for(inbound_twilio_number)
     message_generator = MessageGenerator.new(language)
-    if ebt_number != :invalid_number
-      twilio_service.make_call(
-        url: twiml_url,
-        to: state_handler.phone_number,
-        from: inbound_twilio_number,
-        method: "GET"
-      )
-      twilio_service.send_text(
-        to: texter_phone_number,
-        from: inbound_twilio_number,
-        body: message_generator.thanks_please_wait
-      )
-    else
-      twilio_service.send_text(
-        to: texter_phone_number,
-        from: inbound_twilio_number,
-        body: message_generator.sorry_try_again(state_handler.allowed_number_of_ebt_card_digits)
-      )
+    # Need to rescue Twilio API errors
+    begin
+      if ebt_number != :invalid_number
+        twilio_service.send_text(
+          to: texter_phone_number,
+          from: inbound_twilio_number,
+          body: message_generator.thanks_please_wait
+        )
+        twilio_service.make_call(
+          url: twiml_url,
+          to: state_handler.phone_number,
+          from: inbound_twilio_number,
+          method: "GET"
+        )
+      else
+        twilio_service.send_text(
+          to: texter_phone_number,
+          from: inbound_twilio_number,
+          body: message_generator.sorry_try_again(state_handler.allowed_number_of_ebt_card_digits)
+        )
+      end
+    rescue Twilio::REST::RequestError => e
+      puts "Twilio API request error - \"#{e.message}\""
     end
   end
 
