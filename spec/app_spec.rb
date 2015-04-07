@@ -72,6 +72,45 @@ describe EbtBalanceSmsApp, :type => :feature do
       end
     end
 
+    context 'with blocked phone number' do
+      let(:fake_state_handler) { double('FakeStateHandler', :phone_number => 'fake_state_phone_number', :button_sequence => "fake_button_sequence", :extract_valid_ebt_number_from_text => :invalid_number, :allowed_number_of_ebt_card_digits => [14] ) }
+      let(:fake_twilio_with_blacklist_raise) { double("FakeTwilioService") }
+
+      before do
+        allow(fake_twilio_with_blacklist_raise).to receive(:send_text).and_raise(Twilio::REST::RequestError.new("The message From/To pair violates a blacklist rule."))
+        allow(TwilioService).to receive(:new).and_return(fake_twilio_with_blacklist_raise)
+        allow(StateHandler).to receive(:for).with(to_state).and_return(fake_state_handler)
+      end
+
+      context 'with an EBT # that passes validation in the body' do
+        before do
+          post '/', { "Body" => "11112222333344", "From" => texter_number, "To" => inbound_twilio_number, "ToState" => to_state }
+        end
+
+        it 'does NOT initiate a call via Twilio' do
+          expect(fake_twilio).to_not have_received(:make_call)
+        end
+
+        it 'does not blow up (ie, it responds with 200 status)' do
+          expect(last_response.status).to eq(200)
+        end
+      end
+
+      context 'with text in the body' do
+        before do
+          post '/', { "Body" => "Stop", "From" => texter_number, "To" => inbound_twilio_number, "ToState" => to_state }
+        end
+
+        it 'does NOT initiate a call via Twilio' do
+          expect(fake_twilio).to_not have_received(:make_call)
+        end
+
+        it 'does not blow up (ie, it responds with 200 status)' do
+          expect(last_response.status).to eq(200)
+        end
+      end
+    end
+
     context 'using Spanish-language Twilio phone number' do
       let(:ebt_number) { "1111222233334444" }
       let(:spanish_twilio_number) { "+19998887777" }
