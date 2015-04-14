@@ -30,6 +30,7 @@ end
 
 describe StateHandler::AK do
   describe 'balance transcription processing' do
+    let(:transcription_with_trailing_period) { "1:00 moment please. Okay. I pulled up your account information. Your food stamp balance is $3.48. You are eligible to enroll in (new?) free service called." }
 
     # DUMMY — not taken from real logs
     let(:successful_transcription_1) { "blah $123.45 blah" }
@@ -44,6 +45,13 @@ describe StateHandler::AK do
         it 'sends response with balance amounts' do
           reply_for_user = subject.transcribe_balance_response(successful_transcription_1)
           expect(reply_for_user).to eq("Hi! Your food stamp balance is $123.45.")
+        end
+      end
+
+      context 'with transcription with trailing period on balance amount' do
+        it 'sends balance without trailing period' do
+          reply_for_user = subject.transcribe_balance_response(transcription_with_trailing_period)
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $3.48.")
         end
       end
 
@@ -137,6 +145,7 @@ describe StateHandler::CA do
       let(:successful_transcription_1) { "Your food stamp balance is $136.33 your cash account balance is $0 as a reminder by saving the receipt from your last purchase and your last a cash purchase for Cash Bank Transaction you will always have your current balance at and will also print your balance on the Cash Withdrawal receipt to hear the number of Cash Withdrawal for that a transaction fee (running?) this month press 1 to hear your last 10 transactions report a transaction there file a claim or check the status of a claim press 2 to report your card lost stolen or damaged press 3 for (pin?) replacement press 4 for additional options press 5" }
     let(:successful_transcription_2) { "(Stamp?) balance is $123.11 your cash account balance is $11.32 as a reminder by saving the receipt from your last purchase and your last a cash purchase or cash back transaction you will always have your current balance at and will also print the balance on the Cash Withdrawal receipt to hear the number of Cash Withdrawal for that a transaction fee this month press 1 to hear your last 10 transactions report a transaction there file a claim or check the status of a claim press 2 to report your card lost stolen or damaged press 3 for (pin?) replacement press 4 for additional options press 5" }
       let(:successful_transcription_3) { "Devon Alan is $156.89 your cash account balance is $4.23 as a reminder by saving the receipt from your last purchase and your last the cash purchase or cash back for (action?) you will always have your current balance. I'm at and will also print the balance on the Cash Withdrawal receipt to hear the number of Cash Withdrawal for that a transaction fee (running?) this month press 1 to hear your last 10 transactions report a transaction there file a claim or check the status of a claim press 2 to report your card lost stolen or damaged press 3 for pain placement press 4 for additional options press 5" }
+      let(:successful_transcription_extra_periods) { "Your food stamp balance is $9.11. Your cash account balance is $13.93. As a reminder. Bye C." }
       let(:transcription_ebt_not_found) { "Our records indicate the number you have entered it's for an non working card in case your number was entered incorrectly please reenter your 16 digit card number followed by the pound sign." }
 
 
@@ -161,6 +170,13 @@ describe StateHandler::CA do
         it 'sends response with balance amounts' do
           reply_for_user = subject.transcribe_balance_response(successful_transcription_3)
           expect(reply_for_user).to eq("Hi! Your food stamp balance is $156.89 and your cash balance is $4.23.")
+        end
+      end
+
+      context 'with a transcription with extraneous periods' do
+        it 'sends response with balance amounts without extra periods' do
+          reply_for_user = subject.transcribe_balance_response(successful_transcription_extra_periods)
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $9.11 and your cash balance is $13.93.")
         end
       end
 
@@ -406,6 +422,7 @@ end
 
 describe StateHandler::PA do
   describe 'balance transcription' do
+    let(:successful_transcription_with_extraneous_period) { "Your snap balance is $716. Your cash balance is $294.68. to repeat your account balance press 1 To hear your last 10 transactions on your card. Press." }
 
     # DUMMY — not taken from real logs
     let(:successful_transcription_1) { "blah $136.33 blah $23.87 blah" }
@@ -421,6 +438,13 @@ describe StateHandler::PA do
         it 'sends response with balance amounts' do
           reply_for_user = subject.transcribe_balance_response(successful_transcription_1)
           expect(reply_for_user).to eq("Hi! Your food stamp balance is $136.33 and your cash balance is $23.87.")
+        end
+      end
+
+      context 'with transcription with balance and extraneous periods' do
+        it 'transcribes without extraneous periods in amounts' do
+          reply_for_user = subject.transcribe_balance_response(successful_transcription_with_extraneous_period)
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $716 and your cash balance is $294.68.")
         end
       end
 
@@ -572,6 +596,7 @@ end
 
 describe StateHandler::VA do
   describe 'balance transcription' do
+    let(:transcription_with_trailing_period) { "Your snap balance is $221.90. As a reminder by saving to (receive?) from your last purchase you'll know your current balance. You can also access your balance online at www.EBT dot a C at." }
 
     # DUMMY — not taken from real logs
     let(:successful_transcription_1) { "blah $136.33 blah $23.87 blah" }
@@ -587,6 +612,13 @@ describe StateHandler::VA do
         it 'sends response with balance amounts' do
           reply_for_user = subject.transcribe_balance_response(successful_transcription_1)
           expect(reply_for_user).to eq("Hi! Your food stamp balance is $136.33.")
+        end
+      end
+
+      context 'with transcription with trailing period in amount' do
+        it 'sends response with balance without trailing period' do
+          reply_for_user = subject.transcribe_balance_response(transcription_with_trailing_period)
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $221.90.")
         end
       end
 

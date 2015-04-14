@@ -11,7 +11,7 @@ class StateHandler::CA < StateHandler::Base
     if transcription_text == nil
       return mg.having_trouble_try_again_message
     end
-    regex_matches = transcription_text.scan(/(\$\S+)/)
+    regex_matches = transcription_text.scan(/(\$\d+\.?\d*)/)
     if transcription_text.include?("non working card")
       mg.card_number_not_found_message
     elsif regex_matches.count > 1

@@ -29,7 +29,7 @@ class StateHandler::NC < StateHandler::Base
 
     # Deal with a successful balance transcription
     ### Step 6. EXAMPLE — Edit for your state! ###
-    regex_matches = transcription_text.scan(/(\$\S+)/)
+    regex_matches = transcription_text.scan(/(\$\d+\.?\d*)/)
     if regex_matches.count == 1
       ebt_amount = regex_matches[0][0]
       return "Hi! Your food and nutrition benefits balance is #{ebt_amount}."
