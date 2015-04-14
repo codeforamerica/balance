@@ -15,8 +15,8 @@ class StateHandler::CA < StateHandler::Base
     if transcription_text.include?("non working card")
       mg.card_number_not_found_message
     elsif regex_matches.count > 1
-      ebt_amount = regex_matches[0][0]
-      cash_amount = regex_matches[1][0]
+      ebt_amount = clean_trailing_period(regex_matches[0][0])
+      cash_amount = clean_trailing_period(regex_matches[1][0])
       return mg.balance_message(ebt_amount, cash: cash_amount)
     else
       mg.having_trouble_try_again_message
