@@ -50,7 +50,7 @@ class MessageGenerator
     if language == :spanish
       'Hola! Usted puede verificar su saldo de EBT por mensaje de texto. Solo responda a este mensaje con su número de tarjeta de EBT.'
     else
-      "Hi there! Reply to this message with your EBT card number and I'll check your balance for you."
+      "Hi there! Reply to this message with your EBT card number and we'll check your balance for you. For more info, text ABOUT."
     end
   end
 
@@ -76,5 +76,9 @@ class MessageGenerator
     else
       'https://s3-us-west-1.amazonaws.com/balance-cfa/balance-voice-splash-v4-012515.mp3'
     end
+  end
+
+  def more_info
+    "This is a free text service provided by non-profit Code for America for checking your EBT balance (standard rates apply). For more info go to www.c4a.me/balance"
   end
 end
