@@ -34,8 +34,8 @@ class StateHandler::PA < StateHandler::Base
     ### Step 5. EXAMPLE — Edit for your state! ###
     regex_matches = transcription_text.scan(/(\$\S+)/)
     if regex_matches.count > 1
-      ebt_amount = regex_matches[0][0]
-      cash_amount = regex_matches[1][0]
+      ebt_amount = clean_trailing_period(regex_matches[0][0])
+      cash_amount = clean_trailing_period(regex_matches[1][0])
       return mg.balance_message(ebt_amount, cash: cash_amount)
     end
 

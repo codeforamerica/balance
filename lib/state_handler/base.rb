@@ -1,4 +1,6 @@
 class StateHandler::Base
+  include TranscriptionParsingHelpers
+
   def phone_number
     self.class.const_get(:PHONE_NUMBER)
   end
