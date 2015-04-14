@@ -72,6 +72,96 @@ describe EbtBalanceSmsApp, :type => :feature do
       end
     end
 
+    context 'asking for more info (about)' do
+      let(:fake_state_handler) { double('FakeStateHandler', :phone_number => 'fake_state_phone_number', :button_sequence => "fake_button_sequence", :extract_valid_ebt_number_from_text => :invalid_number, :allowed_number_of_ebt_card_digits => [14] ) }
+      let(:more_info_content) { "This is a free text service provided by non-profit Code for America for checking your EBT balance (standard rates apply). For more info go to www.c4a.me/balance" }
+
+      before do
+        allow(TwilioService).to receive(:new).and_return(fake_twilio)
+        allow(StateHandler).to receive(:for).with(to_state).and_return(fake_state_handler)
+      end
+
+      context 'with all caps' do
+        let(:body) { "ABOUT" }
+
+        before do
+          post '/', { "Body" => body, "From" => texter_number, "To" => inbound_twilio_number, "ToState" => to_state }
+        end
+
+        it 'sends a text to the user with more info' do
+          expect(fake_twilio).to have_received(:send_text).with(
+            to: texter_number,
+            from: inbound_twilio_number,
+            body: more_info_content
+          )
+        end
+
+        it 'responds with 200 status' do
+          expect(last_response.status).to eq(200)
+        end
+      end
+
+      context 'with lower case' do
+        let(:body) { "about" }
+
+        before do
+          post '/', { "Body" => body, "From" => texter_number, "To" => inbound_twilio_number, "ToState" => to_state }
+        end
+
+        it 'sends a text to the user with more info' do
+          expect(fake_twilio).to have_received(:send_text).with(
+            to: texter_number,
+            from: inbound_twilio_number,
+            body: more_info_content
+          )
+        end
+
+        it 'responds with 200 status' do
+          expect(last_response.status).to eq(200)
+        end
+      end
+
+      context 'with camel case' do
+        let(:body) { "About" }
+
+        before do
+          post '/', { "Body" => body, "From" => texter_number, "To" => inbound_twilio_number, "ToState" => to_state }
+        end
+
+        it 'sends a text to the user with more info' do
+          expect(fake_twilio).to have_received(:send_text).with(
+            to: texter_number,
+            from: inbound_twilio_number,
+            body: more_info_content
+          )
+        end
+
+        it 'responds with 200 status' do
+          expect(last_response.status).to eq(200)
+        end
+      end
+
+      context 'with about embedded inside another string' do
+        let(:body) { "akjhsasfhaboutaskjh ashjd PHEEa23" }
+
+        before do
+          post '/', { "Body" => body, "From" => texter_number, "To" => inbound_twilio_number, "ToState" => to_state }
+        end
+
+        it 'sends a text to the user with more info' do
+          expect(fake_twilio).to have_received(:send_text).with(
+            to: texter_number,
+            from: inbound_twilio_number,
+            body: more_info_content
+          )
+        end
+
+        it 'responds with 200 status' do
+          expect(last_response.status).to eq(200)
+        end
+      end
+    end
+
     context 'with blocked phone number' do
       let(:fake_state_handler) { double('FakeStateHandler', :phone_number => 'fake_state_phone_number', :button_sequence => "fake_button_sequence", :extract_valid_ebt_number_from_text => :invalid_number, :allowed_number_of_ebt_card_digits => [14] ) }
       let(:fake_twilio_with_blacklist_raise) { double("FakeTwilioService") }
@@ -295,7 +385,7 @@ EOF
   end
 
   describe 'welcome text message' do
-    let(:body) { "Hi there! Reply to this message with your EBT card number and I'll check your balance for you." }
+    let(:body) { "Hi there! Reply to this message with your EBT card number and we'll check your balance for you. For more info, text ABOUT." }
     let(:fake_twilio) { double("FakeTwilioService", :send_text => 'sent text') }
     let(:inbound_twilio_number) { "+15556667777" }
     let(:invalid_number_message_text) { "Sorry! That number doesn't look right. Please go back and try again." }

@@ -76,6 +76,12 @@ class EbtBalanceSmsApp < Sinatra::Base
           from: inbound_twilio_number,
           method: "GET"
         )
+      elsif params["Body"].downcase.include?('about')
+        twilio_service.send_text(
+          to: texter_phone_number,
+          from: inbound_twilio_number,
+          body: message_generator.more_info
+        )
       else
         twilio_service.send_text(
           to: texter_phone_number,
