@@ -26,6 +26,12 @@ describe StateHandler::Base do
       expect(subject.transcribe_balance_response("hi")).to eq("hi")
     end
   end
+
+  describe 'default #max_message_length for a handler' do
+    it 'is 18' do
+      expect(subject.max_message_length).to eq(18)
+    end
+  end
 end
 
 describe StateHandler::AK do
@@ -138,6 +144,10 @@ describe StateHandler::CA do
       inbound_text = 'my ebt is 123'
       extracted_number = subject.extract_valid_ebt_number_from_text(inbound_text)
       expect(extracted_number).to eq(:invalid_number)
+    end
+
+    it 'returns a value of 22 for #max_message_length' do
+      expect(subject.max_message_length).to eq(22)
     end
   end
 
