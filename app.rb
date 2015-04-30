@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'sinatra/json'
 require 'twilio-ruby'
 require 'rack/ssl'
 require File.expand_path('../lib/twilio_service', __FILE__)
@@ -42,34 +43,10 @@ class EbtBalanceSmsApp < Sinatra::Base
         '+' + phone_number
       end
     end
-
   end
 
   before do
     puts "Request details — #{request.request_method} #{request.url}" unless settings.environment == :test
-  end
-
-  get '/.well-known/status' do
-    client = Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH'])
-    messages = client.account.messages.list
-    most_recent_thanks_message_more_than_5_mins_old = messages.select do |m|
-      (Time.now - Time.parse(m.date_sent)) > 300 && m.body.include?('Thanks! Please wait')
-    end.max_by do |m|
-      Time.parse(m.date_sent)
-    end
-    time_thanks_message_sent = Time.parse(most_recent_thanks_message_more_than_5_mins_old.date_sent)
-    phone_number_that_should_receive_balance = most_recent_thanks_message_more_than_5_mins_old.to
-    target_balance_responses = messages.select do |m|
-      m.to == phone_number_that_should_receive_balance &&
-        (Time.parse(m.date_sent) - time_thanks_message_sent) > 0 &&
-        StatusCheckHelper.new.contains_balance_response?(m.body)
-    end
-    response_hash = Hash.new
-    response_hash[:dependencies] = [ "twilio" ]
-    response_hash[:status] = target_balance_responses.count > 0 ? 'ok' : 'NOT OK'
-    response_hash[:updated] = Time.now.to_i
-    response_hash[:resources] = {}
-    response_hash.to_json
   end
 
   post '/' do
@@ -190,5 +167,28 @@ EOF
     else
       "Sorry! That number doesn't look right. Please go back and try again."
     end
+  end
+
+  get '/.well-known/status' do
+    client = Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH'])
+    messages = client.account.messages.list
+    most_recent_thanks_message_more_than_5_mins_old = messages.select do |m|
+      (Time.now - Time.parse(m.date_sent)) > 300 && m.body.include?('Thanks! Please wait')
+    end.max_by do |m|
+      Time.parse(m.date_sent)
+    end
+    time_thanks_message_sent = Time.parse(most_recent_thanks_message_more_than_5_mins_old.date_sent)
+    phone_number_that_should_receive_balance = most_recent_thanks_message_more_than_5_mins_old.to
+    target_balance_responses = messages.select do |m|
+      m.to == phone_number_that_should_receive_balance &&
+        (Time.parse(m.date_sent) - time_thanks_message_sent) > 0 &&
+        StatusCheckHelper.new.contains_balance_response?(m.body)
+    end
+    response_hash = Hash.new
+    response_hash[:dependencies] = [ "twilio" ]
+    response_hash[:status] = target_balance_responses.count > 0 ? 'ok' : 'NOT OK'
+    response_hash[:updated] = Time.now.to_i
+    response_hash[:resources] = {}
+    json response_hash
   end
 end

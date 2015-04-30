@@ -523,6 +523,10 @@ EOF
         expect(last_response.status).to eq(200)
       end
 
+      it 'responds with json' do
+        expect(last_response.content_type).to eq('application/json')
+      end
+
       it 'reports the status as ok' do
         expect(@parsed_response['status']).to eq('ok')
       end

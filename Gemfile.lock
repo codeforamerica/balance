@@ -2,6 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     addressable (2.3.6)
+    backports (3.6.4)
     builder (3.2.2)
     coderay (1.1.0)
     crack (0.4.2)
@@ -50,6 +51,13 @@ GEM
       rack (~> 1.4)
       rack-protection (~> 1.4)
       tilt (~> 1.3, >= 1.3.4)
+    sinatra-contrib (1.4.2)
+      backports (>= 2.0)
+      multi_json
+      rack-protection
+      rack-test
+      sinatra (~> 1.4.0)
+      tilt (~> 1.3)
     slop (3.5.0)
     thor (0.19.1)
     tilt (1.4.1)
@@ -82,6 +90,7 @@ DEPENDENCIES
   require_all
   rspec
   sinatra
+  sinatra-contrib
   timecop
   twilio-ruby
   unicorn
