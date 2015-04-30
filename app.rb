@@ -6,7 +6,7 @@ require File.expand_path('../lib/twilio_service', __FILE__)
 require File.expand_path('../lib/state_handler', __FILE__)
 require File.expand_path('../lib/phone_number_processor', __FILE__)
 require File.expand_path('../lib/message_generator', __FILE__)
-require File.expand_path('../lib/status_check_helper', __FILE__)
+require File.expand_path('../lib/balance_log_analyzer', __FILE__)
 
 class EbtBalanceSmsApp < Sinatra::Base
   use Rack::SSL unless settings.environment == :development or settings.environment == :test
@@ -172,21 +172,10 @@ EOF
   get '/.well-known/status' do
     client = Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH'])
     messages = client.account.messages.list
-    most_recent_thanks_message_more_than_5_mins_old = messages.select do |m|
-      (Time.now - Time.parse(m.date_sent)) > 300 && m.body.include?('Thanks! Please wait')
-    end.max_by do |m|
-      Time.parse(m.date_sent)
-    end
-    time_thanks_message_sent = Time.parse(most_recent_thanks_message_more_than_5_mins_old.date_sent)
-    phone_number_that_should_receive_balance = most_recent_thanks_message_more_than_5_mins_old.to
-    target_balance_responses = messages.select do |m|
-      m.to == phone_number_that_should_receive_balance &&
-        (Time.parse(m.date_sent) - time_thanks_message_sent) > 0 &&
-        StatusCheckHelper.new.contains_balance_response?(m.body)
-    end
+    log_analyzer = BalanceLogAnalyzer.new(messages)
     response_hash = Hash.new
     response_hash[:dependencies] = [ "twilio" ]
-    response_hash[:status] = target_balance_responses.count > 0 ? 'ok' : 'NOT OK'
+    response_hash[:status] = log_analyzer.balance_messages_being_sent? ? 'ok' : 'NOT OK'
     response_hash[:updated] = Time.now.to_i
     response_hash[:resources] = {}
     json response_hash
