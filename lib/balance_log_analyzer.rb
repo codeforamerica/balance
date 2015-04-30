@@ -3,16 +3,12 @@ class BalanceLogAnalyzer < Struct.new(:messages)
     most_recent_thanks_msg = find_most_recent_thanks_message_more_than_5_mins_old
     time_thanks_message_sent = Time.parse(most_recent_thanks_msg.date_sent)
     phone_number_that_should_receive_balance = most_recent_thanks_msg.to
-    target_balance_responses = messages.select do |m|
+    balance_responses_to_waiting_person = messages.select do |m|
       m.to == phone_number_that_should_receive_balance &&
         (Time.parse(m.date_sent) - time_thanks_message_sent) > 0 &&
         contains_balance_response?(m.body)
     end
-    if target_balance_responses.count > 0
-      true
-    else
-      false
-    end
+    balance_responses_to_waiting_person.count > 0
   end
 
   def find_most_recent_thanks_message_more_than_5_mins_old
