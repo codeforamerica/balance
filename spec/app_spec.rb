@@ -511,8 +511,8 @@ EOF
   describe 'status monitoring' do
     context 'when balance checks working' do
       before do
-        time_for_test = Time.parse("Wed, 29 Apr 2015 22:42:07 GMT")
-        Timecop.freeze(time_for_test)
+        @time_for_test = Time.parse("Wed, 29 Apr 2015 22:42:07 GMT")
+        Timecop.freeze(@time_for_test)
         VCR.use_cassette('messages-for-status-check-system-working') do
           get '/.well-known/status'
         end
@@ -529,6 +529,14 @@ EOF
 
       it 'reports the status as ok' do
         expect(@parsed_response['status']).to eq('ok')
+      end
+
+      it 'reports the time of the status check as an integer' do
+        expect(@parsed_response['updated']).to eq(@time_for_test.to_i)
+      end
+
+      it 'reports Twilio as the only dependency' do
+        expect(@parsed_response['dependencies']).to include('twilio')
       end
     end
 
