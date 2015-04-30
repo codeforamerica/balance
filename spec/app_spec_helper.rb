@@ -2,10 +2,17 @@ require 'spec_helper'
 require 'rack/test'
 require 'nokogiri'
 require 'sinatra'
+require 'vcr'
+require 'timecop'
 require File.expand_path('../rack_spec_helpers', __FILE__)
 
 class EbtBalanceSmsApp < Sinatra::Base
   set :environment, :test
+end
+
+VCR.configure do |config|
+  config.cassette_library_dir = "spec/fixtures/vcr_cassettes"
+  config.hook_into :webmock
 end
 
 RSpec.configure do |config|

@@ -507,4 +507,56 @@ EOF
       end
     end
   end
+
+  describe 'status monitoring' do
+    context 'when balance checks working' do
+      before do
+        @time_for_test = Time.parse("Wed, 29 Apr 2015 22:42:07 GMT")
+        Timecop.freeze(@time_for_test)
+        VCR.use_cassette('messages-for-status-check-system-working') do
+          get '/.well-known/status'
+        end
+        @parsed_response = JSON.parse(last_response.body)
+      end
+
+      it 'responds with 200 status' do
+        expect(last_response.status).to eq(200)
+      end
+
+      it 'responds with json' do
+        expect(last_response.content_type).to eq('application/json')
+      end
+
+      it 'reports the status as ok' do
+        expect(@parsed_response['status']).to eq('ok')
+      end
+
+      it 'reports the time of the status check as an integer' do
+        expect(@parsed_response['updated']).to eq(@time_for_test.to_i)
+      end
+
+      it 'reports Twilio as the only dependency' do
+        expect(@parsed_response['dependencies']).to include('twilio')
+      end
+    end
+
+    context 'when balance checks NOT working' do
+      before do
+        time_for_test = Time.parse("Wed, 29 Apr 2015 22:42:07 GMT")
+        Timecop.freeze(time_for_test)
+        VCR.use_cassette('messages-for-status-check-system-down') do
+          get '/.well-known/status'
+        end
+        @parsed_response = JSON.parse(last_response.body)
+      end
+
+      it 'reports the status as NOT OK' do
+        expect(@parsed_response['status']).to eq('NOT OK')
+      end
+
+      it 'responds with 200 status' do
+        expect(last_response.status).to eq(200)
+      end
+    end
+  end
 end

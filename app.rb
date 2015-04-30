@@ -1,10 +1,12 @@
 require 'sinatra'
+require 'sinatra/json'
 require 'twilio-ruby'
 require 'rack/ssl'
 require File.expand_path('../lib/twilio_service', __FILE__)
 require File.expand_path('../lib/state_handler', __FILE__)
 require File.expand_path('../lib/phone_number_processor', __FILE__)
 require File.expand_path('../lib/message_generator', __FILE__)
+require File.expand_path('../lib/balance_log_analyzer', __FILE__)
 
 class EbtBalanceSmsApp < Sinatra::Base
   use Rack::SSL unless settings.environment == :development or settings.environment == :test
@@ -165,5 +167,17 @@ EOF
     else
       "Sorry! That number doesn't look right. Please go back and try again."
     end
+  end
+
+  get '/.well-known/status' do
+    client = Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH'])
+    messages = client.account.messages.list
+    log_analyzer = BalanceLogAnalyzer.new(messages)
+    response_hash = Hash.new
+    response_hash[:dependencies] = [ "twilio" ]
+    response_hash[:status] = log_analyzer.balance_messages_being_sent? ? 'ok' : 'NOT OK'
+    response_hash[:updated] = Time.now.to_i
+    response_hash[:resources] = {}
+    json response_hash
   end
 end
