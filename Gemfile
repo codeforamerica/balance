@@ -18,4 +18,5 @@ group :test, :development do
   gem 'foreman'
   gem 'vcr'
   gem 'webmock'
+  gem 'timecop'
 end
