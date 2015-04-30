@@ -1,0 +1,64 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://mytwiliosid:mytwilioauth@api.twilio.com/2010-04-01/Accounts/mytwiliosid/Messages.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Charset:
+      - utf-8
+      User-Agent:
+      - twilio-ruby/3.11.6 (ruby/x86_64-darwin14.0 2.1.5-p273)
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Access-Control-Allow-Origin:
+      - https://www.twilio.com
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Wed, 29 Apr 2015 22:42:07 GMT
+      X-Powered-By:
+      - AT-5000
+      X-Shenanigans:
+      - none
+      Content-Length:
+      - '41784'
+      Connection:
+      - keep-alive
+    body:
+      encoding: UTF-8
+      string: '{"first_page_uri": "/2010-04-01/Accounts/mytwiliosid/Messages.json?PageSize=50&Page=0",
+        "end": 49, "previous_page_uri": null, "messages": [{"sid": "fakesid1", "date_created": "Wed, 29 Apr
+        2015 22:35:41 +0000", "date_updated": "Wed, 29 Apr 2015 22:35:41 +0000", "date_sent":
+        "Wed, 29 Apr 2015 22:35:41 +0000", "account_sid": "mytwiliosid",
+        "to": "+12223334444", "from": "+14150001111", "body": "Hi! Your food stamp
+        balance is $0 and your cash balance is $1.49.", "status": "delivered", "num_segments":
+        "1", "num_media": "0", "direction": "outbound-api", "api_version": "2010-04-01",
+        "price": "-0.00562", "price_unit": "USD", "error_code": null, "error_message":
+        null, "uri": "/2010-04-01/Accounts/mytwiliosid/Messages/fakesid1.json",
+        "subresource_uris": {"media": "/2010-04-01/Accounts/mytwiliosid/Messages/fakesid1/Media.json"}},
+        {"sid": "fakesid2", "date_created": "Wed, 29 Apr
+        2015 22:34:37 +0000", "date_updated": "Wed, 29 Apr 2015 22:34:37 +0000", "date_sent":
+        "Wed, 29 Apr 2015 22:34:37 +0000", "account_sid": "mytwiliosid",
+        "to": "+12223334444", "from": "+14150001111", "body": "Thanks! Please wait
+        1-2 minutes while we check your balance.", "status": "delivered", "num_segments":
+        "1", "num_media": "0", "direction": "outbound-api", "api_version": "2010-04-01",
+        "price": "-0.00562", "price_unit": "USD", "error_code": null, "error_message":
+        null, "uri": "/2010-04-01/Accounts/mytwiliosid/Messages/fakesid2.json",
+        "subresource_uris": {"media": "/2010-04-01/Accounts/mytwiliosid/Messages/fakesid2/Media.json"}}],
+        "uri": "/2010-04-01/Accounts/mytwiliosid/Messages.json?PageSize=50&Page=0",
+        "page_size": 50, "start": 0, "next_page_uri": "/2010-04-01/Accounts/mytwiliosid/Messages.json?PageSize=50&Page=1&PageToken=PASM75ee20a1801f4d458f73e288785642de",
+        "num_pages": 4566, "total": 228284, "last_page_uri": "/2010-04-01/Accounts/mytwiliosid/Messages.json?PageSize=50&Page=4565",
+        "page": 0}'
+    http_version:
+  recorded_at: Wed, 29 Apr 2015 22:42:08 GMT
+recorded_with: VCR 2.9.0
