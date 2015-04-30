@@ -1,12 +1,8 @@
 class BalanceLogAnalyzer < Struct.new(:messages)
   def balance_messages_being_sent?
-    most_recent_thanks_message_more_than_5_mins_old = messages.select do |m|
-      (Time.now - Time.parse(m.date_sent)) > 300 && m.body.include?('Thanks! Please wait')
-    end.max_by do |m|
-      Time.parse(m.date_sent)
-    end
-    time_thanks_message_sent = Time.parse(most_recent_thanks_message_more_than_5_mins_old.date_sent)
-    phone_number_that_should_receive_balance = most_recent_thanks_message_more_than_5_mins_old.to
+    most_recent_thanks_msg = find_most_recent_thanks_message_more_than_5_mins_old
+    time_thanks_message_sent = Time.parse(most_recent_thanks_msg.date_sent)
+    phone_number_that_should_receive_balance = most_recent_thanks_msg.to
     target_balance_responses = messages.select do |m|
       m.to == phone_number_that_should_receive_balance &&
         (Time.parse(m.date_sent) - time_thanks_message_sent) > 0 &&
@@ -16,6 +12,14 @@ class BalanceLogAnalyzer < Struct.new(:messages)
       true
     else
       false
+    end
+  end
+
+  def find_most_recent_thanks_message_more_than_5_mins_old
+    messages.select do |m|
+      (Time.now - Time.parse(m.date_sent)) > 300 && m.body.include?('Thanks! Please wait')
+    end.max_by do |m|
+      Time.parse(m.date_sent)
     end
   end
 
