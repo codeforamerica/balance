@@ -9,6 +9,7 @@ gem 'require_all'
 gem 'unicorn'
 gem 'rack-timeout'
 gem 'newrelic_rpm'
+gem 'activesupport'
 
 group :test, :development do
   gem 'rspec'

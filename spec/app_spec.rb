@@ -540,7 +540,7 @@ EOF
       end
     end
 
-    context 'when balance checks NOT working' do
+    context 'when balance check responses are delayed/non-responsive' do
       before do
         time_for_test = Time.parse("Wed, 29 Apr 2015 22:42:07 GMT")
         Timecop.freeze(time_for_test)
@@ -550,8 +550,8 @@ EOF
         @parsed_response = JSON.parse(last_response.body)
       end
 
-      it 'reports the status as NOT OK' do
-        expect(@parsed_response['status']).to eq('NOT OK')
+      it 'reports a verbose description of the problem' do
+        expect(@parsed_response['status']).to eq("Missing balance response: User with number ending '34444' did not receive a response within 5 minutes to their request at 2015-04-29 15:34:37 Pacific. 'Thanks' message SID: fakesid2")
       end
 
       it 'responds with 200 status' do

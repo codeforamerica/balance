@@ -1,10 +1,10 @@
 require 'spec_helper'
 require File.expand_path('../../../lib/balance_log_analyzer', __FILE__)
 
-describe BalanceLogAnalyzer do
+describe BalanceLogAnalyzer::MessageAnalyzer do
   describe '#contains_balance_response?' do
     it 'returns true for valid English balance responses' do
-      helper = BalanceLogAnalyzer.new
+      helper = BalanceLogAnalyzer::MessageAnalyzer.new
 
       ex1 = "Hi! Your food stamp balance is $4.23 and your cash balance is $0."
       expect(helper.contains_balance_response?(ex1)).to eq(true)
@@ -17,7 +17,7 @@ describe BalanceLogAnalyzer do
     end
 
     it 'returns false for other app message' do
-      helper = BalanceLogAnalyzer.new
+      helper = BalanceLogAnalyzer::MessageAnalyzer.new
 
       ex4 = "Thanks! Please wait 1-2 minutes while we check your balance."
       expect(helper.contains_balance_response?(ex4)).to eq(false)
