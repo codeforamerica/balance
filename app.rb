@@ -2,6 +2,7 @@ require 'sinatra'
 require 'sinatra/json'
 require 'twilio-ruby'
 require 'rack/ssl'
+require 'active_support/core_ext/time'
 require File.expand_path('../lib/twilio_service', __FILE__)
 require File.expand_path('../lib/state_handler', __FILE__)
 require File.expand_path('../lib/phone_number_processor', __FILE__)
@@ -172,12 +173,16 @@ EOF
   get '/.well-known/status' do
     client = Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH'])
     messages = client.account.messages.list
-    log_analyzer = BalanceLogAnalyzer.new(messages)
+    delay_analysis = BalanceLogAnalyzer::DelayedBalanceResponseAnalysis.new(messages)
     response_hash = Hash.new
     response_hash[:dependencies] = [ "twilio" ]
-    response_hash[:status] = log_analyzer.balance_messages_being_sent? ? 'ok' : 'NOT OK'
     response_hash[:updated] = Time.now.to_i
     response_hash[:resources] = {}
+    if delay_analysis.messages_delayed?
+      response_hash[:status] = delay_analysis.problem_description
+    else
+      response_hash[:status] = 'ok'
+    end
     json response_hash
   end
 end
