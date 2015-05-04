@@ -551,7 +551,7 @@ EOF
       end
 
       it 'reports a verbose description of the problem' do
-        expect(@parsed_response['status']).to eq("Missing balance response: User with number ending '34444' did not receive a response within 5 minutes to their request at 2015-04-29 15:34:37 -0700. 'Thanks' message SID: fakesid2")
+        expect(@parsed_response['status']).to eq("Missing balance response: User with number ending '34444' did not receive a response within 5 minutes to their request at 2015-04-29 15:34:37 Pacific. 'Thanks' message SID: fakesid2")
       end
 
       it 'responds with 200 status' do

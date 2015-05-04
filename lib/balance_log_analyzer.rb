@@ -17,7 +17,7 @@ module BalanceLogAnalyzer
         @are_messages_delayed = false
       else
         @are_messages_delayed = true
-        @problem_description = "Missing balance response: User with number ending '#{@phone_number_that_should_receive_balance[-5..-1]}' did not receive a response within 5 minutes to their request at #{@time_thanks_message_sent}. 'Thanks' message SID: #{@most_recent_thanks_msg.sid}"
+        @problem_description = "Missing balance response: User with number ending '#{@phone_number_that_should_receive_balance[-5..-1]}' did not receive a response within 5 minutes to their request at #{@time_thanks_message_sent.in_time_zone('Pacific Time (US & Canada)').strftime("%Y-%m-%d %H:%M:%S")} Pacific. 'Thanks' message SID: #{@most_recent_thanks_msg.sid}"
       end
     end
 

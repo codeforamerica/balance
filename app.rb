@@ -2,6 +2,7 @@ require 'sinatra'
 require 'sinatra/json'
 require 'twilio-ruby'
 require 'rack/ssl'
+require 'active_support/core_ext/time'
 require File.expand_path('../lib/twilio_service', __FILE__)
 require File.expand_path('../lib/state_handler', __FILE__)
 require File.expand_path('../lib/phone_number_processor', __FILE__)
