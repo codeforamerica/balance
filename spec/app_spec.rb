@@ -16,6 +16,7 @@ describe EbtBalanceSmsApp, :type => :feature do
         allow(TwilioService).to receive(:new).and_return(fake_twilio)
         allow(MessageGenerator).to receive(:new).and_return(fake_message_generator)
         allow(StateHandler).to receive(:for).with(to_state).and_return(fake_state_handler)
+        allow(SecureRandom).to receive(:hex).and_return("fakehexvalue")
         post '/', { "Body" => ebt_number, "From" => texter_number, "To" => inbound_twilio_number, "ToState" => to_state }
       end
 
@@ -25,7 +26,7 @@ describe EbtBalanceSmsApp, :type => :feature do
 
       it 'initiates an outbound Twilio call to EBT line with correct details' do
         expect(fake_twilio).to have_received(:make_call).with(
-          url: "http://example.org/get_balance?phone_number=#{texter_number}&twilio_phone_number=#{inbound_twilio_number}&state=#{to_state}&ebt_number=#{ebt_number}",
+          url: "http://example.org/get_balance?phone_number=#{texter_number}&twilio_phone_number=#{inbound_twilio_number}&state=#{to_state}&ebt_number=#{ebt_number}&balance_check_id=fakehexvalue",
           to: fake_state_handler.phone_number,
           from: inbound_twilio_number,
           method: 'GET'
@@ -239,7 +240,7 @@ describe EbtBalanceSmsApp, :type => :feature do
 
     before do
       allow(StateHandler).to receive(:for).and_return(fake_state_handler)
-      get "/get_balance?phone_number=#{texter_number}&twilio_phone_number=#{inbound_twilio_number}&state=#{state}&ebt_number=#{ebt_number}"
+      get "/get_balance?phone_number=#{texter_number}&twilio_phone_number=#{inbound_twilio_number}&state=#{state}&ebt_number=#{ebt_number}&balance_check_id=fakehexvalue"
       parsed_response = Nokogiri::XML(last_response.body)
       @play_digits = parsed_response.children.children[0].get_attribute("digits")
       @callback_url = parsed_response.children.children[1].get_attribute("transcribeCallback")
@@ -255,7 +256,7 @@ describe EbtBalanceSmsApp, :type => :feature do
     end
 
     it 'responds with callback to correct URL (ie, correct phone number)' do
-      expect(@callback_url).to eq("http://example.org/CA/12223334444/15556667777/send_balance")
+      expect(@callback_url).to eq("http://example.org/CA/12223334444/15556667777/fakehexvalue/send_balance")
     end
 
     it 'has max recording length set correctly' do
@@ -284,7 +285,7 @@ describe EbtBalanceSmsApp, :type => :feature do
 
       before do
         allow(StateHandler).to receive(:for).with(state).and_return(fake_state_handler)
-        post "/#{state}/#{to_phone_number}/#{twilio_number}/send_balance", { "TranscriptionText" => transcription_text }
+        post "/#{state}/#{to_phone_number}/#{twilio_number}/fakehexvalue/send_balance", { "TranscriptionText" => transcription_text }
       end
 
       it 'sends transcription text and language to the handler' do
@@ -310,7 +311,7 @@ describe EbtBalanceSmsApp, :type => :feature do
 
       before do
         allow(StateHandler).to receive(:for).with(state).and_return(fake_state_handler)
-        post "/#{state}/#{to_phone_number}/#{twilio_number}/send_balance", { "TranscriptionText" => 'fake raw transcription for EBT number not found' }
+        post "/#{state}/#{to_phone_number}/#{twilio_number}/fakehexvalue/send_balance", { "TranscriptionText" => 'fake raw transcription for EBT number not found' }
       end
 
       it 'sends the user an error message' do
