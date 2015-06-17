@@ -63,6 +63,7 @@ class EbtBalanceSmsApp < Sinatra::Base
     twiml_url << "&twilio_phone_number=#{inbound_twilio_number}"
     twiml_url << "&state=#{state_abbreviation}"
     twiml_url << "&ebt_number=#{ebt_number}"
+    twiml_url << "&balance_check_id=#{SecureRandom.hex}"
     language = settings.phone_number_processor.language_for(inbound_twilio_number)
     message_generator = MessageGenerator.new(language)
     # Need to rescue Twilio API errors
@@ -100,12 +101,13 @@ class EbtBalanceSmsApp < Sinatra::Base
   get '/get_balance' do
     phone_number = params[:phone_number].strip
     twilio_number = params[:twilio_phone_number].strip
+    balance_check_id = params[:balance_check_id]
     state = params[:state]
     state_handler = StateHandler.for(state)
     Twilio::TwiML::Response.new do |r|
       r.Play digits: state_handler.button_sequence(params['ebt_number'])
       r.Record transcribe: true,
-        transcribeCallback: "#{settings.url_scheme}://#{request.env['HTTP_HOST']}/#{state}/#{phone_number}/#{twilio_number}/send_balance",
+        transcribeCallback: "#{settings.url_scheme}://#{request.env['HTTP_HOST']}/#{state}/#{phone_number}/#{twilio_number}/#{balance_check_id}/send_balance",
         maxLength: state_handler.max_message_length
     end.text
   end
@@ -119,7 +121,7 @@ class EbtBalanceSmsApp < Sinatra::Base
 EOF
   end
 
-  post '/:state/:to_phone_number/:from_phone_number/send_balance' do
+  post '/:state/:to_phone_number/:from_phone_number/:balance_check_id/send_balance' do
     twilio_phone_number = params[:from_phone_number]
     language = settings.phone_number_processor.language_for(twilio_phone_number)
     handler = StateHandler.for(params[:state])
