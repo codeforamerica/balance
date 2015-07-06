@@ -35,13 +35,13 @@ class MessageGenerator
       "Perdon, ese número de EBT no esta trabajando. Favor de intentarlo otra vez."
     else
       if digits_array == nil
-        "Sorry! That number doesn't look right. Please reply with your EBT card number."
+        "Sorry! That number doesn't look right. Please reply with your EBT card number or ABOUT for more information."
       elsif digits_array.length == 1
-        "Sorry! That number doesn't look right. Please reply with your #{digits_array[0]}-digit EBT card number."
+        "Sorry! That number doesn't look right. Please reply with your #{digits_array[0]}-digit EBT card number or ABOUT for more information."
       elsif digits_array.length == 2
-        "Sorry! That number doesn't look right. Please reply with your #{digits_array[0]}- or #{digits_array[1]}-digit EBT card number."
+        "Sorry! That number doesn't look right. Please reply with your #{digits_array[0]}- or #{digits_array[1]}-digit EBT card number or ABOUT for more information."
       else
-        "Sorry! That number doesn't look right. Please reply with your EBT card number."
+        "Sorry! That number doesn't look right. Please reply with your EBT card number or ABOUT for more information."
       end
     end
   end
