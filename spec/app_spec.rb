@@ -80,7 +80,7 @@ describe EbtBalanceSmsApp, :type => :feature do
         expect(fake_twilio).to have_received(:send_text).with(
           to: texter_number,
           from: inbound_twilio_number,
-          body: "Sorry! That number doesn't look right. Please reply with your 14-digit EBT card number."
+          body: "Sorry! That number doesn't look right. Please reply with your 14-digit EBT card number or ABOUT for more information."
         )
       end
 
