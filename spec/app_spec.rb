@@ -45,7 +45,7 @@ describe EbtBalanceSmsApp, :type => :feature do
         expect(fake_twilio).to have_received(:send_text).with(
           to: texter_number,
           from: inbound_twilio_number,
-          body: "Help us improve CalFresh mail & earn $5 in Amazon.com credit. Text a photo of any food stamp letter you've received to 323-210-3883 & we'll send you a gift code"
+          body: "Help improve food stamp mail & earn $5 in Amazon.com credit. Send a photo of the text of any CalFresh letter you have to 323-210-3883 & we'll send a gift code"
         )
       end
 
