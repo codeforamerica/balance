@@ -74,14 +74,6 @@ class EbtBalanceSmsApp < Sinatra::Base
           from: inbound_twilio_number,
           body: message_generator.thanks_please_wait
         )
-        # NOA solicitation
-        if language == :english
-          twilio_service.send_text(
-            to: texter_phone_number,
-            from: inbound_twilio_number,
-            body: "Help improve food stamp mail & earn $5 in Amazon.com credit. Send a photo of the text of any CalFresh letter you have to 323-210-3883 & we'll send a gift code"
-          )
-        end
         twilio_service.make_call(
           url: twiml_url,
           to: state_handler.phone_number,
