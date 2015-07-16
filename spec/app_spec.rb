@@ -41,14 +41,6 @@ describe EbtBalanceSmsApp, :type => :feature do
         )
       end
 
-      it 'sends a text to the user with a solicitation for our NOA research' do
-        expect(fake_twilio).to have_received(:send_text).with(
-          to: texter_number,
-          from: inbound_twilio_number,
-          body: "Help improve food stamp mail & earn $5 in Amazon.com credit. Send a photo of the text of any CalFresh letter you have to 323-210-3883 & we'll send a gift code"
-        )
-      end
-
       it 'sends a text to the user telling them wait time' do
         expect(fake_twilio).to have_received(:send_text).with(
           to: texter_number,
@@ -237,14 +229,6 @@ describe EbtBalanceSmsApp, :type => :feature do
           to: texter_number,
           from: inbound_twilio_number,
           body: spanish_message_generator.thanks_please_wait
-        )
-      end
-
-      it 'does NOT send a NOA research solicitation text' do
-        expect(fake_twilio).to_not have_received(:send_text).with(
-          to: texter_number,
-          from: inbound_twilio_number,
-          body: "Help us improve CalFresh mail & earn $5 in Amazon.com credit. Text a photo of any food stamp letter you've received to 323-210-3883 & we'll send you a gift code"
         )
       end
 
