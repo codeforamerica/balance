@@ -3,7 +3,7 @@ class StateHandler::CA < StateHandler::Base
   ALLOWED_NUMBER_OF_EBT_CARD_DIGITS = [16]
 
   def button_sequence(ebt_number)
-    "wwww1wwwwww#{ebt_number}ww"
+    "wwww1wwwwww#{ebt_number}#ww"
   end
 
   def transcribe_balance_response(transcription_text, language = :english)
