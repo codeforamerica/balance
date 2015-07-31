@@ -17,6 +17,13 @@ describe MessageGenerator do
       end
     end
 
+    describe '#having_trouble_try_again_message' do
+      it 'has the correct text' do
+        desired_message = "I'm sorry! We're having trouble contacting the EBT system right now. Please try again in a few minutes or call this # and press 1 to use the state phone system."
+        expect(mg.having_trouble_try_again_message).to eq(desired_message)
+      end
+    end
+
     describe '#balance_message' do
       context 'with single argument' do
         it 'reports just the food stamp balance' do

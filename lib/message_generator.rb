@@ -58,7 +58,7 @@ class MessageGenerator
     if language == :spanish
       "Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos."
     else
-      "I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes."
+      "I'm sorry! We're having trouble contacting the EBT system right now. Please try again in a few minutes or call this # and press 1 to use the state phone system."
     end
   end
 

@@ -252,6 +252,7 @@ describe EbtBalanceSmsApp, :type => :feature do
       parsed_response = Nokogiri::XML(last_response.body)
       @play_digits = parsed_response.children.children[0].get_attribute("digits")
       @callback_url = parsed_response.children.children[1].get_attribute("transcribeCallback")
+      @timeout = parsed_response.children.children[1].get_attribute("timeout")
       @maxlength = parsed_response.children.children[1].get_attribute("maxLength")
     end
 
@@ -265,6 +266,10 @@ describe EbtBalanceSmsApp, :type => :feature do
 
     it 'responds with callback to correct URL (ie, correct phone number)' do
       expect(@callback_url).to eq("http://example.org/CA/12223334444/15556667777/fakehexvalue/send_balance")
+    end
+
+    it 'sets the timeout for the recording to 10 seconds' do
+      expect(@timeout).to eq('10')
     end
 
     it 'has max recording length set correctly' do
