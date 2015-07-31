@@ -71,7 +71,7 @@ describe StateHandler::AK do
       context 'with a failed (nil) transcription' do
         it 'sends EBT-not-found message' do
           reply_for_user = subject.transcribe_balance_response(failed_transcription)
-          expect(reply_for_user).to eq("I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes.")
+          expect(reply_for_user).to eq(MessageGenerator.new.having_trouble_try_again_message)
         end
       end
     end
@@ -202,7 +202,7 @@ describe StateHandler::CA do
 
         it 'sends EBT-not-found message' do
           reply_for_user = subject.transcribe_balance_response(failed_transcription)
-          expect(reply_for_user).to eq("I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes.")
+          expect(reply_for_user).to eq(MessageGenerator.new.having_trouble_try_again_message)
         end
       end
     end
@@ -363,7 +363,7 @@ describe StateHandler::NC do
     context 'with a failed (nil) transcription' do
       it 'sends EBT-not-found message' do
         reply_for_user = subject.transcribe_balance_response(failed_transcription)
-        expect(reply_for_user).to eq("I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes.")
+        expect(reply_for_user).to eq(MessageGenerator.new.having_trouble_try_again_message)
       end
     end
   end
@@ -398,7 +398,7 @@ describe StateHandler::OK do
       context 'with a failed (nil) transcription' do
         it 'sends EBT-not-found message' do
           reply_for_user = subject.transcribe_balance_response(failed_transcription)
-          expect(reply_for_user).to eq("I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes.")
+          expect(reply_for_user).to eq(MessageGenerator.new.having_trouble_try_again_message)
         end
       end
     end
@@ -477,7 +477,7 @@ describe StateHandler::PA do
 
         it 'sends EBT-not-found message' do
           reply_for_user = subject.transcribe_balance_response(failed_transcription)
-          expect(reply_for_user).to eq("I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes.")
+          expect(reply_for_user).to eq(MessageGenerator.new.having_trouble_try_again_message)
         end
       end
     end
@@ -572,7 +572,7 @@ describe StateHandler::TX do
       context 'with a failed (nil) transcription' do
         it 'sends EBT-not-found message' do
           reply_for_user = subject.transcribe_balance_response(failed_transcription)
-          expect(reply_for_user).to eq("I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes.")
+          expect(reply_for_user).to eq(MessageGenerator.new.having_trouble_try_again_message)
         end
       end
     end
@@ -651,7 +651,7 @@ describe StateHandler::VA do
 
         it 'sends EBT-not-found message' do
           reply_for_user = subject.transcribe_balance_response(failed_transcription)
-          expect(reply_for_user).to eq("I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes.")
+          expect(reply_for_user).to eq(MessageGenerator.new.having_trouble_try_again_message)
         end
       end
     end
