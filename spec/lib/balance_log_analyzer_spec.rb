@@ -9,7 +9,7 @@ describe BalanceLogAnalyzer::MessageAnalyzer do
       ex1 = "Hi! Your food stamp balance is $4.23 and your cash balance is $0."
       expect(helper.contains_balance_response?(ex1)).to eq(true)
 
-      ex2 = "I'm really sorry! We're having trouble contacting the EBT system right now. Please text your EBT # again in a few minutes."
+      ex2 = "I'm sorry! We're having trouble contacting the EBT system right now. Please try again in a few minutes or call this # and press 1 to use the state phone system."
       expect(helper.contains_balance_response?(ex2)).to eq(true)
 
       ex3 = "I'm sorry, that card number was not found. Please try again."
