@@ -7,10 +7,14 @@ class StateHandler::CA < StateHandler::Base
     "wwww1wwwwww#{waiting_ebt_number}ww"
   end
 
-  def transcribe_balance_response(transcription_text, language = :english)
+  def transcribe_balance_response(transcription_text, retries, language = :english)
     mg = MessageGenerator.new(language)
     if transcription_text == nil
-      return mg.having_trouble_try_again_message
+      if retries > ENV['MAX_RETRIES'].to_i
+        return mg.having_trouble_try_again_message
+      else
+        return 'retry'
+      end
     end
     regex_matches = transcription_text.scan(/(\$\S+)/)
     if transcription_text.include?("non working card")
@@ -20,7 +24,11 @@ class StateHandler::CA < StateHandler::Base
       cash_amount = clean_trailing_period(regex_matches[1][0])
       return mg.balance_message(ebt_amount, cash: cash_amount)
     else
-      mg.having_trouble_try_again_message
+      if retries > ENV['MAX_RETRIES'].to_i
+        return mg.having_trouble_try_again_message
+      else
+        return 'retry'
+      end
     end
   end
 

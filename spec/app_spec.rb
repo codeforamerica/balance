@@ -265,7 +265,7 @@ describe EbtBalanceSmsApp, :type => :feature do
     end
 
     it 'responds with callback to correct URL (ie, correct phone number)' do
-      expect(@callback_url).to eq("http://example.org/CA/12223334444/15556667777/fakehexvalue/send_balance")
+      expect(@callback_url).to eq("http://example.org/CA/12223334444/15556667777/fakehexvalue/send_balance?retries=0")
     end
 
     it 'sets the timeout for the recording to 10 seconds' do
@@ -298,11 +298,11 @@ describe EbtBalanceSmsApp, :type => :feature do
 
       before do
         allow(StateHandler).to receive(:for).with(state).and_return(fake_state_handler)
-        post "/#{state}/#{to_phone_number}/#{twilio_number}/fakehexvalue/send_balance", { "TranscriptionText" => transcription_text }
+        post "/#{state}/#{to_phone_number}/#{twilio_number}/fakehexvalue/send_balance?retries=0", { "TranscriptionText" => transcription_text }
       end
 
       it 'sends transcription text and language to the handler' do
-        expect(fake_state_handler).to have_received(:transcribe_balance_response).with(transcription_text, :english)
+        expect(fake_state_handler).to have_received(:transcribe_balance_response).with(transcription_text, 0, :english)
       end
 
       it 'sends the correct amounts to user' do
@@ -324,7 +324,7 @@ describe EbtBalanceSmsApp, :type => :feature do
 
       before do
         allow(StateHandler).to receive(:for).with(state).and_return(fake_state_handler)
-        post "/#{state}/#{to_phone_number}/#{twilio_number}/fakehexvalue/send_balance", { "TranscriptionText" => 'fake raw transcription for EBT number not found' }
+        post "/#{state}/#{to_phone_number}/#{twilio_number}/fakehexvalue/send_balance?retries=0", { "TranscriptionText" => 'fake raw transcription for EBT number not found' }
       end
 
       it 'sends the user an error message' do

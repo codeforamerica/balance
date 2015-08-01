@@ -103,11 +103,12 @@ class EbtBalanceSmsApp < Sinatra::Base
     twilio_number = params[:twilio_phone_number].strip
     balance_check_id = params[:balance_check_id]
     state = params[:state]
+    retries = params[:retries] || 0
     state_handler = StateHandler.for(state)
     Twilio::TwiML::Response.new do |r|
       r.Play digits: state_handler.button_sequence(params['ebt_number'])
       r.Record transcribe: true,
-        transcribeCallback: "#{settings.url_scheme}://#{request.env['HTTP_HOST']}/#{state}/#{phone_number}/#{twilio_number}/#{balance_check_id}/send_balance",
+        transcribeCallback: "#{settings.url_scheme}://#{request.env['HTTP_HOST']}/#{state}/#{phone_number}/#{twilio_number}/#{balance_check_id}/send_balance?retries=#{retries}",
         timeout: 10,
         maxLength: state_handler.max_message_length
     end.text
@@ -123,16 +124,24 @@ EOF
   end
 
   post '/:state/:to_phone_number/:from_phone_number/:balance_check_id/send_balance' do
+    to_phone_number = params[:to_phone_number]
     twilio_phone_number = params[:from_phone_number]
+    balance_check_id = params[:balance_check_id]
     language = settings.phone_number_processor.language_for(twilio_phone_number)
-    handler = StateHandler.for(params[:state])
-    processed_balance_response_for_user = handler.transcribe_balance_response(params["TranscriptionText"], language)
-    twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
-    twilio_service.send_text(
-      to: params[:to_phone_number].strip,
-      from: params[:from_phone_number],
-      body: processed_balance_response_for_user
-    )
+    state = params[:state]
+    retries = params[:retries].to_i
+    handler = StateHandler.for(state)
+    processed_balance_response_for_user = handler.transcribe_balance_response(params["TranscriptionText"], retries, language)
+    if processed_balance_response_for_user == 'retry'
+      redirect "/get_balance?phone_number=#{to_phone_number}twilio_phone_number=#{twilio_phone_number}&balance_check_id=#{balance_check_id}&state=#{state}&retries=#{retries + 1}"
+    else
+      twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
+      twilio_service.send_text(
+        to: params[:to_phone_number].strip,
+        from: params[:from_phone_number],
+        body: processed_balance_response_for_user
+      )
+    end
   end
 
   post '/voice_call' do

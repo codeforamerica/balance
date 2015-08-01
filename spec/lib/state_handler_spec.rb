@@ -154,46 +154,47 @@ describe StateHandler::CA do
 
   describe 'balance transcriber' do
       let(:successful_transcription_1) { "Your food stamp balance is $136.33 your cash account balance is $0 as a reminder by saving the receipt from your last purchase and your last a cash purchase for Cash Bank Transaction you will always have your current balance at and will also print your balance on the Cash Withdrawal receipt to hear the number of Cash Withdrawal for that a transaction fee (running?) this month press 1 to hear your last 10 transactions report a transaction there file a claim or check the status of a claim press 2 to report your card lost stolen or damaged press 3 for (pin?) replacement press 4 for additional options press 5" }
-    let(:successful_transcription_2) { "(Stamp?) balance is $123.11 your cash account balance is $11.32 as a reminder by saving the receipt from your last purchase and your last a cash purchase or cash back transaction you will always have your current balance at and will also print the balance on the Cash Withdrawal receipt to hear the number of Cash Withdrawal for that a transaction fee this month press 1 to hear your last 10 transactions report a transaction there file a claim or check the status of a claim press 2 to report your card lost stolen or damaged press 3 for (pin?) replacement press 4 for additional options press 5" }
+      let(:successful_transcription_2) { "(Stamp?) balance is $123.11 your cash account balance is $11.32 as a reminder by saving the receipt from your last purchase and your last a cash purchase or cash back transaction you will always have your current balance at and will also print the balance on the Cash Withdrawal receipt to hear the number of Cash Withdrawal for that a transaction fee this month press 1 to hear your last 10 transactions report a transaction there file a claim or check the status of a claim press 2 to report your card lost stolen or damaged press 3 for (pin?) replacement press 4 for additional options press 5" }
       let(:successful_transcription_3) { "Devon Alan is $156.89 your cash account balance is $4.23 as a reminder by saving the receipt from your last purchase and your last the cash purchase or cash back for (action?) you will always have your current balance. I'm at and will also print the balance on the Cash Withdrawal receipt to hear the number of Cash Withdrawal for that a transaction fee (running?) this month press 1 to hear your last 10 transactions report a transaction there file a claim or check the status of a claim press 2 to report your card lost stolen or damaged press 3 for pain placement press 4 for additional options press 5" }
       let(:successful_transcription_extra_periods) { "Your food stamp balance is $9.11. Your cash account balance is $13.93. As a reminder. Bye C." }
       let(:transcription_ebt_not_found) { "Our records indicate the number you have entered it's for an non working card in case your number was entered incorrectly please reenter your 16 digit card number followed by the pound sign." }
-
+      let(:failed_transcription) { nil }
+      let(:retries) { 0 }
 
     context 'for English' do
       let(:language) { :english }
 
       context 'with transcription containing balance variation 1' do
         it 'sends response with balance amounts' do
-          reply_for_user = subject.transcribe_balance_response(successful_transcription_1)
+          reply_for_user = subject.transcribe_balance_response(successful_transcription_1, retries)
           expect(reply_for_user).to eq("Hi! Your food stamp balance is $136.33 and your cash balance is $0.")
         end
       end
 
       context 'with transcription containing balance variation 2' do
         it 'sends response with balance amounts' do
-          reply_for_user = subject.transcribe_balance_response(successful_transcription_2)
+          reply_for_user = subject.transcribe_balance_response(successful_transcription_2, retries)
           expect(reply_for_user).to eq("Hi! Your food stamp balance is $123.11 and your cash balance is $11.32.")
         end
       end
 
       context 'with transcription containing balance variation 3' do
         it 'sends response with balance amounts' do
-          reply_for_user = subject.transcribe_balance_response(successful_transcription_3)
+          reply_for_user = subject.transcribe_balance_response(successful_transcription_3, retries)
           expect(reply_for_user).to eq("Hi! Your food stamp balance is $156.89 and your cash balance is $4.23.")
         end
       end
 
       context 'with a transcription with extraneous periods' do
         it 'sends response with balance amounts without extra periods' do
-          reply_for_user = subject.transcribe_balance_response(successful_transcription_extra_periods)
+          reply_for_user = subject.transcribe_balance_response(successful_transcription_extra_periods, retries)
           expect(reply_for_user).to eq("Hi! Your food stamp balance is $9.11 and your cash balance is $13.93.")
         end
       end
 
       context 'with EBT card not found in system' do
         it 'sends EBT-not-found message' do
-          reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found)
+          reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found, retries)
           expect(reply_for_user).to eq("I'm sorry, that card number was not found. Please try again.")
         end
       end
@@ -202,7 +203,12 @@ describe StateHandler::CA do
         let(:failed_transcription) { nil }
 
         it 'sends EBT-not-found message' do
-          reply_for_user = subject.transcribe_balance_response(failed_transcription)
+          reply_for_user = subject.transcribe_balance_response(failed_transcription, retries)
+          expect(reply_for_user).to eq('retry')
+        end
+
+        it 'sends EBT-not-found message' do
+          reply_for_user = subject.transcribe_balance_response(failed_transcription, 10)
           expect(reply_for_user).to eq(MessageGenerator.new.having_trouble_try_again_message)
         end
       end
@@ -213,28 +219,28 @@ describe StateHandler::CA do
 
       context 'with transcription containing balance variation 1' do
         it 'sends response with balance amounts' do
-          reply_for_user = subject.transcribe_balance_response(successful_transcription_1, language)
+          reply_for_user = subject.transcribe_balance_response(successful_transcription_1, retries, language)
           expect(reply_for_user).to eq("Hola! El saldo de su cuenta de estampillas para comida es $136.33 y su balance de dinero en efectivo es $0.")
         end
       end
 
       context 'with transcription containing balance variation 2' do
         it 'sends response with balance amounts' do
-          reply_for_user = subject.transcribe_balance_response(successful_transcription_2, language)
+          reply_for_user = subject.transcribe_balance_response(successful_transcription_2, retries, language)
           expect(reply_for_user).to eq("Hola! El saldo de su cuenta de estampillas para comida es $123.11 y su balance de dinero en efectivo es $11.32.")
         end
       end
 
       context 'with transcription containing balance variation 3' do
         it 'sends response with balance amounts' do
-          reply_for_user = subject.transcribe_balance_response(successful_transcription_3, language)
+          reply_for_user = subject.transcribe_balance_response(successful_transcription_3, retries, language)
           expect(reply_for_user).to eq("Hola! El saldo de su cuenta de estampillas para comida es $156.89 y su balance de dinero en efectivo es $4.23.")
         end
       end
 
       context 'with EBT card not found in system' do
         it 'sends EBT-not-found message' do
-          reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found, language)
+          reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found, retries, language)
           expect(reply_for_user).to eq("Lo siento, no se encontró el número de tarjeta. Por favor, inténtelo de nuevo.")
         end
       end
@@ -242,12 +248,32 @@ describe StateHandler::CA do
       context 'with a failed (nil) transcription' do
         let(:failed_transcription) { nil }
 
-        it 'sends EBT-not-found message' do
-          reply_for_user = subject.transcribe_balance_response(failed_transcription, language)
+        it 'sends retry when retries less than max retries' do
+          reply_for_user = subject.transcribe_balance_response(failed_transcription, retries, language)
+          expect(reply_for_user).to eq("retry")
+        end
+
+
+        it 'sends EBT-not-found message when max retries exceeded' do
+          reply_for_user = subject.transcribe_balance_response(failed_transcription, 10, language)
           expect(reply_for_user).to eq("Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos.")
         end
       end
     end
+
+
+    context 'for Retries' do
+
+      context 'with three retries in environment variables' do
+
+        it 'redirects instead of sending an error message' do
+          allow(ENV).to receive(:[]).with('MAX_RETRIES').and_return "3"
+          reply_for_user = subject.transcribe_balance_response(failed_transcription, 0)
+          expect(reply_for_user).to eq('retry')
+        end
+      end
+    end
+
   end
 end
 
