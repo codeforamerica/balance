@@ -83,7 +83,7 @@ describe EbtBalanceSmsApp, :type => :feature do
 
     context 'asking for more info (about)' do
       let(:fake_state_handler) { double('FakeStateHandler', :phone_number => 'fake_state_phone_number', :button_sequence => "fake_button_sequence", :extract_valid_ebt_number_from_text => :invalid_number, :allowed_number_of_ebt_card_digits => [14] ) }
-      let(:more_info_content) { "This is a free text service provided by non-profit Code for America for checking your EBT balance (standard rates apply). For more info go to www.c4a.me/balance" }
+      let(:more_info_content) { "This is a free text service by non-profit Code for America for checking your EBT balance (standard msg rates apply). For more info go to http://c4a.me/balance" }
 
       before do
         allow(TwilioService).to receive(:new).and_return(fake_twilio)
