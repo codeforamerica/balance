@@ -79,6 +79,6 @@ class MessageGenerator
   end
 
   def more_info
-    "This is a free text service provided by non-profit Code for America for checking your EBT balance (standard rates apply). For more info go to www.c4a.me/balance"
+    "This is a free text service by non-profit Code for America for checking your EBT balance (standard msg rates apply). For more info go to http://c4a.me/balance"
   end
 end
