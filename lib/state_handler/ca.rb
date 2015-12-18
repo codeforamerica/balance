@@ -12,8 +12,9 @@ class StateHandler::CA < StateHandler::Base
     if transcription_text == nil
       return mg.having_trouble_try_again_message
     end
-    regex_matches = transcription_text.scan(/(\$\S+)/)
-    if transcription_text.include?("non working card")
+    processed_transcription = process_transcription_for_zero_text(transcription_text)
+    regex_matches = processed_transcription.scan(/(\$\S+)/)
+    if processed_transcription.include?("non working card")
       mg.card_number_not_found_message
     elsif regex_matches.count > 1
       ebt_amount = clean_trailing_period(regex_matches[0][0])

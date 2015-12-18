@@ -6,4 +6,8 @@ module TranscriptionParsingHelpers
       amount_string
     end
   end
+
+  def process_transcription_for_zero_text(text)
+    text.gsub("zero dollars", "$0")
+  end
 end
