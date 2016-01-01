@@ -54,6 +54,7 @@ class EbtBalanceSmsApp < Sinatra::Base
     twilio_service = TwilioService.new(Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']))
     texter_phone_number = params["From"]
     inbound_twilio_number = params["To"]
+=begin
     state_abbreviation = params["ToState"] || "no_state_abbreviation_received"
     state_handler = StateHandler.for(state_abbreviation)
     ebt_number = state_handler.extract_valid_ebt_number_from_text(params["Body"])
@@ -66,8 +67,10 @@ class EbtBalanceSmsApp < Sinatra::Base
     twiml_url << "&balance_check_id=#{SecureRandom.hex}"
     language = settings.phone_number_processor.language_for(inbound_twilio_number)
     message_generator = MessageGenerator.new(language)
+=end
     # Need to rescue Twilio API errors
     begin
+=begin
       if ebt_number != :invalid_number
         twilio_service.send_text(
           to: texter_phone_number,
@@ -87,12 +90,15 @@ class EbtBalanceSmsApp < Sinatra::Base
           body: message_generator.more_info
         )
       else
+=end
         twilio_service.send_text(
           to: texter_phone_number,
           from: inbound_twilio_number,
-          body: message_generator.sorry_try_again(state_handler.allowed_number_of_ebt_card_digits)
+          body: "We're so sorry but we're experiencing some temporary issues right now. Please try again in a few days, or call this # and press 1 to get your balance by phone."
         )
+=begin
       end
+=end
     rescue Twilio::REST::RequestError => e
       puts "Twilio API request error - \"#{e.message}\""
     end
