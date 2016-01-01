@@ -20,6 +20,7 @@ describe EbtBalanceSmsApp, :type => :feature do
         post '/', { "Body" => ebt_number, "From" => texter_number, "To" => inbound_twilio_number, "ToState" => to_state }
       end
 
+=begin
       it 'initializes a new state handler' do
         expect(StateHandler).to have_received(:for).with(to_state)
       end
@@ -32,20 +33,13 @@ describe EbtBalanceSmsApp, :type => :feature do
           method: 'GET'
         )
       end
+=end
 
-      it 'sends a text to the user telling them wait time' do
+      it 'sends a text with outage message' do
         expect(fake_twilio).to have_received(:send_text).with(
           to: texter_number,
           from: inbound_twilio_number,
-          body: fake_message_generator.thanks_please_wait
-        )
-      end
-
-      it 'sends a text to the user telling them wait time' do
-        expect(fake_twilio).to have_received(:send_text).with(
-          to: texter_number,
-          from: inbound_twilio_number,
-          body: fake_message_generator.thanks_please_wait
+          body: "We're so sorry but we're experiencing some temporary issues right now. Please try again in a few days, or call this # and press 1 to get your balance by phone."
         )
       end
 
@@ -54,6 +48,7 @@ describe EbtBalanceSmsApp, :type => :feature do
       end
     end
 
+=begin
     context 'with INVALID EBT number' do
       let(:invalid_ebt_number) { "111122223333" }
       let(:fake_state_handler) { double('FakeStateHandler', :phone_number => 'fake_state_phone_number', :button_sequence => "fake_button_sequence", :extract_valid_ebt_number_from_text => :invalid_number, :allowed_number_of_ebt_card_digits => [14] ) }
@@ -170,6 +165,7 @@ describe EbtBalanceSmsApp, :type => :feature do
         end
       end
     end
+=end
 
     context 'with blocked phone number' do
       let(:fake_state_handler) { double('FakeStateHandler', :phone_number => 'fake_state_phone_number', :button_sequence => "fake_button_sequence", :extract_valid_ebt_number_from_text => :invalid_number, :allowed_number_of_ebt_card_digits => [14] ) }
@@ -210,6 +206,7 @@ describe EbtBalanceSmsApp, :type => :feature do
       end
     end
 
+=begin
     context 'using Spanish-language Twilio phone number' do
       let(:ebt_number) { "1111222233334444" }
       let(:spanish_twilio_number) { "+19998887777" }
@@ -236,8 +233,10 @@ describe EbtBalanceSmsApp, :type => :feature do
         expect(last_response.status).to eq(200)
       end
     end
+=end
   end
 
+=begin
   describe 'GET /get_balance' do
     let(:texter_number) { "+12223334444" }
     let(:ebt_number) { "5555444433332222" }
@@ -522,6 +521,7 @@ EOF
     end
   end
 
+=end
   describe 'status monitoring' do
     context 'when balance checks working' do
       before do
