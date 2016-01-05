@@ -3,7 +3,7 @@ class DollarAmountsProcessor
 
   Words = NumbersInWords::English.exceptions.values
   MatchWord = /\b(?:#{Words.join('|')})\b/
-  MatchAmount = /(?:#{MatchWord}\s+){1,9}dollars?(?: and)?(?:\s+#{MatchWord}){1,2}\s+cents?/
+  MatchAmount = /(?:#{MatchWord}\s+){1,9}dollars?(?: and)?(?:\s+#{MatchWord}){1,2}\s+cents?/s
 
 
   def process(text_with_words)
