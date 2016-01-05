@@ -12,7 +12,7 @@ class DollarAmountsProcessor
       amount.gsub!(/cents?/, '')
 
       '$%.2f' % [ NumbersInWords.in_numbers(amount) ]
-    end
+    end.gsub('the euro', '$0.00')
   end
 
 end
