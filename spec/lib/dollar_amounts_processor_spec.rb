@@ -67,7 +67,7 @@ describe DollarAmountsProcessor do
         transaction. You will always have you.
       EOIN
       )).to eq_text <<-EOOUT
-        Balance is one $171.86. Your cash
+        Balance is $171.68. Your cash
         account balance is $0.90. As a reminder. By saving the
         receipt from your last purchase and or your last cash purchase or cashback
         transaction. You will always have you.
@@ -82,7 +82,7 @@ describe DollarAmountsProcessor do
         transaction. You will always have your current.
       EOIN
       )).to eq_text <<-EOOUT
-        Balance is $501.23. Your cash account
+        Balance is $401.23. Your cash account
         balance is $2.51. As a reminder. By saving the
         receipt from your last purchase and or your last cash purchase or cashback
         transaction. You will always have your current.
