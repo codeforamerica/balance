@@ -11,6 +11,9 @@ gem 'rack-timeout'
 gem 'newrelic_rpm'
 gem 'activesupport'
 
+# For DollarAmountsProcessor
+gem 'numbers_in_words'
+
 group :test, :development do
   gem 'rspec'
   gem 'rack-test'

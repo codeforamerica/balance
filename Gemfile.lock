@@ -29,6 +29,8 @@ GEM
     newrelic_rpm (3.14.1.311)
     nokogiri (1.6.7.1)
       mini_portile2 (~> 2.0.0.rc2)
+    numbers_in_words (0.4.0)
+      activesupport
     pry (0.10.3)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -98,6 +100,7 @@ DEPENDENCIES
   foreman
   newrelic_rpm
   nokogiri
+  numbers_in_words
   pry
   rack-ssl
   rack-test
