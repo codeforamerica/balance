@@ -10,7 +10,7 @@ describe DollarAmountsProcessor do
         receipt from your last purchase and or your last cash purchase or cashback
         Prinz action. You will always have your.
       EOIN
-      )).to eq <<-EOOUT
+      )).to eq_text <<-EOOUT
         Your food stamp balance is $6.25. Your cash account
         balance is $11.69. As a reminder. By saving the
         receipt from your last purchase and or your last cash purchase or cashback
@@ -25,7 +25,7 @@ describe DollarAmountsProcessor do
         know your current balance. Remember you can also access your account
         information online at.
       EOIN
-      )).to eq <<-EOOUT
+      )).to eq_text <<-EOOUT
         Your snap balance is $426.00. Your cash balance is $0.00.
         As a reminder by saving the receipt from your last purchase you will
         know your current balance. Remember you can also access your account
@@ -39,7 +39,7 @@ describe DollarAmountsProcessor do
         balance is seven hundred sixty six dollars and thirty seven cents. You are
         eligible to enroll in a free service called my own.
       EOIN
-      )).to eq <<-EOOUT
+      )).to eq_text <<-EOOUT
         One moment please. OK. I've pulled up your account information. Your food stamp
         balance is $766.37. You are
         eligible to enroll in a free service called my own.
@@ -52,7 +52,7 @@ describe DollarAmountsProcessor do
         balance is seven hundred sixty six dollars and thirty seven cents. You are
         eligible to enroll in a free service called my alerts.
       EOIN
-      )).to eq <<-EOOUT
+      )).to eq_text <<-EOOUT
         One moment please. OK. I've pulled up your account information. Your food stamp
         balance is $766.37. You are
         eligible to enroll in a free service called my alerts.
@@ -66,7 +66,7 @@ describe DollarAmountsProcessor do
         receipt from your last purchase and or your last cash purchase or cashback
         transaction. You will always have you.
       EOIN
-      )).to eq <<-EOOUT
+      )).to eq_text <<-EOOUT
         Balance is one $171.86. Your cash
         account balance is $0.90. As a reminder. By saving the
         receipt from your last purchase and or your last cash purchase or cashback
@@ -81,7 +81,7 @@ describe DollarAmountsProcessor do
         receipt from your last purchase and or your last cash purchase or cashback
         transaction. You will always have your current.
       EOIN
-      )).to eq <<-EOOUT
+      )).to eq_text <<-EOOUT
         Balance is $501.23. Your cash account
         balance is $2.51. As a reminder. By saving the
         receipt from your last purchase and or your last cash purchase or cashback
@@ -96,7 +96,7 @@ describe DollarAmountsProcessor do
         know your current balance. Remember you can also access your account
         information online at W W.
       EOIN
-      )).to eq <<-EOOUT
+      )).to eq_text <<-EOOUT
         Snap balance is $314.00. Your cash balance is $0.00.
         As a reminder by saving the receipt from your last purchase you'll
         know your current balance. Remember you can also access your account
@@ -111,7 +111,7 @@ describe DollarAmountsProcessor do
         your last cash purchase or cashback transaction.  You will always have your
         current balance. Some A.T.M.'s will also print your balance on a cash with the.
       EOIN
-      )).to eq <<-EOOUT
+      )).to eq_text <<-EOOUT
         Balance is $0.00. Dollars. Your cash account balance is $541.00
         as a reminder. By saving the receipt from your last purchase and or
         your last cash purchase or cashback transaction.  You will always have your
