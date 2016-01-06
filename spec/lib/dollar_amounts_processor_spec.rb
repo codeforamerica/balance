@@ -112,10 +112,32 @@ describe DollarAmountsProcessor do
         current balance. Some A.T.M.'s will also print your balance on a cash with the.
       EOIN
       )).to eq_text <<-EOOUT
-        Balance is $0.00. Dollars. Your cash account balance is $541.00
+        Balance is $0.00. Your cash account balance is $541.00
         as a reminder. By saving the receipt from your last purchase and or
         your last cash purchase or cashback transaction.  You will always have your
         current balance. Some A.T.M.'s will also print your balance on a cash with the.
+      EOOUT
+    end
+
+    it "replaces words with numbers in sample text #09" do
+      expect(subject.process(<<-EOIN
+        Balance is twenty two dollars and eight cents. Your cash account balance
+        is zero dollars and sixty eight cents. As a reminder...
+      EOIN
+      )).to eq_text <<-EOOUT
+        Balance is $22.08. Your cash account balance
+        is $0.68. As a reminder...
+      EOOUT
+    end
+
+    it "replaces words with numbers in sample text #10" do
+      expect(subject.process(<<-EOIN
+        One moment please. OK. I've pulled up your account information.
+        Your food stamp balance is the row. Dollars and forty two cents. You are
+      EOIN
+      )).to eq_text <<-EOOUT
+        One moment please. OK. I've pulled up your account information.
+        Your food stamp balance is $0.42. You are
       EOOUT
     end
   end
