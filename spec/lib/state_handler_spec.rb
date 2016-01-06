@@ -184,6 +184,15 @@ describe StateHandler::CA do
         end
       end
 
+      context 'with English language (not number) dollar amounts' do
+        it 'sends a numerical value back to the user' do
+          transcription_with_english_amounts = 'Your food stamp balance is six dollars and twenty five cents. Your cash account balance is eleven dollars and sixty nine cents. As a reminder. By saving the receipt from your last purchase and or your last cash purchase or cashback Prinz action. You will always have your.'
+
+          reply_for_user = subject.transcribe_balance_response(transcription_with_english_amounts)
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $6.25 and your cash balance is $11.69.")
+        end
+      end
+
       context 'with a transcription with extraneous periods' do
         it 'sends response with balance amounts without extra periods' do
           successful_transcription_extra_periods = "Your food stamp balance is $9.11. Your cash account balance is $13.93. As a reminder. Bye C."
@@ -216,7 +225,7 @@ describe StateHandler::CA do
           transcription_with_zero_as_words = "Balance is zero dollars. Your cash account balance is zero dollars. As a reminder by saving the receipt from your last purchase and or your last cash purchase or cash back transaction."
 
           reply_for_user = subject.transcribe_balance_response(transcription_with_zero_as_words)
-          expect(reply_for_user).to eq("Hi! Your food stamp balance is $0 and your cash balance is $0.")
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $0.00 and your cash balance is $0.00.")
         end
       end
     end
