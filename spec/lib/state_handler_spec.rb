@@ -623,6 +623,15 @@ describe StateHandler::TX do
     let(:failed_transcription) { nil }
 
     context 'for English' do
+      context 'with an English-language amount' do
+        it 'processes it as a dollar amount successfully' do
+          # Not taken from logs; modified the above with English language numbers
+          transcription = "(Who?) the account balance for the card number entered is one hundred fifty four dollars and seventy cents. To end this call press one to repeat your account balance press two to report a lost or still in card press three if you would like to select a new pen for your account."
+          reply_for_user = subject.transcribe_balance_response(transcription)
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $154.70.")
+        end
+      end
+
       context 'with transcription containing balance variation 1' do
         it 'sends response with balance amounts' do
           reply_for_user = subject.transcribe_balance_response(successful_transcription_1)
