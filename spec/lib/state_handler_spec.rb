@@ -517,6 +517,15 @@ describe StateHandler::PA do
         end
       end
 
+      context 'with an English-language amount' do
+        it 'processes it as a dollar amount successfully' do
+          # Not taken directly from logs; modified the above with a transcription of English language numbers from logs
+          transcription = "Your snap balance is ten dollars and twenty two cents. Your cash balance is one dollar. To repeat your account balance press 1 To hear your last 10 transactions on your card. Press."
+          reply_for_user = subject.transcribe_balance_response(transcription)
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $10.22 and your cash balance is $1.00.")
+        end
+      end
+
       context 'with transcription with balance and extraneous periods' do
         it 'transcribes without extraneous periods in amounts' do
           reply_for_user = subject.transcribe_balance_response(successful_transcription_with_extraneous_period)
