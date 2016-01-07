@@ -121,7 +121,7 @@ describe StateHandler::CA do
   it 'gives correct button sequence (ebt # with pauses between digits and pound at end)' do
     fake_ebt_number = '11112222'
     desired_sequence = subject.button_sequence(fake_ebt_number)
-    expect(desired_sequence).to eq("wwww1wwwwww1w1w1w1w2w2w2w2w#ww")
+    expect(desired_sequence).to eq("wwww1wwwwwwww1ww1ww1ww1ww2ww2ww2ww2ww#ww")
   end
 
   it 'tells the number of digits a CA EBT card has' do
