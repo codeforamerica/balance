@@ -401,6 +401,15 @@ describe StateHandler::NC do
       end
     end
 
+    context 'with an English-language amount' do
+      it 'processes it as a dollar amount successfully' do
+        # Not taken from logs; just modified above example with English-language dollar amount
+        transcription = "blah one hundred twenty three dollars and forty five cents blah"
+        reply_for_user = subject.transcribe_balance_response(transcription)
+        expect(reply_for_user).to eq("Hi! Your food and nutrition benefits balance is $123.45.")
+      end
+    end
+
     context 'with EBT card not found in system' do
       it 'sends EBT-not-found message' do
         reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found)
