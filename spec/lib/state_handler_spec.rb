@@ -74,6 +74,14 @@ describe StateHandler::AK do
           expect(reply_for_user).to eq(MessageGenerator.new.having_trouble_try_again_message)
         end
       end
+
+      context 'with an English-language amount' do
+        it 'processes it as a dollar amount successfully' do
+          transcription = "One moment please. OK. I've pulled up your account information. Your food stamp balance is seven hundred sixty six dollars and thirty seven cents. You are eligible to enroll in a free service called my own."
+          reply_for_user = subject.transcribe_balance_response(transcription)
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $766.37.")
+        end
+      end
     end
 
     context 'for Spanish' do

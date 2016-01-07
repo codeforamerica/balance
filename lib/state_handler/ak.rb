@@ -33,7 +33,8 @@ class StateHandler::AK < StateHandler::Base
 
     # Deal with a successful balance transcription
     ### Step 6. EXAMPLE — Edit for your state! ###
-    regex_matches = transcription_text.scan(/(\$\S+)/)
+    text_with_dollar_amounts = DollarAmountsProcessor.new.process(transcription_text)
+    regex_matches = text_with_dollar_amounts.scan(/(\$\S+)/)
     if regex_matches.count > 0
       ebt_amount = clean_trailing_period(regex_matches[0][0])
       return mg.balance_message(ebt_amount)
