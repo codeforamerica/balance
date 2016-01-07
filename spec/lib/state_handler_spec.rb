@@ -74,6 +74,14 @@ describe StateHandler::AK do
           expect(reply_for_user).to eq(MessageGenerator.new.having_trouble_try_again_message)
         end
       end
+
+      context 'with an English-language amount' do
+        it 'processes it as a dollar amount successfully' do
+          transcription = "One moment please. OK. I've pulled up your account information. Your food stamp balance is seven hundred sixty six dollars and thirty seven cents. You are eligible to enroll in a free service called my own."
+          reply_for_user = subject.transcribe_balance_response(transcription)
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $766.37.")
+        end
+      end
     end
 
     context 'for Spanish' do
@@ -113,7 +121,7 @@ describe StateHandler::CA do
   it 'gives correct button sequence (ebt # with pauses between digits and pound at end)' do
     fake_ebt_number = '11112222'
     desired_sequence = subject.button_sequence(fake_ebt_number)
-    expect(desired_sequence).to eq("wwww1wwwwww1w1w1w1w2w2w2w2w#ww")
+    expect(desired_sequence).to eq("wwww1wwwwwwww1ww1ww1ww1ww2ww2ww2ww2ww#ww")
   end
 
   it 'tells the number of digits a CA EBT card has' do
@@ -184,6 +192,15 @@ describe StateHandler::CA do
         end
       end
 
+      context 'with English language (not number) dollar amounts' do
+        it 'sends a numerical value back to the user' do
+          transcription_with_english_amounts = 'Your food stamp balance is six dollars and twenty five cents. Your cash account balance is eleven dollars and sixty nine cents. As a reminder. By saving the receipt from your last purchase and or your last cash purchase or cashback Prinz action. You will always have your.'
+
+          reply_for_user = subject.transcribe_balance_response(transcription_with_english_amounts)
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $6.25 and your cash balance is $11.69.")
+        end
+      end
+
       context 'with a transcription with extraneous periods' do
         it 'sends response with balance amounts without extra periods' do
           successful_transcription_extra_periods = "Your food stamp balance is $9.11. Your cash account balance is $13.93. As a reminder. Bye C."
@@ -216,7 +233,7 @@ describe StateHandler::CA do
           transcription_with_zero_as_words = "Balance is zero dollars. Your cash account balance is zero dollars. As a reminder by saving the receipt from your last purchase and or your last cash purchase or cash back transaction."
 
           reply_for_user = subject.transcribe_balance_response(transcription_with_zero_as_words)
-          expect(reply_for_user).to eq("Hi! Your food stamp balance is $0 and your cash balance is $0.")
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $0.00 and your cash balance is $0.00.")
         end
       end
     end
@@ -315,6 +332,15 @@ describe StateHandler::MO do
         end
       end
 
+      context 'with an English-language amount' do
+        it 'processes it as a dollar amount successfully' do
+          # Not taken from logs; just modified above example with English-language dollar amount
+          transcription = "That is the balance you have one hundred fifty four dollars and seventy cents for food stamps to hear that again say repeat that or if you're down here just."
+          reply_for_user = subject.transcribe_balance_response(transcription)
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $154.70.")
+        end
+      end
+
       context 'with EBT card not found in system' do
         it 'sends EBT-not-found message' do
           reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found)
@@ -375,6 +401,15 @@ describe StateHandler::NC do
       end
     end
 
+    context 'with an English-language amount' do
+      it 'processes it as a dollar amount successfully' do
+        # Not taken from logs; just modified above example with English-language dollar amount
+        transcription = "blah one hundred twenty three dollars and forty five cents blah"
+        reply_for_user = subject.transcribe_balance_response(transcription)
+        expect(reply_for_user).to eq("Hi! Your food and nutrition benefits balance is $123.45.")
+      end
+    end
+
     context 'with EBT card not found in system' do
       it 'sends EBT-not-found message' do
         reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found)
@@ -406,6 +441,15 @@ describe StateHandler::OK do
       context 'with transcription containing balance' do
         it 'sends response with balance amounts' do
           reply_for_user = subject.transcribe_balance_response(successful_transcription_1)
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $123.45.")
+        end
+      end
+
+      context 'with an English-language amount' do
+        it 'processes it as a dollar amount successfully' do
+          # Not taken from logs; just modified above example with English-language dollar amount
+          transcription = "blah one hundred twenty three dollars and forty five cents blah"
+          reply_for_user = subject.transcribe_balance_response(transcription)
           expect(reply_for_user).to eq("Hi! Your food stamp balance is $123.45.")
         end
       end
@@ -470,6 +514,15 @@ describe StateHandler::PA do
         it 'sends response with balance amounts' do
           reply_for_user = subject.transcribe_balance_response(successful_transcription_1)
           expect(reply_for_user).to eq("Hi! Your food stamp balance is $136.33 and your cash balance is $23.87.")
+        end
+      end
+
+      context 'with an English-language amount' do
+        it 'processes it as a dollar amount successfully' do
+          # Not taken directly from logs; modified the above with a transcription of English language numbers from logs
+          transcription = "Your snap balance is ten dollars and twenty two cents. Your cash balance is one dollar. To repeat your account balance press 1 To hear your last 10 transactions on your card. Press."
+          reply_for_user = subject.transcribe_balance_response(transcription)
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $10.22 and your cash balance is $1.00.")
         end
       end
 
@@ -570,6 +623,15 @@ describe StateHandler::TX do
     let(:failed_transcription) { nil }
 
     context 'for English' do
+      context 'with an English-language amount' do
+        it 'processes it as a dollar amount successfully' do
+          # Not taken from logs; modified the above with English language numbers
+          transcription = "(Who?) the account balance for the card number entered is one hundred fifty four dollars and seventy cents. To end this call press one to repeat your account balance press two to report a lost or still in card press three if you would like to select a new pen for your account."
+          reply_for_user = subject.transcribe_balance_response(transcription)
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $154.70.")
+        end
+      end
+
       context 'with transcription containing balance variation 1' do
         it 'sends response with balance amounts' do
           reply_for_user = subject.transcribe_balance_response(successful_transcription_1)
@@ -639,6 +701,15 @@ describe StateHandler::VA do
 
     context 'for English' do
       let(:language) { :english }
+
+      context 'with an English-language amount' do
+        it 'processes it as a dollar amount successfully' do
+          # Not taken from logs; modified the above with English language numbers
+          transcription = "Your snap balance is two hundred twenty one dollars and ninety cents. As a reminder by saving to (receive?) from your last purchase you'll know your current balance. You can also access your balance online at www.EBT dot a C at."
+          reply_for_user = subject.transcribe_balance_response(transcription)
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $221.90.")
+        end
+      end
 
       context 'with transcription containing balance' do
         it 'sends response with balance amounts' do
