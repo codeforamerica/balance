@@ -702,6 +702,15 @@ describe StateHandler::VA do
     context 'for English' do
       let(:language) { :english }
 
+      context 'with an English-language amount' do
+        it 'processes it as a dollar amount successfully' do
+          # Not taken from logs; modified the above with English language numbers
+          transcription = "Your snap balance is two hundred twenty one dollars and ninety cents. As a reminder by saving to (receive?) from your last purchase you'll know your current balance. You can also access your balance online at www.EBT dot a C at."
+          reply_for_user = subject.transcribe_balance_response(transcription)
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $221.90.")
+        end
+      end
+
       context 'with transcription containing balance' do
         it 'sends response with balance amounts' do
           reply_for_user = subject.transcribe_balance_response(successful_transcription_1)
