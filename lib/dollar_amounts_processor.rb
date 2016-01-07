@@ -3,8 +3,8 @@ class DollarAmountsProcessor
 
   Words = NumbersInWords::English.exceptions.values +
     NumbersInWords::English.powers_of_ten.values
-  MatchWord = /\b(?:#{Words.join('|')})\b/
-  MatchAmountWithCent = /((?:#{MatchWord}\s+)+)\s*dollars?(?: and)?(?:((?:\s+#{MatchWord}){1,2})\s+cents?)?/s
+  MatchWord = /\b(?:#{Words.join('|')})\b/i
+  MatchAmountWithCent = /((?:#{MatchWord}\s+)+)\s*dollars?(?: and)?(?:((?:\s+#{MatchWord}){1,2})\s+cents?)?/si
   InvalidZeros = /the\s+(row|euro)\.?\s*dollars/si
 
 
