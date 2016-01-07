@@ -332,6 +332,15 @@ describe StateHandler::MO do
         end
       end
 
+      context 'with an English-language amount' do
+        it 'processes it as a dollar amount successfully' do
+          # Not taken from logs; just modified above example with English-language dollar amount
+          transcription = "That is the balance you have one hundred fifty four dollars and seventy cents for food stamps to hear that again say repeat that or if you're down here just."
+          reply_for_user = subject.transcribe_balance_response(transcription)
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $154.70.")
+        end
+      end
+
       context 'with EBT card not found in system' do
         it 'sends EBT-not-found message' do
           reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found)
