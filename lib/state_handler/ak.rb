@@ -14,7 +14,7 @@ class StateHandler::AK < StateHandler::Base
   end
 
 
-  def transcribe_balance_response(transcription_text, language = :english)
+  def transcribe_balance_response(transcription_text, language = :yupik)
     mg = MessageGenerator.new(language)
 
     # Deal with a failed transcription
