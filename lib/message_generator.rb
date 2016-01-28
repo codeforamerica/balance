@@ -96,7 +96,7 @@ class MessageGenerator
 	  "Picaqenritamken! Tauna alangqayugnarquq. Kiik cali card-avet number-aari nasvakegki."
     elsif language == :russian
 	  "Извините, Ваш номер карточки не найден. Пожалуйста, повторите Ваш номер еще раз. (Сейчас этот сервис работает только в Калифорнии.)"
-	else
+    else
       "I'm sorry, that card number was not found. Please try again."
     end
   end
@@ -104,6 +104,10 @@ class MessageGenerator
   def call_in_voice_file_url
     if language == :spanish
       'https://s3-us-west-1.amazonaws.com/balance-cfa/balance-voice-splash-spanish-v2-012515.mp3'
+    elsif language == :yupik
+      'https://s3-us-west-1.amazonaws.com/balance-cfa/balance-voice-splash-v4-012515.mp3'
+    elsif language == :russian
+      'https://s3-us-west-1.amazonaws.com/balance-cfa/balance-voice-splash-v4-012515.mp3'
     else
       'https://s3-us-west-1.amazonaws.com/balance-cfa/balance-voice-splash-v4-012515.mp3'
     end
