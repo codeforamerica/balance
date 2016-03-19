@@ -32,7 +32,7 @@ class MessageGenerator
 
   def sorry_try_again(digits_array = [])
     if language == :spanish
-      "Perdon, ese número de EBT no esta trabajando. Favor de intentarlo otra vez."
+      "Perdon, ese numero de EBT no esta trabajando. Favor de intentarlo otra vez."
     else
       if digits_array == nil
         "Sorry! That number doesn't look right. Please reply with your EBT card number or ABOUT for more information."
