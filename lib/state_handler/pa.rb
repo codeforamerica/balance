@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 # Step 0. Change "::Example" below to a state abbreviation
 # For example, "::PA" for Pennsylvania
 class StateHandler::PA < StateHandler::Base
