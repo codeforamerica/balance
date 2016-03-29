@@ -1,7 +1,11 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # -*- encoding : utf-8 -*-
 =======
 >>>>>>> added FL handler.
+=======
+# -*- encoding : utf-8 -*-
+>>>>>>> new Twilio phone number
 # Step 1. Change "::Example" below to a state abbreviation
 # For example, "::PA" for Pennsylvania
 class StateHandler::FL < StateHandler::Base
