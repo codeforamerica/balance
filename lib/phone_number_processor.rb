@@ -7,7 +7,7 @@ class PhoneNumberProcessor
 
   def initialize
     @lookup_hash = Hash.new
-    phone_number_list = Twilio::REST::Client.new('AC9059ee47e7802d8fdde65e07e0b0384a', '7493f6d49f093b405c393672f0e23fd1').account.incoming_phone_numbers.list
+    phone_number_list = Twilio::REST::Client.new(ENV['TWILIO_SID'], ENV['TWILIO_AUTH']).account.incoming_phone_numbers.list
     phone_number_list.each do |pn|
       SUPPORTED_LANGUAGES.each do |language|
         if pn.friendly_name.include?(language.to_s)
