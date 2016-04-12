@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module TranscriptionParsingHelpers
   def clean_trailing_period(amount_string)
     if amount_string[-1] == '.'
