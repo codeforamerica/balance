@@ -12,11 +12,12 @@ class StateHandler::TX < StateHandler::Base
     if transcription_text == nil
       return mg.having_trouble_try_again_message
     end
-    regex_matches = transcription_text.scan(/(\$\S+)/)
+    text_with_dollar_amounts = DollarAmountsProcessor.new.process(transcription_text)
+    regex_matches = text_with_dollar_amounts.scan(/(\$\S+)/)
     if transcription_text.include?("please enter the")
       mg.card_number_not_found_message
     elsif regex_matches.count > 0
-      ebt_amount = regex_matches[0][0]
+      ebt_amount = clean_trailing_period(regex_matches[0][0])
       if ebt_amount.match(/(\d{5,10})/)
         ebt_amount.gsub!("0","")
       end

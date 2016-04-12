@@ -34,19 +34,11 @@ describe EbtBalanceSmsApp, :type => :feature do
         )
       end
 
-      it 'sends a text to the user telling them wait time' do
+      it 'sends a text with outage message' do
         expect(fake_twilio).to have_received(:send_text).with(
           to: texter_number,
           from: inbound_twilio_number,
-          body: fake_message_generator.thanks_please_wait
-        )
-      end
-
-      it 'sends a text to the user telling them wait time' do
-        expect(fake_twilio).to have_received(:send_text).with(
-          to: texter_number,
-          from: inbound_twilio_number,
-          body: fake_message_generator.thanks_please_wait
+          body: "fake thanks please wait msg"
         )
       end
 
