@@ -27,7 +27,8 @@ class StateHandler::MO < StateHandler::Base
       if transcription_text == nil
         return having_trouble_try_again_message
       end
-      regex_matches = transcription_text.scan(/(\$\S+)/)
+      text_with_dollar_amounts = DollarAmountsProcessor.new.process(transcription_text)
+      regex_matches = text_with_dollar_amounts.scan(/(\$\S+)/)
       if transcription_text.include?("say I don't have it")
         card_number_not_found_message
       elsif regex_matches.count > 0
