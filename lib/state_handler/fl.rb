@@ -1,3 +1,4 @@
+
 # -*- encoding : utf-8 -*-
 # Step 1. Change "::Example" below to a state abbreviation
 # For example, "::PA" for Pennsylvania
@@ -14,7 +15,23 @@ class StateHandler::FL < StateHandler::Base
     "wwww1wwww#{ebt_number}"
   end
 
-=begin # Delete this line when ready to transcribe!
+# =begin # Delete this line when ready to transcribe!
+
+# Step 0. Change "::Example" below to a state abbreviation
+# For example, "::PA" for Pennsylvania
+class StateHandler::FL < StateHandler::Base
+
+  # Step 1. EXAMPLE — Edit for your state!
+  PHONE_NUMBER = '+8637346192'
+
+  # Step 2. EXAMPLE — Edit for your state!
+  ALLOWED_NUMBER_OF_EBT_CARD_DIGITS = [16]
+
+  def button_sequence(ebt_number)
+    # Step 3. EXAMPLE — Edit for your state!
+    "ww1ww#{ebt_number}"
+  end
+
   def transcribe_balance_response(transcription_text, language = :english)
     mg = MessageGenerator.new(language)
 
@@ -27,6 +44,8 @@ class StateHandler::FL < StateHandler::Base
     # Deal with an invalid card number
     ### Step 5. EXAMPLE — Edit for your state! ###
     phrase_indicating_invalid_card_number = "CHANGE ME"
+    ### Step 4. EXAMPLE — Edit for your state! ###
+    phrase_indicating_invalid_card_number = "we did not get your card number"
 
     if transcription_text.include?(phrase_indicating_invalid_card_number)
       return mg.card_number_not_found_message
@@ -36,6 +55,9 @@ class StateHandler::FL < StateHandler::Base
     ### Step 6. EXAMPLE — Edit for your state! ###
     regex_matches = transcription_text.scan(/(\$\S+)/)
     if regex_matches.count > 0
+    ### Step 5. EXAMPLE — Edit for your state! ###
+    regex_matches = transcription_text.scan(/(\$\S+)/)
+    if regex_matches.count > 1
       ebt_amount = regex_matches[0][0]
       return "Hi! Your food stamp balance is #{ebt_amount}."
     end
@@ -44,5 +66,7 @@ class StateHandler::FL < StateHandler::Base
     # You do not need to change this. :D
     return mg.having_trouble_try_again_message
   end
-=end # Delete this line when ready to transcribe
+
+# =end # Delete this line when ready to transcribe
+
 end
