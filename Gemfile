@@ -1,11 +1,18 @@
 source 'https://rubygems.org'
-ruby '2.1.1'
+# ruby '2.2.4'
 
 gem 'sinatra'
+gem 'sinatra-contrib'
 gem 'twilio-ruby'
 gem 'rack-ssl'
-gem 'phone'
 gem 'require_all'
+gem 'unicorn'
+gem 'rack-timeout'
+gem 'newrelic_rpm'
+gem 'activesupport'
+
+# For DollarAmountsProcessor
+gem 'numbers_in_words'
 
 group :test, :development do
   gem 'rspec'
@@ -16,4 +23,5 @@ group :test, :development do
   gem 'foreman'
   gem 'vcr'
   gem 'webmock'
+  gem 'timecop'
 end

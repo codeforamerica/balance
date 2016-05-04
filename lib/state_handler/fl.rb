@@ -1,17 +1,20 @@
-# Step 0. Change "::Example" below to a state abbreviation
+
+# -*- encoding : utf-8 -*-
+# Step 1. Change "::Example" below to a state abbreviation
 # For example, "::PA" for Pennsylvania
 class StateHandler::FL < StateHandler::Base
 
-  # Step 1. EXAMPLE — Edit for your state!
-  PHONE_NUMBER = '+8637346192'
-
   # Step 2. EXAMPLE — Edit for your state!
+  PHONE_NUMBER = '+18883563281'
+
+  # Step 3. EXAMPLE — Edit for your state!
   ALLOWED_NUMBER_OF_EBT_CARD_DIGITS = [16]
 
   def button_sequence(ebt_number)
-    # Step 3. EXAMPLE — Edit for your state!
-    "ww1ww#{ebt_number}"
+    # Step 4. EXAMPLE — Edit for your state!
+    "wwww1wwww#{ebt_number}"
   end
+
 
   def transcribe_balance_response(transcription_text, language = :english)
     mg = MessageGenerator.new(language)
@@ -33,6 +36,8 @@ class StateHandler::FL < StateHandler::Base
     # Deal with a successful balance transcription
     ### Step 5. EXAMPLE — Edit for your state! ###
     regex_matches = transcription_text.scan(/(\$\S+)/)
+    if regex_matches.count > 0
+    regex_matches = transcription_text.scan(/(\$\S+)/)
     if regex_matches.count > 1
       ebt_amount = regex_matches[0][0]
       return "Hi! Your food stamp balance is #{ebt_amount}."
@@ -41,5 +46,6 @@ class StateHandler::FL < StateHandler::Base
     # Deal with any other transcription (catching weird errors)
     # You do not need to change this. :D
     return mg.having_trouble_try_again_message
+    end
   end
 end

@@ -1,6 +1,6 @@
 language: ruby
 rvm:
-  - "2.1.1"
+  - "2.2.4"
 before_install: gem install foreman
 script: foreman run bundle exec rspec spec
 notifications:

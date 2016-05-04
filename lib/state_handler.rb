@@ -1,4 +1,7 @@
+# -*- encoding : utf-8 -*-
 require File.expand_path('../message_generator', __FILE__)
+require File.expand_path('../transcription_parsing_helpers', __FILE__)
+require File.expand_path('../dollar_amounts_processor', __FILE__)
 
 module StateHandler
   extend self

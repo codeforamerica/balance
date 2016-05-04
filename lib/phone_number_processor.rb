@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require 'twilio-ruby'
 
 class PhoneNumberProcessor
@@ -16,6 +17,10 @@ class PhoneNumberProcessor
         end
       end
     end
+  end
+
+  def twilio_number?(number)
+    lookup_hash.keys.include?(number)
   end
 
   def language_for(phone_number)
