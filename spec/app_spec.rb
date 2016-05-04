@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require 'app_spec_helper'
 
 describe EbtBalanceSmsApp, :type => :feature do
@@ -6,14 +7,17 @@ describe EbtBalanceSmsApp, :type => :feature do
     let(:inbound_twilio_number) { "+15556667777" }
     let(:fake_twilio) { double("FakeTwilioService", :make_call => 'made call', :send_text => 'sent text') }
     let(:to_state) { 'CA' }
+    let(:fake_message_generator) { double("MessageGenerator", :thanks_please_wait => "fake thanks please wait msg") }
 
     context 'with valid EBT number' do
       let(:ebt_number) { "1111222233334444" }
-      let(:fake_state_handler) { double('FakeStateHandler', :phone_number => 'fake_state_phone_number', :button_sequence => "fake_button_sequence", :extract_valid_ebt_number_from_text => ebt_number ) }
+      let(:fake_state_handler) { double('FakeStateHandler', :phone_number => 'fake_state_phone_number', :button_sequence => "fake_button_sequence", :extract_valid_ebt_number_from_text => ebt_number) }
 
       before do
         allow(TwilioService).to receive(:new).and_return(fake_twilio)
+        allow(MessageGenerator).to receive(:new).and_return(fake_message_generator)
         allow(StateHandler).to receive(:for).with(to_state).and_return(fake_state_handler)
+        allow(SecureRandom).to receive(:hex).and_return("fakehexvalue")
         post '/', { "Body" => ebt_number, "From" => texter_number, "To" => inbound_twilio_number, "ToState" => to_state }
       end
 
@@ -23,18 +27,18 @@ describe EbtBalanceSmsApp, :type => :feature do
 
       it 'initiates an outbound Twilio call to EBT line with correct details' do
         expect(fake_twilio).to have_received(:make_call).with(
-          url: "http://example.org/get_balance?phone_number=#{texter_number}&twilio_phone_number=#{inbound_twilio_number}&state=#{to_state}&ebt_number=#{ebt_number}",
+          url: "http://example.org/get_balance?phone_number=#{texter_number}&twilio_phone_number=#{inbound_twilio_number}&state=#{to_state}&ebt_number=#{ebt_number}&balance_check_id=fakehexvalue",
           to: fake_state_handler.phone_number,
           from: inbound_twilio_number,
           method: 'GET'
         )
       end
 
-      it 'sends a text to the user telling them wait time' do
+      it 'sends a text with outage message' do
         expect(fake_twilio).to have_received(:send_text).with(
           to: texter_number,
           from: inbound_twilio_number,
-          body: "Thanks! Please wait 1-2 minutes while we check your EBT balance."
+          body: "fake thanks please wait msg"
         )
       end
 
@@ -45,7 +49,7 @@ describe EbtBalanceSmsApp, :type => :feature do
 
     context 'with INVALID EBT number' do
       let(:invalid_ebt_number) { "111122223333" }
-      let(:fake_state_handler) { double('FakeStateHandler', :phone_number => 'fake_state_phone_number', :button_sequence => "fake_button_sequence", :extract_valid_ebt_number_from_text => :invalid_number ) }
+      let(:fake_state_handler) { double('FakeStateHandler', :phone_number => 'fake_state_phone_number', :button_sequence => "fake_button_sequence", :extract_valid_ebt_number_from_text => :invalid_number, :allowed_number_of_ebt_card_digits => [14] ) }
 
       before do
         allow(TwilioService).to receive(:new).and_return(fake_twilio)
@@ -53,16 +57,149 @@ describe EbtBalanceSmsApp, :type => :feature do
         post '/', { "Body" => invalid_ebt_number, "From" => texter_number, "To" => inbound_twilio_number, "ToState" => to_state }
       end
 
+      it 'asks the state handler for the EBT card number of digits (to produce sorry msg)' do
+        expect(fake_state_handler).to have_received(:allowed_number_of_ebt_card_digits)
+      end
+
       it 'sends a text to the user with error message' do
         expect(fake_twilio).to have_received(:send_text).with(
           to: texter_number,
           from: inbound_twilio_number,
-          body: "Sorry, that EBT number doesn't look right. Please try again."
+          body: "Sorry! That number doesn't look right. Please reply with your 14-digit EBT card number or ABOUT for more information."
         )
       end
 
       it 'responds with 200 status' do
         expect(last_response.status).to eq(200)
+      end
+    end
+
+    context 'asking for more info (about)' do
+      let(:fake_state_handler) { double('FakeStateHandler', :phone_number => 'fake_state_phone_number', :button_sequence => "fake_button_sequence", :extract_valid_ebt_number_from_text => :invalid_number, :allowed_number_of_ebt_card_digits => [14] ) }
+      let(:more_info_content) { "This is a free text service by non-profit Code for America for checking your EBT balance (standard msg rates apply). For more info go to http://c4a.me/balance" }
+
+      before do
+        allow(TwilioService).to receive(:new).and_return(fake_twilio)
+        allow(StateHandler).to receive(:for).with(to_state).and_return(fake_state_handler)
+      end
+
+      context 'with all caps' do
+        let(:body) { "ABOUT" }
+
+        before do
+          post '/', { "Body" => body, "From" => texter_number, "To" => inbound_twilio_number, "ToState" => to_state }
+        end
+
+        it 'sends a text to the user with more info' do
+          expect(fake_twilio).to have_received(:send_text).with(
+            to: texter_number,
+            from: inbound_twilio_number,
+            body: more_info_content
+          )
+        end
+
+        it 'responds with 200 status' do
+          expect(last_response.status).to eq(200)
+        end
+      end
+
+      context 'with lower case' do
+        let(:body) { "about" }
+
+        before do
+          post '/', { "Body" => body, "From" => texter_number, "To" => inbound_twilio_number, "ToState" => to_state }
+        end
+
+        it 'sends a text to the user with more info' do
+          expect(fake_twilio).to have_received(:send_text).with(
+            to: texter_number,
+            from: inbound_twilio_number,
+            body: more_info_content
+          )
+        end
+
+        it 'responds with 200 status' do
+          expect(last_response.status).to eq(200)
+        end
+      end
+
+      context 'with camel case' do
+        let(:body) { "About" }
+
+        before do
+          post '/', { "Body" => body, "From" => texter_number, "To" => inbound_twilio_number, "ToState" => to_state }
+        end
+
+        it 'sends a text to the user with more info' do
+          expect(fake_twilio).to have_received(:send_text).with(
+            to: texter_number,
+            from: inbound_twilio_number,
+            body: more_info_content
+          )
+        end
+
+        it 'responds with 200 status' do
+          expect(last_response.status).to eq(200)
+        end
+      end
+
+      context 'with about embedded inside another string' do
+        let(:body) { "akjhsasfhaboutaskjh ashjd PHEEa23" }
+
+        before do
+          post '/', { "Body" => body, "From" => texter_number, "To" => inbound_twilio_number, "ToState" => to_state }
+        end
+
+        it 'sends a text to the user with more info' do
+          expect(fake_twilio).to have_received(:send_text).with(
+            to: texter_number,
+            from: inbound_twilio_number,
+            body: more_info_content
+          )
+        end
+
+        it 'responds with 200 status' do
+          expect(last_response.status).to eq(200)
+        end
+      end
+    end
+
+    context 'with blocked phone number' do
+      let(:fake_state_handler) { double('FakeStateHandler', :phone_number => 'fake_state_phone_number', :button_sequence => "fake_button_sequence", :extract_valid_ebt_number_from_text => :invalid_number, :allowed_number_of_ebt_card_digits => [14] ) }
+      let(:fake_twilio_with_blacklist_raise) { double("FakeTwilioService") }
+
+      before do
+        allow(fake_twilio_with_blacklist_raise).to receive(:send_text).and_raise(Twilio::REST::RequestError.new("The message From/To pair violates a blacklist rule."))
+        allow(TwilioService).to receive(:new).and_return(fake_twilio_with_blacklist_raise)
+        allow(StateHandler).to receive(:for).with(to_state).and_return(fake_state_handler)
+      end
+
+      context 'with an EBT # that passes validation in the body' do
+        before do
+          post '/', { "Body" => "11112222333344", "From" => texter_number, "To" => inbound_twilio_number, "ToState" => to_state }
+        end
+
+        it 'does NOT initiate a call via Twilio' do
+          expect(fake_twilio).to_not have_received(:make_call)
+        end
+
+        it 'does not blow up (ie, it responds with 200 status)' do
+          expect(last_response.status).to eq(200)
+        end
+      end
+
+      context 'with text in the body' do
+        before do
+          post '/', { "Body" => "Stop", "From" => texter_number, "To" => inbound_twilio_number, "ToState" => to_state }
+        end
+
+        it 'does NOT initiate a call via Twilio' do
+          expect(fake_twilio).to_not have_received(:make_call)
+        end
+
+        it 'does not blow up (ie, it responds with 200 status)' do
+          expect(last_response.status).to eq(200)
+        end
       end
     end
 
@@ -100,14 +237,15 @@ describe EbtBalanceSmsApp, :type => :feature do
     let(:inbound_twilio_number) { "+15556667777" }
     let(:state) { 'CA' }
     let(:ebt_number) { "1111222233334444" }
-    let(:fake_state_handler) { double('FakeStateHandler', :button_sequence => "fake_button_sequence" ) }
+    let(:fake_state_handler) { double('FakeStateHandler', :button_sequence => "fake_button_sequence", :max_message_length => 22) }
 
     before do
       allow(StateHandler).to receive(:for).and_return(fake_state_handler)
-      get "/get_balance?phone_number=#{texter_number}&twilio_phone_number=#{inbound_twilio_number}&state=#{state}&ebt_number=#{ebt_number}"
+      get "/get_balance?phone_number=#{texter_number}&twilio_phone_number=#{inbound_twilio_number}&state=#{state}&ebt_number=#{ebt_number}&balance_check_id=fakehexvalue"
       parsed_response = Nokogiri::XML(last_response.body)
       @play_digits = parsed_response.children.children[0].get_attribute("digits")
       @callback_url = parsed_response.children.children[1].get_attribute("transcribeCallback")
+      @timeout = parsed_response.children.children[1].get_attribute("timeout")
       @maxlength = parsed_response.children.children[1].get_attribute("maxLength")
     end
 
@@ -120,11 +258,15 @@ describe EbtBalanceSmsApp, :type => :feature do
     end
 
     it 'responds with callback to correct URL (ie, correct phone number)' do
-      expect(@callback_url).to eq("http://example.org/CA/12223334444/15556667777/send_balance")
+      expect(@callback_url).to eq("http://example.org/CA/12223334444/15556667777/fakehexvalue/send_balance")
+    end
+
+    it 'sets the timeout for the recording to 10 seconds' do
+      expect(@timeout).to eq('10')
     end
 
     it 'has max recording length set correctly' do
-      expect(@maxlength).to eq("18")
+      expect(@maxlength).to eq("22")
     end
 
     it 'responds with 200 status' do
@@ -149,7 +291,7 @@ describe EbtBalanceSmsApp, :type => :feature do
 
       before do
         allow(StateHandler).to receive(:for).with(state).and_return(fake_state_handler)
-        post "/#{state}/#{to_phone_number}/#{twilio_number}/send_balance", { "TranscriptionText" => transcription_text }
+        post "/#{state}/#{to_phone_number}/#{twilio_number}/fakehexvalue/send_balance", { "TranscriptionText" => transcription_text }
       end
 
       it 'sends transcription text and language to the handler' do
@@ -175,7 +317,7 @@ describe EbtBalanceSmsApp, :type => :feature do
 
       before do
         allow(StateHandler).to receive(:for).with(state).and_return(fake_state_handler)
-        post "/#{state}/#{to_phone_number}/#{twilio_number}/send_balance", { "TranscriptionText" => 'fake raw transcription for EBT number not found' }
+        post "/#{state}/#{to_phone_number}/#{twilio_number}/fakehexvalue/send_balance", { "TranscriptionText" => 'fake raw transcription for EBT number not found' }
       end
 
       it 'sends the user an error message' do
@@ -231,12 +373,8 @@ EOF
       expect(last_response.status).to eq(200)
     end
 
-    it 'sends an outbound text to the number' do
-      expect(fake_twilio).to have_received(:send_text).with(
-        to: caller_number,
-        from: inbound_twilio_number,
-        body: fake_message_generator.inbound_voice_call_text_message
-      )
+    it 'does NOT send an outbound text to the number' do
+      expect(fake_twilio).to_not have_received(:send_text)
     end
 
     it 'plays welcome message to caller and allows them to go to state line' do
@@ -254,16 +392,18 @@ EOF
   end
 
   describe 'welcome text message' do
-    context 'with a valid phone number' do
-      let(:body) { "Hi there! Reply to this message with your EBT card number and I'll check your balance for you." }
-      let(:texter_phone_number) { "+12223334444" }
-      let(:inbound_twilio_number) { "+15556667777" }
-      let(:fake_twilio) { double("FakeTwilioService", :send_text => 'sent text') }
+    let(:body) { "Hi there! Reply to this message with your EBT card number and we'll check your balance for you. For more info, text ABOUT." }
+    let(:fake_twilio) { double("FakeTwilioService", :send_text => 'sent text') }
+    let(:inbound_twilio_number) { "+15556667777" }
+    let(:invalid_number_message_text) { "Sorry! That number doesn't look right. Please go back and try again." }
 
-      before do
-        allow(TwilioService).to receive(:new).and_return(fake_twilio)
-        post '/welcome', { "inbound_twilio_number" => inbound_twilio_number, "texter_phone_number" => texter_phone_number }
-      end
+    before(:each) do
+      allow(TwilioService).to receive(:new).and_return(fake_twilio)
+      post '/welcome', { "inbound_twilio_number" => inbound_twilio_number, "texter_phone_number" => texter_phone_number }
+    end
+
+    context 'with a valid phone number' do
+      let(:texter_phone_number) { "+12223334444" }
 
       it 'sends a text to the user with instructions' do
         expect(fake_twilio).to have_received(:send_text).with(
@@ -278,5 +418,152 @@ EOF
       end
     end
 
+    context "with a valid (with formatting) phone number" do
+      let(:texter_phone_number) { "(510) 111-2222" }
+
+      it 'sends a text' do
+        expect(fake_twilio).to have_received(:send_text).with(
+          to: '+15101112222',
+          from: inbound_twilio_number,
+          body: body
+        )
+      end
+
+      it 'responds with 200 status' do
+        expect(last_response.status).to eq(200)
+      end
+    end
+
+    context "with garbage input" do
+      let(:texter_phone_number) { "asfljhasgkjshgkj" }
+
+      it 'does NOT send a text' do
+        expect(fake_twilio).to_not have_received(:send_text)
+      end
+
+      it 'responds with 200 status' do
+        expect(last_response.status).to eq(200)
+      end
+
+      it 'gives error message telling you to try again' do
+        expect(last_response.body).to include(invalid_number_message_text)
+      end
+    end
+
+    context "with an invalid (too long) phone number" do
+      let(:texter_phone_number) { "41522233334" }
+
+      it 'does NOT send a text' do
+        expect(fake_twilio).to_not have_received(:send_text)
+      end
+
+      it 'responds with 200 status' do
+        expect(last_response.status).to eq(200)
+      end
+
+      it 'gives error message telling you to try again' do
+        expect(last_response.body).to include(invalid_number_message_text)
+      end
+    end
+
+    context "with an invalid (too short) phone number" do
+      let(:texter_phone_number) { "415222333" }
+
+      it 'does NOT send a text' do
+        expect(fake_twilio).to_not have_received(:send_text)
+      end
+
+      it 'responds with 200 status' do
+        expect(last_response.status).to eq(200)
+      end
+
+      it 'gives error message telling you to try again' do
+        expect(last_response.body).to include(invalid_number_message_text)
+      end
+    end
+
+    context "with a user inputting one of the app's Twilio phone numbers" do
+      let(:texter_phone_number) { "555 666 7777" }
+
+      it 'does NOT send a text' do
+        expect(fake_twilio).to_not have_received(:send_text)
+      end
+
+      it 'responds with 200 status' do
+        expect(last_response.status).to eq(200)
+      end
+
+      it 'gives error message telling you to try again' do
+        expect(last_response.body).to include(invalid_number_message_text)
+      end
+    end
+
+    context '7 digit phone number' do
+      let(:texter_phone_number) { "2223333" }
+
+      it 'does NOT send a text' do
+        expect(fake_twilio).to_not have_received(:send_text)
+      end
+
+      it 'responds with 200 status' do
+        expect(last_response.status).to eq(200)
+      end
+
+      it 'gives error message telling you to try again' do
+        expect(last_response.body).to include(invalid_number_message_text)
+      end
+    end
+  end
+
+  describe 'status monitoring' do
+    context 'when balance checks working' do
+      before do
+        @time_for_test = Time.parse("Wed, 29 Apr 2015 22:42:07 GMT")
+        Timecop.freeze(@time_for_test)
+        VCR.use_cassette('messages-for-status-check-system-working') do
+          get '/.well-known/status'
+        end
+        @parsed_response = JSON.parse(last_response.body)
+      end
+
+      it 'responds with 200 status' do
+        expect(last_response.status).to eq(200)
+      end
+
+      it 'responds with json' do
+        expect(last_response.content_type).to eq('application/json')
+      end
+
+      it 'reports the status as ok' do
+        expect(@parsed_response['status']).to eq('ok')
+      end
+
+      it 'reports the time of the status check as an integer' do
+        expect(@parsed_response['updated']).to eq(@time_for_test.to_i)
+      end
+
+      it 'reports Twilio as the only dependency' do
+        expect(@parsed_response['dependencies']).to include('twilio')
+      end
+    end
+
+    context 'when balance check responses are delayed/non-responsive' do
+      before do
+        time_for_test = Time.parse("Wed, 29 Apr 2015 22:42:07 GMT")
+        Timecop.freeze(time_for_test)
+        VCR.use_cassette('messages-for-status-check-system-down') do
+          get '/.well-known/status'
+        end
+        @parsed_response = JSON.parse(last_response.body)
+      end
+
+      it 'reports a verbose description of the problem' do
+        expect(@parsed_response['status']).to eq("Missing balance response: User with number ending '34444' did not receive a response within 5 minutes to their request at 2015-04-29 15:34:37 Pacific. 'Thanks' message SID: fakesid2")
+      end
+
+      it 'responds with 200 status' do
+        expect(last_response.status).to eq(200)
+      end
+    end
   end
 end

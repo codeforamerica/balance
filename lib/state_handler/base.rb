@@ -1,4 +1,7 @@
+# -*- encoding : utf-8 -*-
 class StateHandler::Base
+  include TranscriptionParsingHelpers
+
   def phone_number
     self.class.const_get(:PHONE_NUMBER)
   end
@@ -21,5 +24,9 @@ class StateHandler::Base
 
   def transcribe_balance_response(transcription_text, language = :english)
     transcription_text
+  end
+
+  def max_message_length
+    18
   end
 end

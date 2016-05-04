@@ -4,14 +4,18 @@
 
 A text message interface for people to check their EBT card balance for SNAP and other human service benefits
 
-![Alt text](balance-screenshot.png)
+![Alt text](screenshots/balance-screenshot.png)
 
 Currently available in:
 
 - California
 - Texas
-- Missouri
 - Pennsylvania
+- Alaska
+- Virginia
+- Oklahoma
+
+If you want to use Balance with real SNAP recipients, check out the [list of official Balance phone numbers](https://github.com/codeforamerica/balance/wiki#phone-numbers).
 
 ## What it is
 
@@ -19,7 +23,7 @@ This is a simple Ruby app built on Twilio that creates a text message interface 
 
 The original idea was by @lippytak with influence from @alanjosephwilliams's experience on Code for America's [health project ideas](https://github.com/codeforamerica/health-project-ideas/issues/34) repo.
 
-This is a project of CFA's Health SpecOps Team.
+This is a project of CFA's Health Lab Team.
 
 ## Metrics
 Our primary metrics are:
@@ -27,9 +31,12 @@ Our primary metrics are:
 - # of unique users with 1+ successful balance checks (growth)
 - % of users who check their balance more than once (engagement)
 
-[![Metrics](http://keep-your-balance.herokuapp.com/chart)](http://keep-your-balance.herokuapp.com/)
+[![Metrics](https://plot.ly/~lippytak/184.png)](http://keep-your-balance.herokuapp.com/)
 
 (click for interactive graph - sorry it's so slow!)
+
+## Contribute
+We aren't accepting contributions right now because it takes a lot of work to QA each new state and we don't have it. Sorry about that! If you're really interested and/or work for a gov agency please feel free to get in touch: health-lab@codeforamerica.org.
 
 ## Deployment
 
@@ -75,6 +82,14 @@ For A/B testing different outreach media, we can buy a new phone number on the s
 ### Servers
 
 We're deployed on Heroku on CFA's main account with both staging and production instances. Currently only @daguar is configured as a collaborator.
+
+### Adding new phone numbers
+
+If you add a new phone number, you will need to restart the app to get it working (this is because we pull down the list of phone numbers and their names when the app starts up, so it requires a restart to refresh this list.)
+
+To do this, simply restart production:
+
+`heroku restart -a balance-production`
 
 ## Copyright & License
 

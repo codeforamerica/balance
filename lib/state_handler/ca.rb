@@ -1,9 +1,11 @@
+# -*- encoding : utf-8 -*-
 class StateHandler::CA < StateHandler::Base
   PHONE_NUMBER = '+18773289677'
   ALLOWED_NUMBER_OF_EBT_CARD_DIGITS = [16]
 
   def button_sequence(ebt_number)
-    "wwww1wwwwww#{ebt_number}ww"
+    waiting_ebt_number = ebt_number.split('').join('ww')
+    "wwww1wwwwwwww#{waiting_ebt_number}ww#ww"
   end
 
   def transcribe_balance_response(transcription_text, language = :english)
@@ -11,19 +13,21 @@ class StateHandler::CA < StateHandler::Base
     if transcription_text == nil
       return mg.having_trouble_try_again_message
     end
-    regex_matches = transcription_text.scan(/(\$\S+)/)
-    if transcription_text.include?("non working card")
+    text_with_dollar_amounts = DollarAmountsProcessor.new.process(transcription_text)
+    processed_transcription = process_transcription_for_zero_text(text_with_dollar_amounts)
+    regex_matches = processed_transcription.scan(/(\$\S+)/)
+    if processed_transcription.include?("non working card")
       mg.card_number_not_found_message
     elsif regex_matches.count > 1
-      ebt_amount = regex_matches[0][0]
-      cash_amount = regex_matches[1][0]
-      if language == :spanish
-        "Hola! El saldo de su cuenta de estampillas para comida es #{ebt_amount} y su balance de dinero en efectivo es #{cash_amount}."
-      else
-        "Hi! Your food stamp balance is #{ebt_amount} and your cash balance is #{cash_amount}."
-      end
+      ebt_amount = clean_trailing_period(regex_matches[0][0])
+      cash_amount = clean_trailing_period(regex_matches[1][0])
+      return mg.balance_message(ebt_amount, cash: cash_amount)
     else
       mg.having_trouble_try_again_message
     end
+  end
+
+  def max_message_length
+    22
   end
 end
