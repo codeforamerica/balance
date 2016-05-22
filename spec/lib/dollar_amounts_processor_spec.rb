@@ -196,5 +196,38 @@ describe DollarAmountsProcessor do
         "Nap balances.  $649.00.  Your cash balance is $0.00.  As a reminder by saving the receipt from your last purchase you will know your current balance.  Remember you can also access your account information on."
       )
     end
+
+    it "handles digits #351 text 1" do
+      expect(subject.process(
+        "Balance is 1 4 8 dollars and 9 2 cents. Your cash account balance is the euro. Dollars as a reminder. By saving the receipt from your last purchase and or your lastcash purchase or cashback transaction. You will always have your current balance. Some A.T.O.."
+      )).to eq_text(
+        "Balance is $148.92. Your cash account balance is $0.00 as a reminder. By saving the receipt from your last purchase and or your lastcash purchase or cashback transaction. You will always have your current balance. Some A.T.O.."
+      )
+    end
+
+    it "handles digits #351 text 2" do
+      expect(subject.process(
+        "Step balance. Is 2 7 1 dollars and 8 7 cents. Your cash account balance. Is the euro. Dollars. As a reminder. By saving the receipt from your last purchase. And oryour last. Cash purchase or cashback transaction. You will always have your current balance."
+      )).to eq_text(
+        "Step balance. Is $271.87. Your cash account balance. Is $0.00. As a reminder. By saving the receipt from your last purchase. And oryour last. Cash purchase or cashback transaction. You will always have your current balance."
+      )
+    end
+
+    it "handles digits #351 text 3" do
+      expect(subject.process(
+        "moment please. OK. I've pulled up your account information. Your food stamp balance is 0 dollars and 2 0 cents. You are eligible to enroll in a free service called myalerts. With my."
+      )).to eq_text(
+        "moment please. OK. I've pulled up your account information. Your food stamp balance is $0.20. You are eligible to enroll in a free service called myalerts. With my."
+      )
+    end
+
+    it "handles digits #351 text 4" do
+      expect(subject.process(
+        "Balance is 2 6 dollars. And boy 6 cents. Your cash account balance is 0 dollars as a reminder. By saving the receipt from your last purchase and or your last cashpurchase or cashback transaction. You will always have your current balance. Some A.T.M.'s will also."
+      )).to eq_text(
+        "Balance is $26.46. Your cash account balance is $0.00 as a reminder. By saving the receipt from your last purchase and or your last cashpurchase or cashback transaction. You will always have your current balance. Some A.T.M.'s will also."
+      )
+    end
+
   end
 end
