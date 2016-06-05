@@ -2,12 +2,22 @@ require 'spec_helper'
 require 'rack/test'
 require 'nokogiri'
 require 'sinatra'
+require 'sinatra/i18n'
+require 'i18n/backend/fallbacks'
 require 'vcr'
 require 'timecop'
 require File.expand_path('../rack_spec_helpers', __FILE__)
 
 class EbtBalanceSmsApp < Sinatra::Base
   set :environment, :test
+  configure do
+    I18n::Backend::Simple.send(:include, I18n::Backend::Fallbacks)
+    set :locales, Dir[
+      File.join(settings.root, '..', 'config', 'locales', '*.yml'),
+      File.join(settings.root, '..', 'config', 'locales', '*.rb')
+    ]
+    register Sinatra::I18n
+  end
 end
 
 VCR.configure do |config|

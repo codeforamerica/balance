@@ -1,0 +1,13 @@
+en:
+  welcome: "Hi there! Reply to this message with your EBT card number and we'll check your balance for you. For more info, text ABOUT."
+  thanks_please_wait: "Thanks! Please wait 1-2 minutes while we check your balance."
+  having_trouble_try_again_message: "I'm sorry! We're having trouble contacting the EBT system right now. Please try again in a few minutes or call this # and press 1 to use the state phone system."
+  card_number_not_found_message: "I'm sorry, that card number was not found. Please try again."
+  more_info: "This is a free text service by non-profit Code for America for checking your EBT balance (standard msg rates apply). For more info go to http://c4a.me/balance"
+  balance_message:
+    default: "Hi! Your food stamp balance is %{balance}."
+    optional: "Hi! Your food stamp balance is %{balance} and your cash balance is %{cash}."
+  sorry_try_again:
+    default: "Sorry! That number doesn't look right. Please reply with your EBT card number or ABOUT for more information."
+    one_number: "Sorry! That number doesn't look right. Please reply with your %{digits_one}-digit EBT card number or ABOUT for more information."
+    two_numbers: "Sorry! That number doesn't look right. Please reply with your %{digits_one}- or %{digits_two}-digit EBT card number or ABOUT for more information."

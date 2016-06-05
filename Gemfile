@@ -10,6 +10,7 @@ gem 'unicorn'
 gem 'rack-timeout'
 gem 'newrelic_rpm'
 gem 'activesupport'
+gem 'sinatra-i18n'
 
 # For DollarAmountsProcessor
 gem 'numbers_in_words'
