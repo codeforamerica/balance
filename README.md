@@ -14,6 +14,7 @@ Currently available in:
 - Alaska
 - Virginia
 - Oklahoma
+- North Carolina
 
 If you want to use Balance with real SNAP recipients, check out the [list of official Balance phone numbers](https://github.com/codeforamerica/balance/wiki#phone-numbers).
 
