@@ -55,11 +55,11 @@ class StateHandler::MO < StateHandler::Base
 
     module SpanishTranscriptionMessages
       def having_trouble_try_again_message
-        "Lo siento! Actualmente estamos teniendo problemas comunicandonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos."
+        "Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos."
       end
 
       def card_number_not_found_message
-          "Lo siento, no se encontro el numero de tarjeta. Por favor, intentelo de nuevo."
+          "Lo siento, no se encontró el número de tarjeta. Por favor, inténtelo de nuevo."
       end
 
       def balance_message_for(ebt_amount)

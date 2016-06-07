@@ -106,6 +106,7 @@ describe StateHandler::AK do
         it 'sends EBT-not-found message' do
           reply_for_user = subject.transcribe_balance_response(failed_transcription, language)
           expect(reply_for_user).to eq("Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos.")
+
         end
       end
     end
@@ -274,7 +275,7 @@ describe StateHandler::CA do
 
         it 'sends EBT-not-found message' do
           reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found, language)
-          expect(reply_for_user).to eq("Lo siento, no se encontro el numero de tarjeta. Por favor, intentelo de nuevo.")
+          expect(reply_for_user).to eq("Lo siento, no se encontró el número de tarjeta. Por favor, inténtelo de nuevo.")
         end
       end
 
@@ -283,7 +284,7 @@ describe StateHandler::CA do
 
         it 'sends EBT-not-found message' do
           reply_for_user = subject.transcribe_balance_response(failed_transcription, language)
-          expect(reply_for_user).to eq("Lo siento! Actualmente estamos teniendo problemas comunicandonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos.")
+          expect(reply_for_user).to eq("Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos.")
         end
       end
     end
@@ -370,14 +371,14 @@ describe StateHandler::MO do
       context 'with EBT card not found in system' do
         it 'sends EBT-not-found message' do
           reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found, language)
-          expect(reply_for_user).to eq("Lo siento, no se encontro el numero de tarjeta. Por favor, intentelo de nuevo.")
+          expect(reply_for_user).to eq("Lo siento, no se encontró el número de tarjeta. Por favor, inténtelo de nuevo.")
         end
       end
 
       context 'with a failed (nil) transcription' do
         it 'sends EBT-not-found message' do
           reply_for_user = subject.transcribe_balance_response(failed_transcription, language)
-          expect(reply_for_user).to eq("Lo siento! Actualmente estamos teniendo problemas comunicandonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos.")
+          expect(reply_for_user).to eq("Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos.")
         end
       end
     end
@@ -483,14 +484,14 @@ describe StateHandler::OK do
       context 'with EBT card not found in system' do
         it 'sends EBT-not-found message' do
           reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found, language)
-          expect(reply_for_user).to eq("Lo siento, no se encontro el numero de tarjeta. Por favor, intentelo de nuevo.")
+          expect(reply_for_user).to eq("Lo siento, no se encontró el número de tarjeta. Por favor, inténtelo de nuevo.")
         end
       end
 
       context 'with a failed (nil) transcription' do
         it 'sends EBT-not-found message' do
           reply_for_user = subject.transcribe_balance_response(failed_transcription, language)
-          expect(reply_for_user).to eq("Lo siento! Actualmente estamos teniendo problemas comunicandonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos.")
+          expect(reply_for_user).to eq("Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos.")
         end
       end
     end
@@ -571,7 +572,7 @@ describe StateHandler::PA do
       context 'with EBT card not found in system' do
         it 'sends EBT-not-found message' do
           reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found_1, language)
-          expect(reply_for_user).to eq("Lo siento, no se encontro el numero de tarjeta. Por favor, intentelo de nuevo.")
+          expect(reply_for_user).to eq("Lo siento, no se encontró el número de tarjeta. Por favor, inténtelo de nuevo.")
         end
       end
 
@@ -580,7 +581,7 @@ describe StateHandler::PA do
 
         it 'sends EBT-not-found message' do
           reply_for_user = subject.transcribe_balance_response(failed_transcription, language)
-          expect(reply_for_user).to eq("Lo siento! Actualmente estamos teniendo problemas comunicandonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos.")
+          expect(reply_for_user).to eq("Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos.")
         end
       end
     end
@@ -675,14 +676,14 @@ describe StateHandler::TX do
       context 'with EBT card not found in system' do
         it 'sends EBT-not-found message' do
           reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found, language)
-          expect(reply_for_user).to eq("Lo siento, no se encontro el numero de tarjeta. Por favor, intentelo de nuevo.")
+          expect(reply_for_user).to eq("Lo siento, no se encontró el número de tarjeta. Por favor, inténtelo de nuevo.")
         end
       end
 
       context 'with a failed (nil) transcription' do
         it 'sends EBT-not-found message' do
           reply_for_user = subject.transcribe_balance_response(failed_transcription, language)
-          expect(reply_for_user).to eq("Lo siento! Actualmente estamos teniendo problemas comunicandonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos.")
+          expect(reply_for_user).to eq("Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos.")
         end
       end
     end
@@ -763,7 +764,7 @@ describe StateHandler::VA do
       context 'with EBT card not found in system' do
         it 'sends EBT-not-found message' do
           reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found_1, language)
-          expect(reply_for_user).to eq("Lo siento, no se encontro el numero de tarjeta. Por favor, intentelo de nuevo.")
+          expect(reply_for_user).to eq("Lo siento, no se encontró el número de tarjeta. Por favor, inténtelo de nuevo.")
         end
       end
 
@@ -772,7 +773,7 @@ describe StateHandler::VA do
 
         it 'sends EBT-not-found message' do
           reply_for_user = subject.transcribe_balance_response(failed_transcription, language)
-          expect(reply_for_user).to eq("Lo siento! Actualmente estamos teniendo problemas comunicandonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos.")
+          expect(reply_for_user).to eq("Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos.")
         end
       end
     end

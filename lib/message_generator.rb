@@ -57,7 +57,7 @@ class MessageGenerator
 
   def having_trouble_try_again_message
     if language == :spanish
-      "Lo siento! Actualmente estamos teniendo problemas comunicandonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos."
+      "Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos."
     else
       "I'm sorry! We're having trouble contacting the EBT system right now. Please try again in a few minutes or call this # and press 1 to use the state phone system."
     end
@@ -65,7 +65,7 @@ class MessageGenerator
 
   def card_number_not_found_message
     if language == :spanish
-        "Lo siento, no se encontro el numero de tarjeta. Por favor, intentelo de nuevo."
+        "Lo siento, no se encontró el número de tarjeta. Por favor, inténtelo de nuevo."
     else
       "I'm sorry, that card number was not found. Please try again."
     end
