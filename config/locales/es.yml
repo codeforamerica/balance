@@ -1,0 +1,10 @@
+es:
+  welcome: "Hola! Usted puede verificar su saldo de EBT por mensaje de texto. Solo responda a este mensaje con su número de tarjeta de EBT."
+  thanks_please_wait: "Gracias! Favor de esperar 1-2 minutos mientras verificamos su saldo de EBT."
+  having_trouble_try_again_message: "Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos."
+  card_number_not_found_message: "Lo siento, no se encontró el número de tarjeta. Por favor, inténtelo de nuevo."
+  balance_message:
+    default: "Hola! El saldo de su cuenta de estampillas para comida es %{balance}."
+    optional: "Hola! El saldo de su cuenta de estampillas para comida es %{balance} y su balance de dinero en efectivo es %{cash}."
+  sorry_try_again:
+    default: "Perdon, ese número de EBT no esta trabajando. Favor de intentarlo otra vez."

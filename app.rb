@@ -3,6 +3,8 @@ require 'sinatra/json'
 require 'twilio-ruby'
 require 'rack/ssl'
 require 'active_support/core_ext/time'
+require 'sinatra/i18n'
+require 'i18n/backend/fallbacks'
 require File.expand_path('../lib/twilio_service', __FILE__)
 require File.expand_path('../lib/state_handler', __FILE__)
 require File.expand_path('../lib/phone_number_processor', __FILE__)
@@ -17,6 +19,15 @@ class EbtBalanceSmsApp < Sinatra::Base
     set :url_scheme, 'http'
   end
   set :phone_number_processor, PhoneNumberProcessor.new
+
+  configure do
+    I18n::Backend::Simple.send(:include, I18n::Backend::Fallbacks)
+    set :locales, Dir[
+      File.join(settings.root, 'config', 'locales', '*.yml'),
+      File.join(settings.root, 'config', 'locales', '*.rb')
+    ]
+    register Sinatra::I18n
+  end
 
   configure :production do
     require 'newrelic_rpm'
