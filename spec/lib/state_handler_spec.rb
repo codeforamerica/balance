@@ -75,6 +75,14 @@ describe StateHandler::AK do
           expect(reply_for_user).to eq(MessageGenerator.new.having_trouble_try_again_message)
         end
       end
+
+      context 'with an English-language amount' do
+        it 'processes it as a dollar amount successfully' do
+          transcription = "One moment please. OK. I've pulled up your account information. Your food stamp balance is seven hundred sixty six dollars and thirty seven cents. You are eligible to enroll in a free service called my own."
+          reply_for_user = subject.transcribe_balance_response(transcription)
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $766.37.")
+        end
+      end
     end
 
     context 'for Spanish' do
@@ -114,7 +122,7 @@ describe StateHandler::CA do
   it 'gives correct button sequence (ebt # with pauses between digits and pound at end)' do
     fake_ebt_number = '11112222'
     desired_sequence = subject.button_sequence(fake_ebt_number)
-    expect(desired_sequence).to eq("wwww1wwwwww1w1w1w1w2w2w2w2w#ww")
+    expect(desired_sequence).to eq("wwww1wwwwwwww1ww1ww1ww1ww2ww2ww2ww2ww#ww")
   end
 
   it 'tells the number of digits a CA EBT card has' do
@@ -153,11 +161,6 @@ describe StateHandler::CA do
   end
 
   describe 'balance transcriber' do
-      let(:successful_transcription_1) { "Your food stamp balance is $136.33 your cash account balance is $0 as a reminder by saving the receipt from your last purchase and your last a cash purchase for Cash Bank Transaction you will always have your current balance at and will also print your balance on the Cash Withdrawal receipt to hear the number of Cash Withdrawal for that a transaction fee (running?) this month press 1 to hear your last 10 transactions report a transaction there file a claim or check the status of a claim press 2 to report your card lost stolen or damaged press 3 for (pin?) replacement press 4 for additional options press 5" }
-    let(:successful_transcription_2) { "(Stamp?) balance is $123.11 your cash account balance is $11.32 as a reminder by saving the receipt from your last purchase and your last a cash purchase or cash back transaction you will always have your current balance at and will also print the balance on the Cash Withdrawal receipt to hear the number of Cash Withdrawal for that a transaction fee this month press 1 to hear your last 10 transactions report a transaction there file a claim or check the status of a claim press 2 to report your card lost stolen or damaged press 3 for (pin?) replacement press 4 for additional options press 5" }
-      let(:successful_transcription_3) { "Devon Alan is $156.89 your cash account balance is $4.23 as a reminder by saving the receipt from your last purchase and your last the cash purchase or cash back for (action?) you will always have your current balance. I'm at and will also print the balance on the Cash Withdrawal receipt to hear the number of Cash Withdrawal for that a transaction fee (running?) this month press 1 to hear your last 10 transactions report a transaction there file a claim or check the status of a claim press 2 to report your card lost stolen or damaged press 3 for pain placement press 4 for additional options press 5" }
-      let(:successful_transcription_extra_periods) { "Your food stamp balance is $9.11. Your cash account balance is $13.93. As a reminder. Bye C." }
-      let(:transcription_ebt_not_found) { "Our records indicate the number you have entered it's for an non working card in case your number was entered incorrectly please reenter your 16 digit card number followed by the pound sign." }
 
 
     context 'for English' do
@@ -165,6 +168,8 @@ describe StateHandler::CA do
 
       context 'with transcription containing balance variation 1' do
         it 'sends response with balance amounts' do
+          successful_transcription_1 = "Your food stamp balance is $136.33 your cash account balance is $0 as a reminder by saving the receipt from your last purchase and your last a cash purchase for Cash Bank Transaction you will always have your current balance at and will also print your balance on the Cash Withdrawal receipt to hear the number of Cash Withdrawal for that a transaction fee (running?) this month press 1 to hear your last 10 transactions report a transaction there file a claim or check the status of a claim press 2 to report your card lost stolen or damaged press 3 for (pin?) replacement press 4 for additional options press 5"
+
           reply_for_user = subject.transcribe_balance_response(successful_transcription_1)
           expect(reply_for_user).to eq("Hi! Your food stamp balance is $136.33 and your cash balance is $0.")
         end
@@ -172,6 +177,8 @@ describe StateHandler::CA do
 
       context 'with transcription containing balance variation 2' do
         it 'sends response with balance amounts' do
+          successful_transcription_2 = "(Stamp?) balance is $123.11 your cash account balance is $11.32 as a reminder by saving the receipt from your last purchase and your last a cash purchase or cash back transaction you will always have your current balance at and will also print the balance on the Cash Withdrawal receipt to hear the number of Cash Withdrawal for that a transaction fee this month press 1 to hear your last 10 transactions report a transaction there file a claim or check the status of a claim press 2 to report your card lost stolen or damaged press 3 for (pin?) replacement press 4 for additional options press 5"
+
           reply_for_user = subject.transcribe_balance_response(successful_transcription_2)
           expect(reply_for_user).to eq("Hi! Your food stamp balance is $123.11 and your cash balance is $11.32.")
         end
@@ -179,13 +186,26 @@ describe StateHandler::CA do
 
       context 'with transcription containing balance variation 3' do
         it 'sends response with balance amounts' do
+          successful_transcription_3 = "Devon Alan is $156.89 your cash account balance is $4.23 as a reminder by saving the receipt from your last purchase and your last the cash purchase or cash back for (action?) you will always have your current balance. I'm at and will also print the balance on the Cash Withdrawal receipt to hear the number of Cash Withdrawal for that a transaction fee (running?) this month press 1 to hear your last 10 transactions report a transaction there file a claim or check the status of a claim press 2 to report your card lost stolen or damaged press 3 for pain placement press 4 for additional options press 5"
+
           reply_for_user = subject.transcribe_balance_response(successful_transcription_3)
           expect(reply_for_user).to eq("Hi! Your food stamp balance is $156.89 and your cash balance is $4.23.")
         end
       end
 
+      context 'with English language (not number) dollar amounts' do
+        it 'sends a numerical value back to the user' do
+          transcription_with_english_amounts = 'Your food stamp balance is six dollars and twenty five cents. Your cash account balance is eleven dollars and sixty nine cents. As a reminder. By saving the receipt from your last purchase and or your last cash purchase or cashback Prinz action. You will always have your.'
+
+          reply_for_user = subject.transcribe_balance_response(transcription_with_english_amounts)
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $6.25 and your cash balance is $11.69.")
+        end
+      end
+
       context 'with a transcription with extraneous periods' do
         it 'sends response with balance amounts without extra periods' do
+          successful_transcription_extra_periods = "Your food stamp balance is $9.11. Your cash account balance is $13.93. As a reminder. Bye C."
+
           reply_for_user = subject.transcribe_balance_response(successful_transcription_extra_periods)
           expect(reply_for_user).to eq("Hi! Your food stamp balance is $9.11 and your cash balance is $13.93.")
         end
@@ -193,6 +213,8 @@ describe StateHandler::CA do
 
       context 'with EBT card not found in system' do
         it 'sends EBT-not-found message' do
+          transcription_ebt_not_found = "Our records indicate the number you have entered it's for an non working card in case your number was entered incorrectly please reenter your 16 digit card number followed by the pound sign."
+
           reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found)
           expect(reply_for_user).to eq("I'm sorry, that card number was not found. Please try again.")
         end
@@ -206,6 +228,15 @@ describe StateHandler::CA do
           expect(reply_for_user).to eq(MessageGenerator.new.having_trouble_try_again_message)
         end
       end
+
+      context 'with zero dollar values in words' do
+        it 'correctly parses the zeroes as values' do
+          transcription_with_zero_as_words = "Balance is zero dollars. Your cash account balance is zero dollars. As a reminder by saving the receipt from your last purchase and or your last cash purchase or cash back transaction."
+
+          reply_for_user = subject.transcribe_balance_response(transcription_with_zero_as_words)
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $0.00 and your cash balance is $0.00.")
+        end
+      end
     end
 
     context 'for Spanish' do
@@ -213,6 +244,8 @@ describe StateHandler::CA do
 
       context 'with transcription containing balance variation 1' do
         it 'sends response with balance amounts' do
+          successful_transcription_1 = "Your food stamp balance is $136.33 your cash account balance is $0 as a reminder by saving the receipt from your last purchase and your last a cash purchase for Cash Bank Transaction you will always have your current balance at and will also print your balance on the Cash Withdrawal receipt to hear the number of Cash Withdrawal for that a transaction fee (running?) this month press 1 to hear your last 10 transactions report a transaction there file a claim or check the status of a claim press 2 to report your card lost stolen or damaged press 3 for (pin?) replacement press 4 for additional options press 5"
+
           reply_for_user = subject.transcribe_balance_response(successful_transcription_1, language)
           expect(reply_for_user).to eq("Hola! El saldo de su cuenta de estampillas para comida es $136.33 y su balance de dinero en efectivo es $0.")
         end
@@ -220,6 +253,8 @@ describe StateHandler::CA do
 
       context 'with transcription containing balance variation 2' do
         it 'sends response with balance amounts' do
+          successful_transcription_2 = "(Stamp?) balance is $123.11 your cash account balance is $11.32 as a reminder by saving the receipt from your last purchase and your last a cash purchase or cash back transaction you will always have your current balance at and will also print the balance on the Cash Withdrawal receipt to hear the number of Cash Withdrawal for that a transaction fee this month press 1 to hear your last 10 transactions report a transaction there file a claim or check the status of a claim press 2 to report your card lost stolen or damaged press 3 for (pin?) replacement press 4 for additional options press 5"
+
           reply_for_user = subject.transcribe_balance_response(successful_transcription_2, language)
           expect(reply_for_user).to eq("Hola! El saldo de su cuenta de estampillas para comida es $123.11 y su balance de dinero en efectivo es $11.32.")
         end
@@ -227,12 +262,16 @@ describe StateHandler::CA do
 
       context 'with transcription containing balance variation 3' do
         it 'sends response with balance amounts' do
+          successful_transcription_3 = "Devon Alan is $156.89 your cash account balance is $4.23 as a reminder by saving the receipt from your last purchase and your last the cash purchase or cash back for (action?) you will always have your current balance. I'm at and will also print the balance on the Cash Withdrawal receipt to hear the number of Cash Withdrawal for that a transaction fee (running?) this month press 1 to hear your last 10 transactions report a transaction there file a claim or check the status of a claim press 2 to report your card lost stolen or damaged press 3 for pain placement press 4 for additional options press 5"
+
           reply_for_user = subject.transcribe_balance_response(successful_transcription_3, language)
           expect(reply_for_user).to eq("Hola! El saldo de su cuenta de estampillas para comida es $156.89 y su balance de dinero en efectivo es $4.23.")
         end
       end
 
       context 'with EBT card not found in system' do
+          transcription_ebt_not_found = "Our records indicate the number you have entered it's for an non working card in case your number was entered incorrectly please reenter your 16 digit card number followed by the pound sign."
+
         it 'sends EBT-not-found message' do
           reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found, language)
           expect(reply_for_user).to eq("Lo siento, no se encontro el numero de tarjeta. Por favor, intentelo de nuevo.")
@@ -290,6 +329,15 @@ describe StateHandler::MO do
       context 'with transcription containing balance variation 1' do
         it 'sends response with balance amounts' do
           reply_for_user = subject.transcribe_balance_response(successful_transcription_1)
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $154.70.")
+        end
+      end
+
+      context 'with an English-language amount' do
+        it 'processes it as a dollar amount successfully' do
+          # Not taken from logs; just modified above example with English-language dollar amount
+          transcription = "That is the balance you have one hundred fifty four dollars and seventy cents for food stamps to hear that again say repeat that or if you're down here just."
+          reply_for_user = subject.transcribe_balance_response(transcription)
           expect(reply_for_user).to eq("Hi! Your food stamp balance is $154.70.")
         end
       end
@@ -354,6 +402,15 @@ describe StateHandler::NC do
       end
     end
 
+    context 'with an English-language amount' do
+      it 'processes it as a dollar amount successfully' do
+        # Not taken from logs; just modified above example with English-language dollar amount
+        transcription = "blah one hundred twenty three dollars and forty five cents blah"
+        reply_for_user = subject.transcribe_balance_response(transcription)
+        expect(reply_for_user).to eq("Hi! Your food and nutrition benefits balance is $123.45.")
+      end
+    end
+
     context 'with EBT card not found in system' do
       it 'sends EBT-not-found message' do
         reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found)
@@ -385,6 +442,15 @@ describe StateHandler::OK do
       context 'with transcription containing balance' do
         it 'sends response with balance amounts' do
           reply_for_user = subject.transcribe_balance_response(successful_transcription_1)
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $123.45.")
+        end
+      end
+
+      context 'with an English-language amount' do
+        it 'processes it as a dollar amount successfully' do
+          # Not taken from logs; just modified above example with English-language dollar amount
+          transcription = "blah one hundred twenty three dollars and forty five cents blah"
+          reply_for_user = subject.transcribe_balance_response(transcription)
           expect(reply_for_user).to eq("Hi! Your food stamp balance is $123.45.")
         end
       end
@@ -449,6 +515,15 @@ describe StateHandler::PA do
         it 'sends response with balance amounts' do
           reply_for_user = subject.transcribe_balance_response(successful_transcription_1)
           expect(reply_for_user).to eq("Hi! Your food stamp balance is $136.33 and your cash balance is $23.87.")
+        end
+      end
+
+      context 'with an English-language amount' do
+        it 'processes it as a dollar amount successfully' do
+          # Not taken directly from logs; modified the above with a transcription of English language numbers from logs
+          transcription = "Your snap balance is ten dollars and twenty two cents. Your cash balance is one dollar. To repeat your account balance press 1 To hear your last 10 transactions on your card. Press."
+          reply_for_user = subject.transcribe_balance_response(transcription)
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $10.22 and your cash balance is $1.00.")
         end
       end
 
@@ -549,6 +624,15 @@ describe StateHandler::TX do
     let(:failed_transcription) { nil }
 
     context 'for English' do
+      context 'with an English-language amount' do
+        it 'processes it as a dollar amount successfully' do
+          # Not taken from logs; modified the above with English language numbers
+          transcription = "(Who?) the account balance for the card number entered is one hundred fifty four dollars and seventy cents. To end this call press one to repeat your account balance press two to report a lost or still in card press three if you would like to select a new pen for your account."
+          reply_for_user = subject.transcribe_balance_response(transcription)
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $154.70.")
+        end
+      end
+
       context 'with transcription containing balance variation 1' do
         it 'sends response with balance amounts' do
           reply_for_user = subject.transcribe_balance_response(successful_transcription_1)
@@ -618,6 +702,15 @@ describe StateHandler::VA do
 
     context 'for English' do
       let(:language) { :english }
+
+      context 'with an English-language amount' do
+        it 'processes it as a dollar amount successfully' do
+          # Not taken from logs; modified the above with English language numbers
+          transcription = "Your snap balance is two hundred twenty one dollars and ninety cents. As a reminder by saving to (receive?) from your last purchase you'll know your current balance. You can also access your balance online at www.EBT dot a C at."
+          reply_for_user = subject.transcribe_balance_response(transcription)
+          expect(reply_for_user).to eq("Hi! Your food stamp balance is $221.90.")
+        end
+      end
 
       context 'with transcription containing balance' do
         it 'sends response with balance amounts' do

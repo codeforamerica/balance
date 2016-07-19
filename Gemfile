@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-#ruby '2.1.6'
+ruby '2.2.4'
 
 gem 'sinatra'
 gem 'sinatra-contrib'
@@ -10,6 +10,9 @@ gem 'unicorn'
 gem 'rack-timeout'
 gem 'newrelic_rpm'
 gem 'activesupport'
+
+# For DollarAmountsProcessor
+gem 'numbers_in_words'
 
 group :test, :development do
   gem 'rspec'
