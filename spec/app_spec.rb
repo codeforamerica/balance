@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require 'app_spec_helper'
 
 describe EbtBalanceSmsApp, :type => :feature do

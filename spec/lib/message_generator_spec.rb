@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require 'spec_helper'
 require File.expand_path('../../../lib/message_generator', __FILE__)
 
@@ -114,7 +115,7 @@ describe MessageGenerator do
 
     describe '#sorry_try_again' do
       it "says Spanish version of 'sorry, try again...'" do
-        desired_message = "Perdon, ese número de EBT no esta trabajando. Favor de intentarlo otra vez."
+        desired_message = "Perdon, ese numero de EBT no esta trabajando. Favor de intentarlo otra vez."
         expect(mg.sorry_try_again).to eq(desired_message)
       end
     end

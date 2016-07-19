@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module BalanceLogAnalyzer
   class DelayedBalanceResponseAnalysis
     attr_reader :most_recent_thanks_msg,

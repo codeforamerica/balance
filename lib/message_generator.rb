@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class MessageGenerator
   attr_reader :language
 
@@ -32,7 +33,7 @@ class MessageGenerator
 
   def sorry_try_again(digits_array = [])
     if language == :spanish
-      "Perdon, ese número de EBT no esta trabajando. Favor de intentarlo otra vez."
+      "Perdon, ese numero de EBT no esta trabajando. Favor de intentarlo otra vez."
     else
       if digits_array == nil
         "Sorry! That number doesn't look right. Please reply with your EBT card number or ABOUT for more information."
@@ -48,7 +49,7 @@ class MessageGenerator
 
   def welcome
     if language == :spanish
-      'Hola! Usted puede verificar su saldo de EBT por mensaje de texto. Solo responda a este mensaje con su número de tarjeta de EBT.'
+      'Hola! Usted puede verificar su saldo de EBT por mensaje de texto. Solo responda a este mensaje con su numero de tarjeta de EBT.'
     else
       "Hi there! Reply to this message with your EBT card number and we'll check your balance for you. For more info, text ABOUT."
     end
@@ -56,7 +57,7 @@ class MessageGenerator
 
   def having_trouble_try_again_message
     if language == :spanish
-      "Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos."
+      "Lo siento! Actualmente estamos teniendo problemas comunicandonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos."
     else
       "I'm sorry! We're having trouble contacting the EBT system right now. Please try again in a few minutes or call this # and press 1 to use the state phone system."
     end
@@ -64,7 +65,7 @@ class MessageGenerator
 
   def card_number_not_found_message
     if language == :spanish
-      "Lo siento, no se encontró el número de tarjeta. Por favor, inténtelo de nuevo."
+        "Lo siento, no se encontro el numero de tarjeta. Por favor, intentelo de nuevo."
     else
       "I'm sorry, that card number was not found. Please try again."
     end

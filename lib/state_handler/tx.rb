@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class StateHandler::TX < StateHandler::Base
   PHONE_NUMBER = '+18007777328'
   ALLOWED_NUMBER_OF_EBT_CARD_DIGITS = [19]
