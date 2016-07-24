@@ -1,4 +1,3 @@
-# -*- encoding : utf-8 -*-
 require 'sinatra'
 require 'sinatra/json'
 require 'twilio-ruby'
