@@ -1,4 +1,3 @@
-# -*- encoding : utf-8 -*-
 class StateHandler::OK < StateHandler::Base
   PHONE_NUMBER = '+18883286551'
   ALLOWED_NUMBER_OF_EBT_CARD_DIGITS = [16]

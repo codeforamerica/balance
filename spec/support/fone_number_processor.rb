@@ -1,4 +1,3 @@
-# -*- encoding : utf-8 -*-
 # Fake of lib/phone_number_processor for use in testing web app
 # without hitting Twilio
 

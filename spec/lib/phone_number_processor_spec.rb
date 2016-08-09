@@ -1,4 +1,3 @@
-# -*- encoding : utf-8 -*-
 require File.expand_path('../../phone_number_processor_spec_helper', __FILE__)
 
 describe PhoneNumberProcessor do

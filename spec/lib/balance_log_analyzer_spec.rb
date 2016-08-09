@@ -1,4 +1,3 @@
-# -*- encoding : utf-8 -*-
 require 'spec_helper'
 require File.expand_path('../../../lib/balance_log_analyzer', __FILE__)
 

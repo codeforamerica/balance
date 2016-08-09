@@ -1,4 +1,3 @@
-# -*- encoding : utf-8 -*-
 # Step 1. Change "::Example" below to a state abbreviation
 # For example, "::PA" for Pennsylvania
 class StateHandler::FL < StateHandler::Base
@@ -27,7 +26,6 @@ class StateHandler::FL < StateHandler::Base
     # Deal with an invalid card number
     ### Step 4. EXAMPLE — Edit for your state! ###
     phrase_indicating_invalid_card_number = "we did not get your card number"
-
 
     if transcription_text.include?(phrase_indicating_invalid_card_number)
       return mg.card_number_not_found_message

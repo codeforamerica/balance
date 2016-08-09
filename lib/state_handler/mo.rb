@@ -1,4 +1,3 @@
-# -*- encoding : utf-8 -*-
 class StateHandler::MO < StateHandler::Base
   PHONE_NUMBER = '+18009977777'
   ALLOWED_NUMBER_OF_EBT_CARD_DIGITS = [16]
@@ -55,7 +54,7 @@ class StateHandler::MO < StateHandler::Base
 
     module SpanishTranscriptionMessages
       def having_trouble_try_again_message
-        "Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos."
+        "Lo siento! Actualmente estamos teniendo problemas comunicandonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos."
       end
 
       def card_number_not_found_message

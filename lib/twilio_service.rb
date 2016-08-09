@@ -1,4 +1,3 @@
-# -*- encoding : utf-8 -*-
 class TwilioService
   attr_reader :client
 
