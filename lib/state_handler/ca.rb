@@ -4,7 +4,7 @@ class StateHandler::CA < StateHandler::Base
 
   def button_sequence(ebt_number)
     waiting_ebt_number = ebt_number.split('').join('ww')
-    "wwwwwwww1wwwwwwww#{waiting_ebt_number}ww#ww"
+    "wwwwwwwwwwwwwwww1wwwwwwwwwwwwww#{waiting_ebt_number}ww#wwww"
   end
 
   def transcribe_balance_response(transcription_text, language = :english)
