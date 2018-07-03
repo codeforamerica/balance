@@ -4,7 +4,7 @@ class StateHandler::CA < StateHandler::Base
 
   def button_sequence(ebt_number)
     waiting_ebt_number = ebt_number.split('').join('ww')
-    "wwww1wwwwwwww#{waiting_ebt_number}ww#ww"
+    "wwwwwwwwwwwwwwww1wwwwwwwwwwwwww#{waiting_ebt_number}ww#wwww"
   end
 
   def transcribe_balance_response(transcription_text, language = :english)
@@ -14,13 +14,14 @@ class StateHandler::CA < StateHandler::Base
     end
     text_with_dollar_amounts = DollarAmountsProcessor.new.process(transcription_text)
     processed_transcription = process_transcription_for_zero_text(text_with_dollar_amounts)
+    puts processed_transcription
     regex_matches = processed_transcription.scan(/(\$\S+)/)
     if processed_transcription.include?("non working card")
       mg.card_number_not_found_message
-    elsif regex_matches.count > 1
+    elsif regex_matches.count > 0
       ebt_amount = clean_trailing_period(regex_matches[0][0])
-      cash_amount = clean_trailing_period(regex_matches[1][0])
-      return mg.balance_message(ebt_amount, cash: cash_amount)
+      # for now omit other balances since now includes future
+      return mg.balance_message(ebt_amount)
     else
       mg.having_trouble_try_again_message
     end
