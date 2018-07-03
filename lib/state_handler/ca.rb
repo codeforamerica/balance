@@ -14,6 +14,7 @@ class StateHandler::CA < StateHandler::Base
     end
     text_with_dollar_amounts = DollarAmountsProcessor.new.process(transcription_text)
     processed_transcription = process_transcription_for_zero_text(text_with_dollar_amounts)
+    puts processed_transcription
     regex_matches = processed_transcription.scan(/(\$\S+)/)
     if processed_transcription.include?("non working card")
       mg.card_number_not_found_message
