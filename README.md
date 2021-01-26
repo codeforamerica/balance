@@ -15,6 +15,7 @@ Currently unavailable. This project is no longer maintained.
 - Virginia
 - Oklahoma
 - North Carolina
+- Florida
 
 ## What it is
 
@@ -38,4 +39,4 @@ The `twilio_console.rb` file just gets you a quick Ruby prompt with Twilio clien
 
 ## Copyright & License
 
-Copyright Code for America Labs, 2014 — MIT License
+Copyright Code for America Labs, 2014-2016 — MIT License

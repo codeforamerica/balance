@@ -58,7 +58,7 @@ class StateHandler::MO < StateHandler::Base
       end
 
       def card_number_not_found_message
-        "Lo siento, no se encontró el número de tarjeta. Por favor, inténtelo de nuevo."
+          "Lo siento, no se encontró el número de tarjeta. Por favor, inténtelo de nuevo."
       end
 
       def balance_message_for(ebt_amount)
