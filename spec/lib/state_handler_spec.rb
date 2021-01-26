@@ -47,6 +47,8 @@ describe StateHandler::AK do
     let(:failed_transcription) { nil }
 
     context 'for English' do
+      let(:language) { :english }
+
       context 'with transcription containing balance' do
         it 'sends response with balance amounts' do
           reply_for_user = subject.transcribe_balance_response(successful_transcription_1)
@@ -105,6 +107,56 @@ describe StateHandler::AK do
         it 'sends EBT-not-found message' do
           reply_for_user = subject.transcribe_balance_response(failed_transcription, language)
           expect(reply_for_user).to eq("Lo siento! Actualmente estamos teniendo problemas comunicándonos con el sistema de EBT. Favor de enviar su # de EBT por texto en unos minutos.")
+        end
+      end
+    end
+
+    context 'for Yupik' do
+      let(:language) { :yupik }
+
+      context 'with transcription containing balance variation 1' do
+        it 'sends response with balance amounts' do
+          reply_for_user = subject.transcribe_balance_response(successful_transcription_1, language)
+          expect(reply_for_user).to eq("Waqaa! Food stamp-an $123.45 amllertauq.")
+        end
+      end
+
+      context 'with EBT card not found in system' do
+        it 'sends EBT-not-found message' do
+          reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found, language)
+          expect(reply_for_user).to eq("Picaqenritamken! Tauna alangqayugnarquq. Kiik cali card-avet number-aari nasvakegki.")
+        end
+      end
+
+      context 'with a failed (nil) transcription' do
+        it 'sends EBT-not-found message' do
+          reply_for_user = subject.transcribe_balance_response(failed_transcription, language)
+          expect(reply_for_user).to eq("Picaqenritamken! EBT System-aaq kiuksaituq. Kiik cali EBT Card-avet number-aari text-arniaten ataataacuarqu.")
+        end
+      end
+    end
+
+    context 'for Russian' do
+      let(:language) { :russian }
+
+      context 'with transcription containing balance variation 1' do
+        it 'sends response with balance amounts' do
+          reply_for_user = subject.transcribe_balance_response(successful_transcription_1, language)
+          expect(reply_for_user).to eq("Здравствуйте, Ваш баланс по фуд стемпам $123.45.")
+        end
+      end
+
+      context 'with EBT card not found in system' do
+        it 'sends EBT-not-found message' do
+          reply_for_user = subject.transcribe_balance_response(transcription_ebt_not_found, language)
+          expect(reply_for_user).to eq("Извините, Ваш номер карточки не найден. Пожалуйста, повторите Ваш номер еще раз. (Сейчас этот сервис работает только в Калифорнии.)")
+        end
+      end
+
+      context 'with a failed (nil) transcription' do
+        it 'sends EBT-not-found message' do
+          reply_for_user = subject.transcribe_balance_response(failed_transcription, language)
+          expect(reply_for_user).to eq("Пожалуйста, извините. Мы не можем сейчас соединиться с системой карточек EBT. Пoжалуйстa, введите Ваш номер карточки опять через несколько минут.")
         end
       end
     end

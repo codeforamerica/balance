@@ -1,7 +1,7 @@
 require 'twilio-ruby'
 
 class PhoneNumberProcessor
-  SUPPORTED_LANGUAGES = %w(spanish)
+  SUPPORTED_LANGUAGES = ["spanish","russian","yupik"]
   attr_reader :lookup_hash
 
   def initialize
@@ -11,6 +11,7 @@ class PhoneNumberProcessor
       SUPPORTED_LANGUAGES.each do |language|
         if pn.friendly_name.include?(language.to_s)
           @lookup_hash[pn.phone_number] = language.to_sym
+		  break
         else
           @lookup_hash[pn.phone_number] = :english
         end
